@@ -1,0 +1,15 @@
+# Permite acesso geral ao diretório
+Require all granted
+
+# Permite execução de arquivos PHP
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch>
+
+# Bloqueia acesso a arquivos sensíveis
+<FilesMatch "\.(htaccess|htpasswd|ini|env|log|sql|sh)$">
+    Require all denied
+</FilesMatch>
+
+# Desativa listagem de diretórios (opcional)
+Options -Indexes

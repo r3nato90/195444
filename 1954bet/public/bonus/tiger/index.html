@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <title>Fortune Tiger</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <!-- Meta Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1197147041647285');
+        fbq('track', 'Rodadas grátis');
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1197147041647285&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+  
+  <script>
+function addEventListeners(button) {
+    const buttonText = button.textContent.trim();
+    console.log('Button clicked:', buttonText);
+
+    // Verificar o texto do botão e disparar o evento correto do Facebook Pixel
+    if (buttonText === 'Criar Conta') {
+        console.log('Disparando evento Registro');
+        fbq('track', 'CompleteRegistration');
+        fbq('track', 'Registro');
+    }
+    if (buttonText === 'Depositar') {
+        console.log('Disparando evento Inicio deposito');
+        fbq('track', 'Inicio deposito');
+    }
+    if (buttonText === 'Gerar PIX') {
+        console.log('Disparando evento Gerar Pix');
+        fbq('track', 'Gerar Pix');
+    }
+    if (buttonText.includes('Código copiado')) {
+        console.log('Disparando evento Copiar pixqrcode');
+        fbq('track', 'Copiar pixqrcode');
+    }
+    if (buttonText === 'Eu já paguei o PIX') {
+        console.log('Disparando evento botao eu ja paguei o PIX');
+        fbq('track', 'botao eu ja paguei o PIX');
+    }
+    if (buttonText === 'Sim, quero cancelar') {
+        console.log('Disparando evento botao cancelar registro');
+        fbq('track', 'botao cancelar registro');
+    }
+
+    // Verificar se o botão contém o link específico
+    if (button.href && button.href.includes('https://1954bet.com')) {
+        console.log('Disparando evento de início de cadastro');
+        fbq('track', 'Lead');
+    }
+}
+
+function observeDOMChanges() {
+    const targetNode = document.body;
+    const config = { childList: true, subtree: true };
+
+    const callback = (mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                const addedNodes = mutation.addedNodes;
+                addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        const buttons = node.querySelectorAll('button');
+                        buttons.forEach(button => {
+                            if (!button.dataset.listenerAdded) {
+                                button.addEventListener('click', function() {
+                                    addEventListeners(button);
+                                });
+                                button.dataset.listenerAdded = 'true'; // Marcando botão como listener adicionado
+                            }
+                        });
+
+                        // Adicionar ouvinte a links específicos
+                        const links = node.querySelectorAll('a[href*="https://1954bet.com"]');
+                        links.forEach(link => {
+                            if (!link.dataset.listenerAdded) {
+                                link.addEventListener('click', function() {
+                                    addEventListeners(link);
+                                });
+                                link.dataset.listenerAdded = 'true';
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    };
+
+    const buttonObserver = new MutationObserver(callback);
+    buttonObserver.observe(targetNode, config);
+}
+
+// Chama a função para iniciar a observação do DOM
+document.addEventListener('DOMContentLoaded', () => {
+    observeDOMChanges();
+
+    // Adicionar ouvintes a botões existentes no carregamento inicial
+    setTimeout(() => {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            if (!button.dataset.listenerAdded) {
+                button.addEventListener('click', function() {
+                    addEventListeners(button);
+                });
+                button.dataset.listenerAdded = 'true'; 
+            }
+        });
+
+        // Adicionar ouvintes a links específicos existentes no carregamento inicial
+        const links = document.querySelectorAll('a[href*="https://1954bet.com"]');
+        links.forEach(link => {
+            if (!link.dataset.listenerAdded) {
+                link.addEventListener('click', function() {
+                    addEventListeners(link);
+                });
+                link.dataset.listenerAdded = 'true';
+            }
+        });
+    }, 1000);
+});
+</script>
+  <body id="body-content">
+    <div class="content" id="main-content">
+      <div class="stage1">
+        <div class="positionBtn">
+          <p>Você ganhou 3 rodadas grátis no Fortune Tiger !</p>
+          <div class="start-button">
+            <div class="start-button-inner">Começar</div>
+          </div>
+          <!---<img
+            src=""
+            alt="cassino-pix"
+            class="logo"
+          />--->
+        </div>
+      </div>
+      <div class="stage2">
+        <video
+          class="video"
+          autoplay="autoplay"
+          playsinline
+          playsinline
+          loop
+          muted
+          src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/top3.mp4"
+          width="569"
+        >
+          <img
+            src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/topstatic.png"
+            alt=""
+            width="569"
+            height="211"
+          />
+        </video>
+        <div class="sorterSpace">
+          <div class="ganhoCols" id="ganhoCols1">
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/orange.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/orange.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/orange.png"
+                width="135"
+                height="138"
+              />
+            </div>
+          </div>
+          <div class="ganhoCols" id="ganhoCols2">
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="105"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/tesouro.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/fichas.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/fichas.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="laranja">
+              <img
+                src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/fichas.png"
+                width="135"
+                height="138"
+              />
+            </div>
+            <div class="line1" style="top: 18%"></div>
+            <div class="line1" style="top: 83%"></div>
+          </div>
+          <div class="col">
+            <div class="els" id="col1"></div>
+          </div>
+          <div class="col">
+            <div class="els elsbottom col2" id="col2"></div>
+          </div>
+          <div class="col">
+            <div class="els elscenter col3" id="col3"></div>
+          </div>
+        </div>
+        <div class="marquee">
+          <div class="allmarquee">
+            <div class="marqueeSpace">
+              <span>Novas rodadas na funcionalidade Tigre da Sorte!</span>
+            </div>
+            <div class="marqueeSpace hidden">
+              <span>Multiplicador x10 com cilindros repletos de ganhos!</span>
+            </div>
+            <div class="marqueeSpace hidden">
+              <span>Ganhe até 2500x</span>
+            </div>
+          </div>
+          <div class="ganho" id="ganho1">
+            <span>Ganho &nbsp; 2.00</span>
+          </div>
+          <div class="speedlight"></div>
+        </div>
+        <div class="total">
+          <div
+            class="input"
+            id="carteira"
+            style="color: #85e6f5; font-size: 1.35rem"
+          >
+            20.00
+          </div>
+          <div
+            class="input"
+            id="aposta"
+            style="color: #85e6f5; font-size: 1.35rem"
+          >
+            2.00
+          </div>
+          <div
+            class="input"
+            id="total"
+            style="color: #85e6f5; font-size: 1.35rem"
+          >
+            0.00
+          </div>
+        </div>
+        <div class="footer">
+          <div id="spinButton" class="spin rotate"></div>
+          <div class="stars"></div>
+        </div>
+      </div>
+      <div class="grandeGanho">
+        <div class="spaceGanho">
+          <img
+            src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/grande-ganho.png"
+            id="grandeGanhoImg"
+            width="569"
+            height="533"
+            alt=""
+          />
+          <img
+            src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/mega-ganho.png"
+            id="megaGanhoImg"
+            width="569"
+            height="598"
+            alt=""
+            style="margin-top: -3%"
+          />
+          <img
+            src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/super-mega-ganho.png"
+            id="superMegaGanhoImg"
+            width="818"
+            height="896"
+            alt=""
+            style="margin-top: -8%"
+          />
+          <div class="contador shake" id="cont1">0</div>
+        </div>
+        <div class="circle"></div>
+        <div class="bgGanho">
+          <img
+            src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/bright.png"
+            width="1020"
+            height="1020"
+            alt=""
+          />
+        </div>
+      </div>
+      <a
+        href="https://go.aff.7k-partners.com/vfihopkm?utm_campaign=kwaimodal"
+        class="btnFim"
+        id="redeem-button"
+      >
+        <div class="btnFim-inner">RESGATAR PRÊMIO</div>
+      </a>
+    </div>
+
+    <div id="new-modal" style="display: none">
+      <iframe
+        src="https://tropapg.com/"
+        style="
+          width: 100%;
+          height: 100vh;
+          border: none;
+          opacity: 0.7;
+          filter: blur(4px);
+        "
+      ></iframe>
+      <div id="overlay">
+        <div id="modal">
+          <div class="top-modal">
+            <img id="poup-img" src="./img/popup.png" alt="" />
+          </div>
+          <div class="modal-content"
+          style="display: flex; flex-direction: column; width: 100%"
+          >
+            <a href="https://1954bet.com"
+            style="display: flex; width: 100%"
+            >
+              <div class="container"
+              style="display: flex; width: 100%; justify-content: center"
+              >
+                <img src="./img/espadilha.svg" 
+                style="width: 16px; height: 16px"
+                alt="" />
+                20 rodadas grátis | Deposite R$10
+              </div>
+            </a>
+            <a href="https://1954bet.com"
+            style="display: flex; width: 100%"
+            >
+              <div class="container"
+              style="display: flex; width: 100%; justify-content: center"
+              >
+                <img src="./img/espadilha.svg"
+                style="width: 16px; height: 16px"
+                alt="" />
+                40 rodadas grátis | Deposite R$20
+              </div>
+            </a>
+            <a href="https://1954bet.com"
+            style="display: flex; width: 100%"
+            >
+              <div class="container"
+              style="display: flex; width: 100%; justify-content: center"
+              >
+                <img src="./img/espadilha.svg"
+                style="width: 16px; height: 16px"
+                alt="" />
+                100 rodadas grátis | Deposite R$50
+              </div>
+            </a>
+            <div class="btn">
+              <a href="https://1954bet.com">DEPOSITAR</a>
+              <button onclick="window.location.href = 'https://1954bet.com'">Fechar</button>
+            </div>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <audio id="bgSound" autoplay loop>
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/bgsound.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="clickSound">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/clickbtn.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="spinSound">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/spin4.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="spinSound2">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/spin2.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="coinsSound">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/coins.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="win1">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/win1.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="bigWinSound">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/bigwin.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="fogosSound" loop>
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/fogos.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="levelupSound">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/level-up.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="levelupSound2">
+      <source
+        src="https://divirta-se.club/lander/fiel---fortune-tiger-simulador/assets/level-up2.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <script src="script.js"></script>
+  </body>
+</html>
