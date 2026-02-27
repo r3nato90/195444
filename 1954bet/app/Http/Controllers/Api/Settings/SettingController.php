@@ -3,71 +3,30 @@
 namespace App\Http\Controllers\Api\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-{
-    $setting = \Helper::getSetting();
-    $custom = \Helper::getCustom();
-    $favorites = \Helper::getFavorites();
-
-    return response()->json([
-        'setting' => $setting,
-        'custom' => $custom,
-        'favorites' => $favorites,
-    ], 200);
-}
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
     {
-        //
-    }
+        // Busca a configuração ou gera uma padrão para não quebrar o Vue
+        $setting = Setting::first() ?: (object) [
+            'id' => 1,
+            'software_name' => '101Win',
+            'status' => 1,
+            'disable_last_winners' => 0,
+            'pwa_is_enable' => 0
+        ];
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'setting' => $setting,
+            'custom'  => [
+                'pwa_is_enable' => $setting->pwa_is_enable ?? 0,
+                'custom_css'    => $setting->custom_css ?? '',
+                'custom_js'     => $setting->custom_js ?? '',
+            ],
+            'favorites' => []
+        ], 200);
     }
 }

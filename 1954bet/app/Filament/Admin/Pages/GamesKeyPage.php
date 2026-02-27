@@ -3,9 +3,11 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Models\GamesKey;
-use App\Models\AproveSaveSetting; // Adicionado para verificação de senha
+use App\Models\AproveSaveSetting;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -13,15 +15,16 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\HtmlString;
+use Filament\Actions\Action;
 
 class GamesKeyPage extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-key'; // Ícone alterado para combinar com chaves
     protected static string $view = 'filament.pages.games-key-page';
-    protected static ?string $title = 'Chaves dos Jogos';
+    protected static ?string $title = 'Chaves dos Provedores';
+    protected static ?string $navigationGroup = 'Configurações';
 
     public ?array $data = [];
     public ?GamesKey $setting;
@@ -42,82 +45,191 @@ class GamesKeyPage extends Page implements HasForms
         }
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            // AÇÃO DE SINCRONIZAÇÃO PGCLONE
+            Action::make('sync_pgclone')
+                ->label('Sincronizar PG Soft (PGClone)')
+                ->icon('heroicon-o-arrow-path')
+                ->color('success')
+                ->requiresConfirmation()
+                ->modalHeading('Sincronizar Jogos?')
+                ->modalDescription('Isso irá atualizar o catálogo, baixar as novas imagens e limpar registros antigos da PG Soft.')
+                ->action(function () {
+                    try {
+                        // Chama o método fetchGames atualizado que limpa o banco e usa Slugs
+                        $response = \App\Http\Controllers\Provider\PGCloneController::fetchGames();
+                        $data = $response->getData(true);
+
+                        if ($response->status() === 200) {
+                            Notification::make()
+                                ->title('Sincronização Concluída!')
+                                ->body($data['message'] ?? 'Catálogo e imagens atualizados com sucesso.')
+                                ->success()
+                                ->persistent()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Erro na API PGClone')
+                                ->body($data['error'] ?? 'Não foi possível obter a lista de jogos.')
+                                ->danger()
+                                ->send();
+                        }
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Erro Crítico')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                }),
+
+            Action::make('sync_maxapi')
+                ->label('Sincronizar MAX API')
+                ->icon('heroicon-o-arrow-path')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->action(function () {
+                    try {
+                        $response = \App\Http\Controllers\Provider\MaxApiController::fetchGames();
+                        $data = $response->getData(true);
+
+                        if ($response->status() === 200) {
+                            Notification::make()
+                                ->title('Concluído!')
+                                ->body($data['message'] ?? 'Jogos MAX API sincronizados.')
+                                ->success()
+                                ->send();
+                        } else {
+                            Notification::make()
+                                ->title('Erro MAX API')
+                                ->body($data['error'] ?? 'Falha na conexão.')
+                                ->danger()
+                                ->send();
+                        }
+                    } catch (\Exception $e) {
+                        Notification::make()
+                            ->title('Erro Fatal')
+                            ->body($e->getMessage())
+                            ->danger()
+                            ->send();
+                    }
+                }),
+        ];
+    }
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
+                Tabs::make('Configuração de Provedores')
+                    ->tabs([
+                        
+                        // ABA PGCLONE (Priorizada conforme solicitado)
+                        Tabs\Tab::make('PGClone (PG Soft)')
+                            ->icon('heroicon-o-bolt')
+                            ->schema([
+                                Section::make('CHAVES DE ACESSO PGCLONE')
+                                    ->description('Atenção: Use estes campos para os jogos da PG Soft.')
+                                    ->schema([
+                                        Toggle::make('pgclone_is_enable')
+                                            ->label('Ativar PG Soft no Sistema')
+                                            ->inline(false)
+                                            ->columnSpanFull(),
 
-                 //PLAY FIVER ADICIONAR ESSA LINHA DE CÓDIGO
-                 Section::make('PLAYFIVER API')
-                 ->description(new HtmlString('
-                     <div style="display: flex; align-items: center;">
-                         Nossa API fornece diversos jogos de slots :
-                         <a class="dark:text-white" 
-                            style="
-                                 font-size: 14px;
-                                 font-weight: 600;
-                                 width: 127px;
-                                 display: flex;
-                                 background-color: #f800ff;
-                                 padding: 10px;
-                                 border-radius: 11px;
-                                 justify-content: center;
-                                 margin-left: 10px;
-                            " 
-                            href="https://playfiver.app" 
-                            target="_blank">
-                             PAINEL PLAYFIVER
-                         </a>
-                         <a class="dark:text-white" 
-                            style="
-                                 font-size: 14px;
-                                 font-weight: 600;
-                                 width: 127px;
-                                 display: flex;
-                                 background-color: #f800ff;
-                                 padding: 10px;
-                                 border-radius: 11px;
-                                 justify-content: center;
-                                 margin-left: 10px;
-                            " 
-                            href="#" 
-                            target="_blank">
-                             GRUPO TELEGRAM OFF
-                         </a>
-                     </div>
-                 '))    
-                 ->schema([
-                 Section::make('CHAVES DE ACESSO PLAYFIVER')
-                         ->description('Você pode obter suas chaves de acesso no painel da Playfiver ao criar o seu agente.')
-                         ->schema([
-                             TextInput::make('playfiver_code')
-                                 ->label('CÓDIGO DO AGENTE')
-                                 ->placeholder('Digite aqui o código do agente')
-                                 ->maxLength(191),
- 
-                             TextInput::make('playfiver_token')
-                                 ->label('AGENTE TOKEN')
-                                 ->placeholder('Digite aqui o token do agente')
-                                 ->maxLength(191),
-                             TextInput::make('playfiver_secret')
-                                 ->label('AGENTE SECRETO')
-                                 ->placeholder('Digite aqui o código secreto do agente')
-                                 ->maxLength(191),    
-                         ])->columns(3),
-                          // Seção para a senha de aprovação
-                Section::make('Digite a senha de confirmação')
-                    ->description('Obrigatório digitar sua senha de confirmação!')
+                                        TextInput::make('play_gaming_base_url')
+                                            ->label('API URL Base')
+                                            ->default('https://api.pgclone.com')
+                                            ->required(),
+
+                                        TextInput::make('play_gaming_agent_code')
+                                            ->label('Código do Agente (Agent Code)'),
+
+                                        TextInput::make('play_gaming_agent_token')
+                                            ->label('Token de Acesso (Agent Token)')
+                                            ->password()
+                                            ->revealable(),
+
+                                        TextInput::make('play_gaming_agent_secret')
+                                            ->label('Chave Secreta (Agent Secret)')
+                                            ->password()
+                                            ->revealable(),
+                                    ])->columns(2),
+                            ]),
+
+                        // ABA PLAYFIVER
+                        Tabs\Tab::make('PlayFiver')
+                            ->icon('heroicon-o-play')
+                            ->schema([
+                                Section::make('PLAYFIVER CONFIG')
+                                    ->schema([
+                                        Toggle::make('playfiver_is_enable')
+                                            ->label('Ativar PlayFiver')
+                                            ->columnSpanFull(),
+
+                                        TextInput::make('playfiver_url')
+                                            ->label('API URL')
+                                            ->default('https://api.playfiver.com')
+                                            ->required(),
+
+                                        TextInput::make('playfiver_code')
+                                            ->label('Agent Code'),
+                                        
+                                        TextInput::make('playfiver_token')
+                                            ->label('Agent Token'),
+                                        
+                                        TextInput::make('playfiver_secret')
+                                            ->label('Agent Secret')
+                                            ->password()
+                                            ->revealable(),
+                                    ])->columns(2),
+                            ]),
+
+                        // ABA MAX API GAMES
+                        Tabs\Tab::make('MAX API GAMES')
+                            ->icon('heroicon-o-fire')
+                            ->schema([
+                                Section::make('MAX API v2')
+                                    ->schema([
+                                        Toggle::make('maxapi_is_enable')
+                                            ->label('Ativar MAX API')
+                                            ->columnSpanFull(),
+
+                                        TextInput::make('evergame_base_url')
+                                            ->label('API URL Base')
+                                            ->default('https://maxapigames.com/api/v2')
+                                            ->required(),
+
+                                        TextInput::make('evergame_agent_code')
+                                            ->label('Agent Code'),
+
+                                        TextInput::make('evergame_agent_token')
+                                            ->label('Agent Token')
+                                            ->password()
+                                            ->revealable(),
+
+                                        TextInput::make('evergame_agent_secret')
+                                            ->label('Agent Secret')
+                                            ->password()
+                                            ->revealable(),
+                                    ])->columns(2),
+                            ]),
+
+                    ])->columnSpanFull(),
+
+                // SEÇÃO DE SEGURANÇA
+                Section::make('Segurança')
+                    ->description('Confirme sua senha para aplicar as novas chaves.')
                     ->schema([
                         TextInput::make('approval_password_save')
                             ->label('Senha de Aprovação')
                             ->password()
                             ->required()
-                            ->helperText('Digite a senha para salvar as alterações.')
-                            ->maxLength(191),
+                            ->revealable()
+                            ->columnSpan(1),
                     ])->columns(2),
-                 ]),
- 
-                 //PLAY FIVER FIM
+
             ])
             ->statePath('data');
     }
@@ -125,53 +237,32 @@ class GamesKeyPage extends Page implements HasForms
     public function submit(): void
     {
         try {
-            if (env('APP_DEMO')) {
-                Notification::make()
-                    ->title('Atenção')
-                    ->body('Você não pode realizar esta alteração na versão demo')
-                    ->danger()
-                    ->send();
+            if (config('app.demo')) {
+                Notification::make()->title('Atenção')->body('Ação bloqueada no modo demo.')->danger()->send(); 
                 return;
             }
 
-            // Verificação da senha
             $approvalSettings = AproveSaveSetting::first();
             $inputPassword = $this->data['approval_password_save'] ?? '';
 
-            if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
-                Notification::make()
-                    ->title('Erro de Autenticação')
-                    ->body('Senha incorreta. Por favor, tente novamente.')
-                    ->danger()
-                    ->send();
+            if (!$approvalSettings || !Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
+                Notification::make()->title('Senha Incorreta')->body('Verifique sua senha de aprovação.')->danger()->send(); 
                 return;
             }
 
             $setting = GamesKey::first();
+            $updateData = $this->data;
+            unset($updateData['approval_password_save']);
 
             if (!empty($setting)) {
-                if ($setting->update($this->data)) {
-                    Notification::make()
-                        ->title('Chaves Alteradas')
-                        ->body('Suas chaves foram alteradas com sucesso!')
-                        ->success()
-                        ->send();
-                }
+                $setting->update($updateData);
+                Notification::make()->title('Configurações salvas!')->success()->send();
             } else {
-                if (GamesKey::create($this->data)) {
-                    Notification::make()
-                        ->title('Chaves Criadas')
-                        ->body('Suas chaves foram criadas com sucesso!')
-                        ->success()
-                        ->send();
-                }
+                GamesKey::create($updateData);
+                Notification::make()->title('Configurações criadas!')->success()->send();
             }
         } catch (Halt $exception) {
-            Notification::make()
-                ->title('Erro ao alterar dados!')
-                ->body('Erro ao alterar dados!')
-                ->danger()
-                ->send();
+            Notification::make()->title('Erro de Validação')->danger()->send();
         }
     }
 }

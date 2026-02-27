@@ -32,6 +32,13 @@ Route::get('clear', function () {
     return back();
 });
 
+Route::get('/limpar-sistema-agora', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    return "O cache do sistema foi limpo com sucesso! Pode tentar salvar o Gateway agora.";
+});
+
 // GAMES PROVIDER
 include_once(__DIR__ . '/groups/provider/wizzepro.php');
 include_once(__DIR__ . '/groups/provider/games.php');

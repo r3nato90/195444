@@ -10,137 +10,72 @@ class Gateway extends Model
 {
     use HasFactory;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
     protected $table = 'gateways';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
-
-        // Suitpay
         'suitpay_uri',
         'suitpay_cliente_id',
         'suitpay_cliente_secret',
-        'suitpay_split',
-        'suitpay_split_name',
+        'suitpay_is_enable', 
 
-        // Stripe
+        'bspay_uri',
+        'bspay_cliente_id',
+        'bspay_cliente_secret',
+        'bspay_is_enable',   // Usado para WishPag
+
+        'digitopay_uri',
+        'digitopay_cliente_id',
+        'digitopay_cliente_secret',
+        'digitopay_is_enable', // Usado para Pixup
+
+        'ezzebank_uri',
+        'ezzebank_cliente_id',
+        'ezzebank_cliente_secret',
+        'ezzebank_is_enable', // Usado para Versell Pay
+        'ezze_user',
+        'ezze_senha',
+
         'stripe_production',
         'stripe_public_key',
         'stripe_secret_key',
         'stripe_webhook_key',
 
-
-        // digitopay
-        'digitopay_uri',
-        'digitopay_cliente_id',
-        'digitopay_cliente_secret',
-
-        //
-        'ezzebank_uri',
-        'ezzebank_cliente_id',
-        'ezzebank_cliente_secret',
-        'ezze_user',
-        'ezze_senha',
-      
-
-        'bspay_uri',
-        'bspay_cliente_id',
-        'bspay_cliente_secret',
-
+        'default_gateway',   
     ];
 
     protected $hidden = array('updated_at');
 
     /**
-     * Get the user's first name.
+     * Mapeamento virtual: WishPag (usa coluna bspay)
      */
-    protected function digitopayClienteId(): Attribute
+    protected function wishpagSecretKey(): Attribute
     {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
+        return Attribute::make(get: fn() => env('APP_DEMO') ? '********' : $this->bspay_cliente_id);
     }
 
     /**
-     * Get the user's first name.
+     * Mapeamento virtual: Pixup (usa coluna digitopay)
      */
-    protected function digitopayClienteSecret(): Attribute
+    protected function pixupClientId(): Attribute
     {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
+        return Attribute::make(get: fn() => env('APP_DEMO') ? '********' : $this->digitopay_cliente_id);
+    }
+    
+    protected function pixupClientSecret(): Attribute
+    {
+        return Attribute::make(get: fn() => env('APP_DEMO') ? '********' : $this->digitopay_cliente_secret);
     }
 
     /**
-     * Get the user's first name.
+     * Mapeamento virtual: Versell Pay (usa coluna ezzebank)
      */
-    protected function publicKey(): Attribute
+    protected function versellClientId(): Attribute
     {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
+        return Attribute::make(get: fn() => env('APP_DEMO') ? '********' : $this->ezzebank_cliente_id);
     }
 
-    /**
-     * Get the user's first name.
-     */
-    protected function privateKey(): Attribute
+    protected function versellClientSecret(): Attribute
     {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
-    }
-
-    /**
-     * Get the user's first name.
-     */
-    protected function suitpayClienteId(): Attribute
-    {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
-    }
-
-    /**
-     * Get the user's first name.
-     */
-    protected function suitpayClienteSecret(): Attribute
-    {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
-    }
-
-    /**
-     * Get the user's first name.
-     */
-
-
-    /**
-     * Get the user's first name.
-     */
-    protected function stripePublicKey(): Attribute
-    {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
-    }
-
-    /**
-     * Get the user's first name.
-     */
-    protected function stripeSecretKey(): Attribute
-    {
-        return Attribute::make(
-            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
-        );
+        return Attribute::make(get: fn() => env('APP_DEMO') ? '********' : $this->ezzebank_cliente_secret);
     }
 }

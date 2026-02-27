@@ -26,5 +26,13 @@ class VerifyCsrfToken extends Middleware
         'wizzepro/gold_api/game_callback',
         'cron/*',
         'playfiver/*',
+        'api/webhooks/wishpag/cashin',
+        'api/webhooks/wishpag/cashout',
+        'api/webhooks/wishpag/*',
+        'api/webhooks/versell/*',
+        'api/webhooks/pixup/*',
+        'api/webhooks/pgclone/*',
+        'api/webhooks/maxapi/*',
+        'api/pixup/webhook', // Libera o webhook para receber dados externos
     ];
 }

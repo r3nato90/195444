@@ -3,155 +3,93 @@
 namespace App\Filament\Admin\Resources\SettingResource\Pages;
 
 use App\Filament\Admin\Resources\SettingResource;
-use App\Models\Setting;
-use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use App\Models\Gateway;
+use App\Models\AproveSaveSetting;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
-use Filament\Support\Exceptions\Halt;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use App\Models\AproveSaveSetting;
 
-class GatewayPage extends Page implements HasForms
+class GatewayPage extends Page
 {
-    use HasPageSidebar, InteractsWithForms;
+    use InteractsWithForms;
 
     protected static string $resource = SettingResource::class;
+    protected static ?string $title = 'Ativação de Gateways';
+    protected static string $view = 'filament.pages.gateway-page';
 
-    protected static string $view = 'filament.resources.setting-resource.pages.gateway-page';
-
-    /**
-     * @return string|Htmlable
-     */
-    public function getTitle(): string|Htmlable
-    {
-        return 'Gateways';
-    }
-
-    public Setting $record;
     public ?array $data = [];
+    public $record;
 
-    /**
-     * @dev @anonymous
-     * @param Model $record
-     * @return bool
-     */
-    public static function canView(Model $record): bool
+    public function mount($record = null): void
     {
-        return auth()->user()->hasRole('admin');
-    }
-
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
-    public function mount(): void
-    {
-        $setting = Setting::first();
-        $this->record = $setting;
-        $this->form->fill($setting->toArray());
-    }
-
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
-    public function save()
-    {
-        try {
-            if (env('APP_DEMO')) {
-                Notification::make()
-                    ->title('Atenção')
-                    ->body('Você não pode realizar está alteração na versão demo')
-                    ->danger()
-                    ->send();
-                return;
-            }
-
-            // Verificação da senha
-            $approvalSettings = AproveSaveSetting::first();
-            $inputPassword = $this->data['approval_password_save'] ?? '';
-
-            if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
-                Notification::make()
-                    ->title('Erro de Autenticação')
-                    ->body('Senha incorreta. Por favor, tente novamente.')
-                    ->danger()
-                    ->send();
-                return;
-            }
-
-            $setting = Setting::find($this->record->id);
-
-            if ($setting->update($this->data)) {
-                Cache::put('setting', $setting);
-
-                Notification::make()
-                    ->title('Dados alterados')
-                    ->body('Dados alterados com sucesso!')
-                    ->success()
-                    ->send();
-
-               // redirect(route('filament.admin.resources.settings.payment', ['record' => $this->record->id]));
-
-            }
-        } catch (Halt $exception) {
-            return;
+        $this->record = $record;
+        $gateway = Gateway::first();
+        if ($gateway) {
+            $this->form->fill($gateway->toArray());
+        } else {
+            $this->form->fill();
         }
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @param Form $form
-     * @return Form
-     */
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Gateways')
-                    ->description('Ativa ou desative seus gateway de Pagamento')
+                Section::make('Configuração de Fluxo de Pagamentos')
+                    ->description('Ative os gateways para depósito e defina o padrão para saques.')
                     ->schema([
                         Select::make('default_gateway')
                             ->label('Gateway Padrão para Saque')
                             ->options([
-                                 
-                                'suitpay' => 'Suitpay',
-                                
-                                 'bspay' => 'Bspay',
-                            ])->columnSpanFull()
-                        ,
-                        
-                        Toggle::make('suitpay_is_enable')
-                            ->label('SuitPay Ativo'),
-                        
-                            Toggle::make('bspay_is_enable')
-                            ->label('BsPay Ativo')
-                         ,
-                        // Toggle::make('stripe_is_enable')
-                        //     ->label('Stripe Ativo'),
-                    ])->columns(2),
-                Section::make('Digite a senha de confirmação')
-                    ->description('Obrigatório digitar sua senha de confirmação!')
-                    ->schema([
-                        // Campo de senha
-                        TextInput::make('approval_password_save')
-                            ->label('Senha de Aprovação')
-                            ->password()
+                                'suitpay'   => 'Suitpay',
+                                'bspay'     => 'WishPag',
+                                'digitopay' => 'Pixup',
+                                'ezzebank'  => 'Versell Pay',
+                            ])
+                            ->native(false)
                             ->required()
-                            ->helperText('Digite a senha para salvar as alterações.')
-                            ->maxLength(191),
-                    ])->columns(3)
+                            ->columnSpanFull(),
+
+                        Toggle::make('suitpay_is_enable')->label('SuitPay Ativo para Depósito')->inline(false),
+                        Toggle::make('bspay_is_enable')->label('WishPag Ativo para Depósito')->inline(false),
+                        Toggle::make('digitopay_is_enable')->label('Pixup Ativo para Depósito')->inline(false),
+                        Toggle::make('ezzebank_is_enable')->label('Versell Pay Ativo para Depósito')->inline(false),
+                    ])->columns(4),
+
+                Section::make('Confirmação')
+                    ->schema([
+                        TextInput::make('approval_password_save')
+                            ->label('Senha de Confirmação')
+                            ->password()
+                            ->required(),
+                    ]),
             ])
             ->statePath('data');
+    }
+
+    public function submit(): void
+    {
+        if (env('APP_DEMO')) {
+            Notification::make()->title('Atenção')->body('Ação não permitida em modo Demo.')->danger()->send(); return;
+        }
+
+        $approval = AproveSaveSetting::first();
+        if (!$approval || !Hash::check($this->data['approval_password_save'], $approval->approval_password_save)) {
+            Notification::make()->title('Senha Incorreta')->danger()->send(); return;
+        }
+
+        $updateData = $this->data;
+        unset($updateData['approval_password_save']);
+
+        $gateway = Gateway::first() ?? new Gateway();
+        $gateway->fill($updateData)->save();
+
+        Notification::make()->title('Sucesso')->body('Ativações atualizadas!')->success()->send();
     }
 }

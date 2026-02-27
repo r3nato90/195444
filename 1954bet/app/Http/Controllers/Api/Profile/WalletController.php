@@ -10,6 +10,8 @@ use App\Models\Withdrawal;
 use App\Notifications\NewWithdrawalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WalletController extends Controller
 {
@@ -55,138 +57,121 @@ class WalletController extends Controller
      */
     public function requestWithdrawal(Request $request)
     {
-        $setting = Setting::first();
+        try {
+            $setting = Setting::first();
 
-        // Verificar se o usuário está autenticado
-        if (auth('api')->check()) {
-            // Obter o usuário autenticado
-            $user = auth('api')->user();
+            if (auth('api')->check()) {
+                $user = auth('api')->user();
 
-            // Verificar se o usuário utilizou o bônus de cadastro
-            if ($user->utilizou_bonus_cadastro == 1) {
-                // Verificar se o campo disable_deposit_min está ativo
-                if ($setting->disable_deposit_min == 1) {
-                    // Somar todos os depósitos do usuário com status 1
-                    $depositSum = \DB::table('deposits')
-                        ->where('user_id', $user->id)
-                        ->where('status', 1)
-                        ->sum('amount');
+                if ($user->utilizou_bonus_cadastro == 1) {
+                    if (isset($setting->disable_deposit_min) && $setting->disable_deposit_min == 1) {
+                        $depositSum = DB::table('deposits')
+                            ->where('user_id', $user->id)
+                            ->where('status', 1)
+                            ->sum('amount');
 
-                    // Verificar se a soma dos depósitos é menor que deposit_min_saque
-                    if ($depositSum < $setting->deposit_min_saque) {
-                        $remainingAmount = $setting->deposit_min_saque - $depositSum;
-                        return response()->json(['error' => 'Você precisa depositar mais ' . number_format($remainingAmount, 2, ',', '.') . ' para poder sacar.'], 400);
+                        if ($depositSum < $setting->deposit_min_saque) {
+                            $remainingAmount = $setting->deposit_min_saque - $depositSum;
+                            return response()->json(['error' => 'Você precisa depositar mais R$ ' . number_format($remainingAmount, 2, ',', '.') . ' para poder sacar.'], 400);
+                        }
                     }
                 }
-            }
 
-            // Verificações de saque de acordo com o tipo de solicitação
-            if ($request->type === 'pix') {
                 $rules = [
-                    'amount' => ['required', 'numeric', 'min:' . $setting->min_withdrawal, 'max:' . $setting->max_withdrawal],
-                    'pix_type' => 'required',
+                    'amount' => ['required', 'numeric', 'min:' . ($setting->min_withdrawal ?? 0), 'max:' . ($setting->max_withdrawal ?? 999999)],
+                    'type' => 'required',
                 ];
 
-                switch ($request->pix_type) {
-                    case 'document':
-                        $rules['pix_key'] = 'required|cpf_ou_cnpj';
-                        break;
-                    case 'email':
-                        $rules['pix_key'] = 'required|email';
-                        break;
-                    default:
-                        $rules['pix_key'] = 'required';
-                        break;
-                }
-            }
-
-            if ($request->type === 'bank') {
-                $rules = [
-                    'amount' => ['required', 'numeric', 'min:' . $setting->min_withdrawal, 'max:' . $setting->max_withdrawal],
-                    'bank_info' => 'required',
-                ];
-            }
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 400);
-            }
-
-            if ($request->amount < 0) {
-                return response()->json(['error' => 'Você tem que solicitar um valor'], 400);
-            }
-
-            // Limite de saque
-            if (!empty($setting->withdrawal_limit) && !empty($setting->withdrawal_period)) {
-                switch ($setting->withdrawal_period) {
-                    // (Mesma lógica que já estava no seu código)
-                    // Verificar limites diários, semanais, mensais, ou anuais de saque...
-                }
-            }
-
-            if ($request->amount > $setting->max_withdrawal) {
-                return response()->json(['error' => 'Você excedeu o limite máximo permitido de: ' . $setting->max_withdrawal], 400);
-            }
-
-            if ($request->accept_terms == true) {
-                if (floatval($request->amount) > floatval(auth('api')->user()->wallet->balance_withdrawal)) {
-                    return response()->json(['error' => 'Você não tem saldo suficiente'], 400);
-                }
-
-                $data = [];
                 if ($request->type === 'pix') {
-                    $data = [
-                        'user_id' => auth('api')->user()->id,
-                        'amount' => \Helper::amountPrepare($request->amount),
-                        'type' => $request->type,
-                        'pix_key' => $request->pix_key,
-                        'pix_type' => $request->pix_type,
-                        'currency' => $request->currency,
-                        'symbol' => $request->symbol,
-                        'status' => 0,
-                    ];
+                    $rules['pix_type'] = 'required';
+                    switch ($request->pix_type) {
+                        case 'document':
+                            $rules['pix_key'] = 'required'; // Removida a validação estrita 'cpf_ou_cnpj' para evitar travamentos se a biblioteca não estiver instalada
+                            break;
+                        case 'email':
+                            $rules['pix_key'] = 'required|email';
+                            break;
+                        default:
+                            $rules['pix_key'] = 'required';
+                            break;
+                    }
+                } elseif ($request->type === 'bank') {
+                    $rules['bank_info'] = 'required';
                 }
 
-                if ($request->type === 'bank') {
-                    $data = [
-                        'user_id' => auth('api')->user()->id,
-                        'amount' => \Helper::amountPrepare($request->amount),
-                        'type' => $request->type,
-                        'bank_info' => $request->bank_info,
-                        'currency' => $request->currency,
-                        'symbol' => $request->symbol,
-                        'status' => 0,
-                    ];
+                $validator = Validator::make($request->all(), $rules);
+
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 400);
                 }
 
-                $withdrawal = Withdrawal::create($data);
+                if ($request->amount < 0) {
+                    return response()->json(['error' => 'Você tem que solicitar um valor válido.'], 400);
+                }
 
-                if ($withdrawal) {
+                if (isset($setting->max_withdrawal) && $request->amount > $setting->max_withdrawal) {
+                    return response()->json(['error' => 'Você excedeu o limite máximo permitido de: R$ ' . $setting->max_withdrawal], 400);
+                }
+
+                if ($request->accept_terms == true || $request->accept_terms == 'true' || $request->accept_terms == 1) {
+                    
                     $wallet = Wallet::where('user_id', $user->id)->first();
-                    $wallet->decrement('balance_withdrawal', floatval($request->amount));
-
-                    // Se o saque for bem-sucedido, definir utilizou_bonus_cadastro como 0
-                    $user->update(['utilizou_bonus_cadastro' => 0]);
-
-                    $admins = User::where('role_id', 0)->get();
-                    foreach ($admins as $admin) {
-                        $admin->notify(new NewWithdrawalNotification($user->name, $request->amount));
+                    
+                    if (floatval($request->amount) > floatval($wallet->balance_withdrawal)) {
+                        return response()->json(['error' => 'Você não tem saldo de saque suficiente.'], 400);
                     }
 
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'Saque realizado com sucesso',
-                    ], 200);
+                    $data = [
+                        'user_id' => $user->id,
+                        'amount' => \Helper::amountPrepare($request->amount),
+                        'type' => $request->type,
+                        'currency' => $request->currency ?? 'BRL',
+                        'symbol' => $request->symbol ?? 'R$',
+                        'status' => 0,
+                    ];
+
+                    if ($request->type === 'pix') {
+                        $data['pix_key'] = $request->pix_key;
+                        $data['pix_type'] = $request->pix_type;
+                    } elseif ($request->type === 'bank') {
+                        $data['bank_info'] = $request->bank_info;
+                    }
+
+                    $withdrawal = Withdrawal::create($data);
+
+                    if ($withdrawal) {
+                        $wallet->decrement('balance_withdrawal', floatval($request->amount));
+
+                        if ($user->utilizou_bonus_cadastro == 1) {
+                            $user->update(['utilizou_bonus_cadastro' => 0]);
+                        }
+
+                        $admins = User::where('role_id', 0)->get();
+                        foreach ($admins as $admin) {
+                            $admin->notify(new NewWithdrawalNotification($user->name, $request->amount));
+                        }
+
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Saque realizado com sucesso',
+                        ], 200);
+                    }
                 }
+
+                return response()->json(['error' => 'Você precisa aceitar os termos'], 400);
             }
 
-            return response()->json(['error' => 'Você precisa aceitar os termos'], 400);
+            return response()->json(['error' => 'Erro ao realizar o saque. Usuário não autenticado.'], 401);
+            
+        } catch (\Exception $e) {
+            Log::error('Erro ao solicitar saque: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro interno ao processar sua solicitação.'], 500);
         }
-
-        return response()->json(['error' => 'Erro ao realizar o saque'], 400);
     }
 
+    /**
+     * BLINDADO: Evita erro 500 se as colunas estiverem nulas
+     */
     public function updateBonusIfNeeded()
     {
         $userId = auth('api')->id();
@@ -198,8 +183,7 @@ class WalletController extends Controller
 
         $messages = [];
 
-        // Verificar e atualizar bônus
-        if ($wallet->balance_bonus == 0) {
+        if (isset($wallet->balance_bonus) && floatval($wallet->balance_bonus) <= 0) {
             $wallet->balance_bonus_rollover = 0;
             $wallet->save();
             $messages[] = 'Bônus zerado e rollover atualizado.';
@@ -222,10 +206,9 @@ class WalletController extends Controller
 
         $messages = [];
 
-        // Verificar e transferir saldo para saque
-        if ($wallet->balance_deposit_rollover == 0) {
+        if (isset($wallet->balance_deposit_rollover) && floatval($wallet->balance_deposit_rollover) <= 0 && floatval($wallet->balance) > 0) {
             $wallet->balance_withdrawal += $wallet->balance;
-            $wallet->balance = 0; // Zerar o saldo após a transferência
+            $wallet->balance = 0; 
             $wallet->save();
             $messages[] = 'Saldo transferido para saque com sucesso!';
         }
@@ -247,10 +230,9 @@ class WalletController extends Controller
 
         $messages = [];
 
-        // Verificar e transferir bônus para saque
-        if ($wallet->balance_bonus_rollover == 0) {
+        if (isset($wallet->balance_bonus_rollover) && floatval($wallet->balance_bonus_rollover) <= 0 && floatval($wallet->balance_bonus) > 0) {
             $wallet->balance_withdrawal += $wallet->balance_bonus;
-            $wallet->balance_bonus = 0; // Zerar o balance_bonus após a transferência
+            $wallet->balance_bonus = 0; 
             $wallet->save();
             $messages[] = 'Saldo do bônus transferido para saque com sucesso!';
         }
@@ -272,25 +254,22 @@ class WalletController extends Controller
 
         $messages = [];
 
-        // Verificar e atualizar bônus
-        if ($wallet->balance_bonus == 0) {
+        if (isset($wallet->balance_bonus) && floatval($wallet->balance_bonus) <= 0) {
             $wallet->balance_bonus_rollover = 0;
             $wallet->save();
             $messages[] = 'Bônus zerado e rollover atualizado.';
         }
 
-        // Verificar e transferir saldo para saque
-        if ($wallet->balance_deposit_rollover == 0) {
-            $wallet->balance_withdrawal += $wallet->balance;
-            $wallet->balance = 0; // Zerar o saldo após a transferência
+        if (isset($wallet->balance_deposit_rollover) && floatval($wallet->balance_deposit_rollover) <= 0 && floatval($wallet->balance) > 0) {
+            $wallet->balance_withdrawal += floatval($wallet->balance);
+            $wallet->balance = 0; 
             $wallet->save();
             $messages[] = 'Saldo transferido para saque com sucesso!';
         }
 
-        // Verificar e transferir bônus para saque
-        if ($wallet->balance_bonus_rollover == 0) {
-            $wallet->balance_withdrawal += $wallet->balance_bonus;
-            $wallet->balance_bonus = 0; // Zerar o balance_bonus após a transferência
+        if (isset($wallet->balance_bonus_rollover) && floatval($wallet->balance_bonus_rollover) <= 0 && floatval($wallet->balance_bonus) > 0) {
+            $wallet->balance_withdrawal += floatval($wallet->balance_bonus);
+            $wallet->balance_bonus = 0; 
             $wallet->save();
             $messages[] = 'Saldo do bônus transferido para saque com sucesso!';
         }
@@ -301,6 +280,4 @@ class WalletController extends Controller
 
         return response()->json(['messages' => $messages], 200);
     }
-
-
 }

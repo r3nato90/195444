@@ -4,85 +4,114 @@ namespace App\Http\Controllers\Api\Wallet;
 
 use App\Http\Controllers\Controller;
 use App\Models\Deposit;
+use App\Models\Gateway;
 use App\Traits\Gateways\SuitpayTrait;
+use App\Http\Controllers\Gateway\WishPagController;
+use App\Http\Controllers\Gateway\VersellController;
+use App\Http\Controllers\Gateway\PixupController; // <-- CAMINHO CORRIGIDO!
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DepositController extends Controller
 {
     use SuitpayTrait;
 
     /**
-     * @param Request $request
-     * @return array|false[]
+     * Retorna o histórico de depósitos do usuário
      */
+    public function index()
+    {
+        try {
+            $user = auth('api')->user();
+            if (!$user) {
+                return response()->json(['status' => false, 'error' => 'Não autorizado'], 401);
+            }
+
+            $deposits = Deposit::where('user_id', $user->id)
+                               ->orderBy('id', 'desc')
+                               ->paginate(15);
+
+            return response()->json(['status' => true, 'deposits' => $deposits], 200);
+
+        } catch (\Exception $e) {
+            Log::error("Erro em DepositController@index: " . $e->getMessage());
+            return response()->json(['status' => false, 'error' => 'Erro ao buscar histórico'], 500);
+        }
+    }
+
     public function submitPayment(Request $request)
     {
-         
-        switch ($request->gateway) {
-           
-            case 'suitpay':
-                return self::requestQrcode($request);
-            default:
-                return response()->json(['error' => 'Gateway not supported'], 400);
-        }
-    }
+        try {
+            $user = auth('api')->user();
+            if (!$user) {
+                return response()->json(['status' => false, 'error' => 'Sessão expirada. Faça login novamente.'], 200);
+            }
 
-    public function consultStatusTransactionPix(Request $request)
-    {
-        return self::consultStatusTransaction($request);
-    }
+            $userId = $user->id;
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        $userId = auth('api')->id();
+            $gatewayConfig = Gateway::first();
+            if (!$gatewayConfig || empty($gatewayConfig->default_gateway)) {
+                return response()->json(['status' => false, 'error' => 'Nenhum gateway configurado no painel admin.'], 200);
+            }
 
-        // Inicia a consulta base
-        $query = Deposit::whereUserId($userId);
+            $gatewaySelected = strtolower($gatewayConfig->default_gateway);
+            
+            $amount = floatval(str_replace(',', '.', $request->amount));
+            if ($amount <= 0) {
+                return response()->json(['status' => false, 'error' => 'Valor do depósito inválido.'], 200);
+            }
 
-        // Filtra por data se o parâmetro 'filter' estiver presente
-        if ($request->has('filter')) {
-            $filter = $request->input('filter');
+            Log::info("Processando depósito. Gateway: " . $gatewaySelected . " | Valor: " . $amount);
 
-            switch ($filter) {
-                case 'today':
-                    $startOfDay = Carbon::today();
-                    $endOfDay = Carbon::tomorrow()->subSecond();
-                    $query->whereBetween('created_at', [$startOfDay, $endOfDay]);
-                    break;
+            switch ($gatewaySelected) {
+                case 'bspay': // WishPag
+                case 'wishpag':
+                    return WishPagController::generatePix($amount, $userId);
 
-                case 'week':
-                    $startOfWeek = Carbon::now()->startOfWeek();
-                    $endOfWeek = Carbon::now()->endOfWeek();
-                    $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
-                    break;
+                case 'digitopay': // Pixup
+                case 'pixup':
+                    $pixup = new PixupController();
+                    return $pixup->generateQRCode($request);
 
-                case 'month':
-                    $startOfMonth = Carbon::now()->startOfMonth();
-                    $endOfMonth = Carbon::now()->endOfMonth();
-                    $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
-                    break;
+                case 'ezzebank': // Versell Pay
+                case 'versell':
+                    return VersellController::generatePix($amount, $userId);
 
-                case 'year':
-                    $startOfYear = Carbon::now()->startOfYear();
-                    $endOfYear = Carbon::now()->endOfYear();
-                    $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
-                    break;
+                case 'suitpay':
+                    config(['suitpay.uri' => rtrim($gatewayConfig->suitpay_uri ?? '', '/') . '/']);
+                    config(['suitpay.client_id' => $gatewayConfig->suitpay_cliente_id ?? '']);
+                    config(['suitpay.client_secret' => $gatewayConfig->suitpay_cliente_secret ?? '']);
+                    return self::requestQrcode($request);
 
                 default:
-                    // Caso o filtro não seja reconhecido, retorna todos os resultados
-                    break;
+                    return response()->json(['status' => false, 'error' => 'Gateway selecionado no admin é inválido.'], 200);
             }
+        } catch (\Throwable $e) {
+            Log::error("Erro Fatal DepositController: " . $e->getMessage() . " Linha: " . $e->getLine());
+            return response()->json([
+                'status' => false, 
+                'error' => 'Erro interno ao processar depósito. Tente novamente mais tarde.'
+            ], 200);
         }
-
-        // Pagina os resultados
-        $deposits = $query->paginate();
-
-        return response()->json(['deposits' => $deposits], 200);
     }
 
-}
+    public function consultStatus($idTransaction)
+    {
+        try {
+            $deposit = Deposit::where('payment_id', $idTransaction)
+                              ->orWhere('hash', $idTransaction)
+                              ->first();
+                              
+            if (!$deposit) {
+                return response()->json(['status' => 'not_found'], 200);
+            }
 
+            return response()->json([
+                'status' => $deposit->status == 1 ? 'paid' : 'pending',
+                'amount' => $deposit->amount
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json(['status' => false, 'error' => 'Erro ao consultar status.'], 200);
+        }
+    }
+}
