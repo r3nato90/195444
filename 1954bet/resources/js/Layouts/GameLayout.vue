@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-0 md:ml-0 mt-0 md:mt-0 mb-0 banoes max-w-[490px]">
+    <div class="ml-0 md:ml-0 mt-0 md:mt-0 mb-0 banoes max-w-[450px]">
         <slot></slot>
     </div>
 </template>

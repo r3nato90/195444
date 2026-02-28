@@ -152,7 +152,7 @@ class AuthController extends Controller
 {
     try {
         // Alterar para buscar as credenciais usando 'name' ao invés de 'email'
-        $credentials = request(['email', 'password']);
+        $credentials = request(['name', 'password']);
 
         // Tentar autenticar o usuário com base nas credenciais fornecidas
         if (!$token = auth('api')->attempt($credentials)) {

@@ -21,16 +21,6 @@ import { useAuthStore } from "@/Stores/Auth.js";
  */
 const app = createApp(App);
 
-app.directive('click-sound', {
-    mounted(el, binding) {
-      const soundPath = binding.value || '/sounds/click.mp3';
-      el.addEventListener('click', () => {
-        const audio = new Audio(soundPath);
-        audio.play();
-      });
-    }
-  });
-
 app.config.globalProperties.state = {
     platformName() {
         return "INFINITYSOFT";

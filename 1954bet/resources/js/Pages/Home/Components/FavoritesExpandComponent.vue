@@ -1,13 +1,13 @@
 <template>
   <!-- Quarto componente -->
-  <div class="scroll-container w-full max-w-[490px] mx-auto scroll-hidden pr-2 pl-2">
+  <div class="scroll-container w-full max-w-[450px] mx-auto scroll-hidden pr-2 pl-2">
 
     <!-- Influencer mode começa aqui -->
     <div v-if="isInfluencerMode && influencer_games && influencer_games.length > 0">
       <div class="w-full flex justify-between mb-1 items-center pl-2 pr-2 pt-2">
         <div class="flex items-center">
           <img src="/public/assets/images/populareshv.png" alt="Ícone" class="w-auto h-8 mr-1"/>
-          <h2 class="title-custom title-color" style="font-family: 'Helvetica', sans-serif;">{{ $t('Favoritos') }}</h2>
+          <h2 class="text-[16px] title-color" style="font-family: 'Helvetica', sans-serif;">{{ $t('Favoritos') }}</h2>
         </div>
       </div>
 
@@ -108,11 +108,5 @@ export default {
 
 body {
   font-family: 'Helvetica', sans-serif; /* Define a fonte Helvetica para todo o documento */
-}
-
-.title-custom {
-    font-family: Helvetica, sans-serif;
-    font-size: calc(min(100vw, 490px)* 0.032);
-    font-weight: bold;
 }
 </style>

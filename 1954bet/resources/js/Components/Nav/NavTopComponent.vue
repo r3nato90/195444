@@ -3,7 +3,7 @@
     <div v-if="isSidebarOpen" class="sidebar-overlay" @click="toggleSidebar"></div>
 
     <!-- Nav com background-imagens aplicadas à esquerda e à direita -->
-    <nav class="fixed navbar top-0 z-50 w-full max-w-[490px] navtop-color"
+    <nav class="fixed navbar top-0 z-50 w-full max-w-[450px] navtop-color"
          :style="{ 
             backgroundImage: `url(/storage/${setting.icon_nav_bottom_left}), url(/storage/${setting.icon_nav_bottom_right})`,
             backgroundRepeat: 'no-repeat, no-repeat',
@@ -16,7 +16,7 @@
                 
                 <!-- div 1 (Esquerda) -->
                 <div class="flex items-center justify-start py-3">
-                    <button v-click-sound @click.prevent="toggleSidebar" :class="[rotateClass, { 'rotate-180': isSidebarOpen }]" type="button" class="inline-flex items-center p-0 text-sm text-gray-500 rounded-lg">
+                    <button @click.prevent="toggleSidebar" :class="[rotateClass, { 'rotate-180': isSidebarOpen }]" type="button" class="inline-flex items-center p-0 text-sm text-gray-500 rounded-lg">
                         <span class="sr-only">Toggle sidebar</span>
                         <img class="w-8 h-8" :src="`/storage/` + setting.image_menu_nav" alt="Toggle sidebar">
                     </button>
@@ -33,14 +33,14 @@
                         <WalletBalance />
                     </div>
                     <div v-if="!isAuthenticated" class="flex items-center right-0">
-                        <button v-click-sound @click="openModal('login')" class="btn-login mr-2">{{ $t('Log in') }}</button>
-                        <button v-click-sound @click="openModal('register')" class="btn-register mr-1">{{ $t('Register') }}</button>
+                        <button @click="openModal('login')" class="btn-login mr-1">{{ $t('Log in') }}</button>
+                        <button @click="openModal('register')" class="btn-register mr-1">{{ $t('Register') }}</button>
                     </div>
                     <div v-if="isAuthenticated" class="flex items-center right-0">
                         <MakeDeposit :showMobile="false" :title="$t('Deposit')" class="btn-deposit ml-1" />
                     </div>
                     <div class="flex items-center right-0">
-                         <button v-click-sound @click="searchButtonClick" class="rounded ml-1">
+                         <button @click="searchButtonClick" class="rounded ml-1">
                             <i class="fa-regular fa-magnifying-glass text-color w-4 h-auto"></i> 
                         </button>
                     </div>
@@ -143,14 +143,6 @@ export default {
     },
   mounted() {
    const routePath = this.$route.path;
-
-   
-
-   if(!this.isAuthenticated && routePath === '/login' ){
-    console.log('rota', routePath);
-    this.$refs.modalAuth.openModal('login');
-   }
-
     if (!this.isAuthenticated && (routePath === '/register/:code?' || routePath.startsWith('/home/game'))) {
         this.$refs.modalAuth.openModal('register');
     }
@@ -224,7 +216,7 @@ export default {
         margin: 0 auto;
         border-bottom-width: solid;
         border-bottom-width: 1px;
-        border-color: var(--navtop-color-dark);
+        border-color: var(--borders-and-dividers-colors);
         transition: background-color 0.3s ease;
         transform: skewX(-30deg);
     }
@@ -289,7 +281,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px; /* Largura máxima de 450px */
+  max-width: 450px; /* Largura máxima de 450px */
   background-color: rgba(0, 0, 0, 0.5); /* Cor do overlay (preto com 50% de opacidade) */
   z-index: 49; /* Z-index menor que a sidebar (50), mas maior que o conteúdo normal */
 }

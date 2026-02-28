@@ -2,7 +2,7 @@
     <div class="relative inline-block">
         <div class="ml-1 btn inline-flex items-center">
         <!-- Botão de Depósito (abre o modal de depósito) -->
-        <button @click.prevent="goToDeposit" type="button" 
+        <button @click.prevent="toggleModalDeposit" type="button" 
                 :class="[showMobile === false ? 'md:block' : '', isFull ? 'w-full' : '']" 
                 class="ml-1 inline-flex items-center">
             {{ title }}
@@ -12,7 +12,7 @@
            <!-- Ícone do dropdown -->
            <svg 
     @click.prevent="toggleDropdown" 
-    :class="{'rotate': !dropdownOpen}" 
+    :class="{'rotate': dropdownOpen}" 
     class="w-4 h-4 ml-1 cursor-pointer transition-transform duration-300" 
     aria-hidden="true" 
     fill="none" 
@@ -26,14 +26,10 @@
           </div>
 
         <!-- Dropdown menu para "Saque" -->
-        <div v-if="dropdownOpen" @click="dropdownOpen = false" class="absolute right-0 z-10" style="top:30px;">
+        <div v-if="dropdownOpen" @click="dropdownOpen = false" class="absolute right-0 z-10">
             <div class="" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                 <a @click.prevent="goToWithdraw" class="block btn" role="menuitem">
                     {{ $t('Withdraw') }}
-                </a>
-
-                <a @click.prevent="goToDeposit"  class="block btn" role="menuitem" style="margin-top: 3px;">
-                    {{ title }}
                 </a>
             </div>
         </div>
@@ -41,7 +37,7 @@
 
     <!-- Modal de Depósito -->
     <div id="modalElDeposit" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full overflow-x-hidden overflow-y-auto md:inset-0 h-screen md:h-[calc(100%-1rem)] max-h-full rounded-lg">
-        <div class="relative w-full max-h-full rounded-lg max-w-[490px]">
+        <div class="relative w-full max-h-full rounded-lg max-w-[450px]">
             <div class="flex flex-col md:justify-between my-auto rounded-lg mt-5">
             
                 <DepositWidget />
@@ -88,11 +84,6 @@ export default {
         goToWithdraw() {
             // Redireciona para a mesma rota "profile/financas"
             this.$router.push('/profile/financas?tab=saque');
-        },
-
-        goToDeposit() {
-            // Redireciona para a mesma rota "profile/financas"
-            this.$router.push('/profile/financas?tab=deposit');
         },
     },
     mounted() {

@@ -1,45 +1,49 @@
 <template>
   <div>
     <GameLayout>
-      <div class="w-full h-full flex justify-center items-center bg-black max-w-[490px]" v-if="isLoading">
+      <!-- Tela de carregamento -->
+      <div class="w-full h-full flex justify-center items-center bg-black max-w-[450px]" :isLoading="isLoading">
         <div class="text-center">
-          <img src="/assets/images/loading.png" class="w-[50px] h-auto" alt="Carregando informações dos jogos" />
+          <img src="/public/assets/images/loading.png" class="w-[50px] h-auto" alt="Carregando informações dos jogos" />
         </div>
       </div>
 
+      <!-- Tela do jogo -->
       <div v-if="!isLoading && game" :class="{ 'w-full': modeMovie, 'lg:w-3/3': !modeMovie }" class="mx-auto relative">
         <div class="game-screen" id="game-screen">
           <fullscreen v-model="fullscreen" :page-only="pageOnly">
-            
+            <!-- Botão "Quitar" -->
             <div class="absolute top-4 left-4 z-10 flex flex-col items-center">
               <router-link to="/" class="mr-2">
-                <img src="/assets/images/lefts.png" alt="Voltar para Home" class="w-12 h-12 cursor-pointer" />
+                <img src="/public/storage/quitar.png" alt="Voltar para Home" class="w-12 h-12 cursor-pointer" />
               </router-link>
 
-              <button @click="toggleFullscreen" class="w-auto h-auto mr-2 mt-1 bg-black bg-opacity-50 p-2 rounded-full">
-                <i v-if="fullscreen" class="fa-light fa-arrows-minimize fa-xl" style="color: #ffffff;"></i>
-                <i v-else class="fa-light fa-arrows-maximize fa-xl" style="color: #ffffff;"></i>
-              </button>
+             <!-- Botão de ativar/desativar tela cheia -->
+<button @click="toggleFullscreen" class="w-auto h-auto mr-2 mt-1">
+  <i v-if="fullscreen" class="fa-light fa-arrows-minimize fa-xl" style="color: #ffffff;"></i>
+  <i v-else class="fa-light fa-arrows-maximize fa-xl" style="color: #ffffff;"></i>
+</button>
+
             </div>
 
-            <div v-if="showButton || isExternalProvider(game.provider?.code)" class="game-full fullscreen-wrapper flex flex-col items-center justify-center bg-gray-900">
-                <p class="text-white mb-4 text-center px-4">Seu navegador bloqueia cookies em iframes ou o provedor exige aba inteira.</p>
-                <button @click.prevent="openModal(gameUrl)" type="button" class="px-6 py-3 rounded-md text-sm font-medium text-black focus:outline-none bg-white hover:bg-gray-200 transition">
-                  🎮 CLIQUE AQUI PARA JOGAR
-                </button>
+            <!-- Exibir o conteúdo do iframe ou botão iniciar -->
+            <div v-if="showButton && game.game_type === 'live' && game.distribution === 'evergame'"
+              class="game-full fullscreen-wrapper flex items-center justify-center">
+              <button @click.prevent="openModal(gameUrl)" type="button" class="text-sm font-medium text-color focus:outline-none bg-white">
+                Clique para começar
+              </button>
             </div>
-            
-            <iframe v-else :src="gameUrl" class="game-full fullscreen-wrapper border-none" allowfullscreen></iframe>
-          
+            <iframe v-else :src="gameUrl" class="game-full fullscreen-wrapper"></iframe>
           </fullscreen>
         </div>
       </div>
 
+      <!-- Mensagem de manutenção -->
       <div v-if="undermaintenance" class="flex flex-col max-h-[100vh] items-center justify-center text-center py-24">
         <h1 class="text-2xl text-color mb-4">Jogo Em Manutenção, volte mais tarde!</h1>
         <img :src="`/assets/images/manutencao.png`" alt="" width="400">
         <div class="fixed bottom-16 flex items-center justify-center w-full p-4 h-20 max-w-[400px]">
-          <router-link to="/" class="absolute rounded-lg w-auto py-4 pr-4 pl-4 items-center background-bottom-navigation text-white">
+          <router-link to="/" class="absolute rounded-lg w-auto py-4 pr-4 pl-4 items-center background-bottom-navigation">
             Voltar para Tela inicial
           </router-link>
         </div>
@@ -55,7 +59,11 @@ import { component } from 'vue-fullscreen';
 import LoadingComponent from "@/Components/UI/LoadingComponent.vue";
 import GameLayout from "@/Layouts/GameLayout.vue";
 import HttpApi from "@/Services/HttpApi.js";
-import { toRefs, reactive } from 'vue';
+import {
+  defineComponent,
+  toRefs,
+  reactive,
+} from 'vue';
 
 export default {
   components: {
@@ -75,6 +83,7 @@ export default {
       tabs: null,
       undermaintenance: false,
       showButton: false,
+      showFullscreenButton: false, // Mostrar botão de fullscreen se for bloqueado
     };
   },
   setup() {
@@ -84,56 +93,70 @@ export default {
       pageOnly: false,
     });
 
-    function toggleFullscreen() {
-      const elem = document.getElementById("game-screen");
-      if (!elem) return;
+  // Função para ativar ou desativar a tela cheia
+function toggleFullscreen() {
+  const elem = document.getElementById("game-screen");
 
-      if (!state.fullscreen) {
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen().then(() => state.fullscreen = true).catch(err => console.log(err));
-        } else if (elem.webkitRequestFullscreen) {
-          elem.webkitRequestFullscreen();
-          state.fullscreen = true;
-        } else if (elem.msRequestFullscreen) {
-          elem.msRequestFullscreen();
-          state.fullscreen = true;
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().then(() => state.fullscreen = false).catch(err => console.log(err));
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-          state.fullscreen = false;
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-          state.fullscreen = false;
-        }
-      }
+  if (!state.fullscreen) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen().then(() => {
+        state.fullscreen = true;
+      }).catch(err => {
+        console.log(`Erro ao tentar ativar o modo de tela cheia: ${err.message}`);
+      });
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else {
+      console.log("Fullscreen não suportado pelo navegador.");
     }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen().then(() => {
+        state.fullscreen = false;
+      }).catch(err => {
+        console.log(`Erro ao sair do modo de tela cheia: ${err.message}`);
+      });
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  }
+}
 
-    return {
-      ...toRefs(state),
-      toggleFullscreen,
-      router
-    };
+   return {
+  ...toRefs(state),
+  toggleFullscreen, // Substitua pelo método atualizado
+  router
+};
+
   },
   mounted() {
+    // Tentar ativar a tela cheia automaticamente
     setTimeout(() => {
-      // Remover a chamada automática pois navegadores bloqueiam fullscreen sem clique do usuário
-      // this.activateFullscreen(); 
-    }, 500);
+      this.activateFullscreen();
+    }, 500); // Espera 0,5 segundos após o carregamento
 
     const userAgent = navigator.userAgent.toLowerCase();
     const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome');
-    const isSamsungInternet = userAgent.includes('samsung') && userAgent.includes('safari');
+    const isSamsungInternet = userAgent.includes('samsung') && userAgent.includes('safari') && !userAgent.includes('chrome');
     const isIOS = userAgent.includes('iphone') || userAgent.includes('ipad');
 
-    // Força abertura via botão se o navegador for Safari/iOS
     if (isSafari || isSamsungInternet || isIOS) {
       this.showButton = true;
     }
   },
   computed: {
+    userData() {
+      const authStore = useAuthStore();
+      return authStore.user;
+    },
     isAuthenticated() {
       const authStore = useAuthStore();
       return authStore.isAuth;
@@ -141,39 +164,57 @@ export default {
   },
   methods: {
     openModal(gameUrl) {
-      window.open(gameUrl, '_self'); // '_self' mantém a navegação na mesma aba se possível
+      window.open(gameUrl);
     },
-    
-    // Método para forçar certos provedores a abrirem via botão em vez de iFrame
-    isExternalProvider(providerCode) {
-      if(!providerCode) return false;
-      const codes = ['maxapi', 'pgclone']; // Adicione aqui provedores que exigem abertura fora de iframe
-      return codes.includes(providerCode.toLowerCase());
-    },
-
     getGame: async function () {
       const _this = this;
 
-      return await HttpApi.post('games/play/' + _this.gameId) // <-- A ROTA PODE PRECISAR DE AJUSTE AQUI. Antes era get('games/single/')..
+      return await HttpApi.get('games/single/' + _this.gameId)
         .then(async response => {
-          
-          if(response.data.status === false || response.data.error) {
-            _this.isLoading = false;
-            _this.undermaintenance = true;
-            return;
+          if (response.data?.action === 'deposit') {
+            _this.$nextTick(() => {
+              _this.router.push({ name: 'profileDeposit' });
+            });
           }
 
+          const game = response.data.game;
+          _this.game = game;
+
           _this.gameUrl = response.data.gameUrl;
-          _this.game = { provider: { code: 'pgclone' }}; // Simulando objeto caso a API de play não retorne o obj game completo
+          _this.token = response.data.token;
           _this.isLoading = false;
 
+          _this.$nextTick(() => {
+            _this.loadingTab();
+          });
         })
         .catch(error => {
-          console.error(error);
           _this.isLoading = false;
           _this.undermaintenance = true;
         });
     },
+    toggleFavorite: function () {
+      const _this = this;
+      return HttpApi.post('games/favorite/' + _this.game.id, {})
+        .then(response => {
+          _this.getGame();
+          _this.isLoading = false;
+        })
+        .catch(error => {
+          _this.isLoading = false;
+        });
+    },
+    toggleLike: async function () {
+      const _this = this;
+      return await HttpApi.post('games/like/' + _this.game.id, {})
+        .then(async response => {
+          await _this.getGame();
+          _this.isLoading = false;
+        })
+        .catch(error => {
+          _this.isLoading = false;
+        });
+    }
   },
   async created() {
     if (this.isAuthenticated) {
@@ -197,8 +238,6 @@ export default {
   position: fixed;
   width: 100%;
   min-height: 100vh;
-  z-index: 50;
-  background-color: #000;
 }
 
 .fullscreen-overlay {
@@ -216,7 +255,6 @@ export default {
 
 .game-full {
   width: 100%;
-  height: 100vh;
-  border: none;
+  min-height: 100vh;
 }
 </style>

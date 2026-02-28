@@ -1,6 +1,6 @@
 <template>
   <ConviteLayout>
-    <div class="w-full max-w-[490px] mt-24 p-4">
+    <div class="w-full max-w-[450px] mt-24 p-4">
       <div class="grid grid-cols-3 gap-2">
         <div class="flex flex-col items-center py-4 rounded-lg background-bottom-navigation">
           <p class="text-[12px]">{{ $t('Total winnings') }}</p>

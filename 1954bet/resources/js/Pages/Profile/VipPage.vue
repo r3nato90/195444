@@ -6,7 +6,7 @@
             </div>
         </LoadingComponent>
 
-        <div v-if="!isLoading" class="w-full btese max-w-[490px] mx-auto pl-2 pr-2 custom-font">
+        <div v-if="!isLoading" class="w-full btese max-w-[450px] mx-auto pl-2 pr-2 custom-font">
             <div>
                 <div class="level-actual relative background-bottom-navigation rounded-lg">
                     <div class="absolute top-0 left-0 text-color px-3 py-2 site-menu-item rounded-tl-lg rounded-br-lg">

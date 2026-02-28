@@ -23,106 +23,208 @@ class GamesKey extends Model
      * @var array
      */
     protected $fillable = [
-        // API PRAGMATIC 40 Jogos
-        'apipragmatic40_url',
-        'apipragmatic40_secret',
-        'apipragmatic40_code',
-        'apipragmatic40_token',
-        
-        // Games2 Api
-        'games2_agent_code',
-        'games2_agent_token',
-        'games2_agent_secret_key',
-        'games2_api_endpoint',
 
-        // wizze pro
-        'wizze_agent_code',
-        'wizze_agent_token',
-        'wizze_agent_secret',
-        'wizze_api_endpoint',
-
-        // PlayFiver
-        'playfiver_url',
-        'playfiver_rtp',
+        // Play Fiver
         'playfiver_secret',
         'playfiver_code',
         'playfiver_token',
-        'playfiver_is_enable', // <-- Novo campo de ativação
 
-        // Colunas usadas para PGClone (mapeadas)
-        'play_gaming_base_url',
-        'play_gaming_agent_code',
-        'play_gaming_agent_token',
-        'play_gaming_agent_secret',
-        'pgclone_is_enable', // <-- Novo campo de ativação
+        // PlayConnect
+        'playconnect_code',
+        'playconnect_token',
+        'playconnect_secret_key',
 
-        // Colunas usadas para MAX API GAMES (mapeadas)
-        'evergame_base_url',
+        'merchant_url',
+        'merchant_id',
+        'merchant_key',
+
+        /// infinity
+        'pig_agent_code',
+        'pig_agent_token',
+        'pig_agent_secret',
+
+        /// EverGame
         'evergame_agent_code',
         'evergame_agent_token',
-        'evergame_agent_secret',
-        'maxapi_is_enable', // <-- Novo campo de ativação
+        'evergame_api_endpoint',
+
+        /// PARALEL EVERGAME
+        'evergame_agent_token2',
+        'evergame_secret_key2',
+        'evergame_api_endpoint2',
+
+        /// WorldSlot
+        'worldslot_agent_code',
+        'worldslot_agent_token',
+        'worldslot_agent_secret_key',
+        'worldslot_api_endpoint',
+
+        /// Fivers
+        'agent_code',
+        'agent_token',
+        'agent_secret_key',
+        'api_endpoint',
+
+        /// parceira
+        'agent_code_1',
+        'agent_token_1',
+        'agent_secret_key_1',
+        'api_endpoint_1',
+
+        /// Drakon
+        'drakon_agent_code',
+        'drakon_agent_token',
+        'drakon_agent_secret',
+
+        /// Play gaming
+        'play_gaming_hall',
+        'play_gaming_key',
+        'play_gaming_login',
+        
+         
+        'pgoneplayigaming_endpoint',
+        'pgoneplayigaming_secret',
+        'pgoneplayigaming_code',
+        'pgoneplayigaming_token',
+        //16
     ];
 
     protected $hidden = array('updated_at');
 
     /**
-     * ==========================================
-     * MAPEAMENTO VIRTUAL: PGCLONE (Usa play_gaming)
-     * ==========================================
+     * Get the user's first name.
      */
-    protected function pgcloneBaseUrl(): Attribute
+    protected function pigAgentCode(): Attribute
     {
-        return Attribute::make(get: fn() => $this->play_gaming_base_url ?? 'https://api.pgclone.com');
-    }
-
-    protected function pgcloneAgentCode(): Attribute
-    {
-        return Attribute::make(get: fn() => env('APP_DEMO') ? '*********************' : $this->play_gaming_agent_code);
-    }
-
-    protected function pgcloneAgentToken(): Attribute
-    {
-        return Attribute::make(get: fn() => env('APP_DEMO') ? '*********************' : $this->play_gaming_agent_token);
-    }
-
-    protected function pgcloneAgentSecret(): Attribute
-    {
-        return Attribute::make(get: fn() => env('APP_DEMO') ? '*********************' : $this->play_gaming_agent_secret);
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
     }
 
     /**
-     * ==========================================
-     * MAPEAMENTO VIRTUAL: MAX API GAMES (Usa evergame)
-     * ==========================================
+     * Get the user's first name.
      */
-    protected function maxapiBaseUrl(): Attribute
+    protected function pigAgentToken(): Attribute
     {
-        return Attribute::make(get: fn() => $this->evergame_base_url ?? 'https://maxapigames.com/api/v2');
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
     }
 
-    protected function maxapiAgentSecret(): Attribute
+    /**
+     * Get the user's first name.
+     */
+    protected function pigAgentSecret(): Attribute
     {
-        return Attribute::make(get: fn() => env('APP_DEMO') ? '*********************' : $this->evergame_agent_secret);
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
     }
+
+
+
+
+
+    protected function drakonAgentCode(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function drakonAgentToken(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function drakonAgentSecret(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+
+
+
+
 
 
     /**
-     * ==========================================
-     * ACCESSORS ORIGINAIS MANTIDOS
-     * ==========================================
+     * Get the user's first name.
      */
-    protected function pigAgentCode(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function pigAgentToken(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function pigAgentSecret(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function drakonAgentCode(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function drakonAgentToken(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function drakonAgentSecret(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function merchantId(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function merchantKey(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function worldslotAgentCode(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function worldslotAgentToken(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function worldslotAgentSecretKey(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function evergameAgentCode(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
-    protected function evergameAgentToken(): Attribute { return Attribute::make(get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value); }
+    protected function merchantId(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function merchantKey(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+    /**
+     * Get the user's first name.
+     */
+    protected function worldslotAgentCode(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function worldslotAgentToken(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function worldslotAgentSecretKey(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function evergameAgentCode(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function evergameAgentToken(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
 }

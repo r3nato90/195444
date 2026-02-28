@@ -1,5 +1,5 @@
 <template>
-        <div class="w-full max-w-[490px] pl-2 pr-2 mbtrs fixed">
+        <div class="w-full max-w-[450px] pl-2 pr-2 mbtrs fixed">
             <div class="flex justify-center items-between items-center p-1 w-full">
                 <span class="ml-1 mr-1 custom-font-bonus text-color">Recargas acumuladas</span>
                 <span class="ml-1 mr-1 custom-font-bonus text-bold text-color">{{ recargasCumulativas || 0 }}</span>

@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-[490px] pl-2 pr-2">
+    <div class="w-full max-w-[450px] pl-2 pr-2">
       <div class="flex w-full">
         <!-- Seção do botão de navegação -->
         <aside class="2x1:w-1/5 md:w-1/5 p-0 bg-transparent sticky top-0">
@@ -136,7 +136,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 55;
   background-color: rgba(0, 0, 0, 0.616);
 }

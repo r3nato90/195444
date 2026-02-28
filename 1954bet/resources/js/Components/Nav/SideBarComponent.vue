@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full max-w-[490px]">
+    <div class="w-full max-w-[450px]">
   <div id="content-wrapper"  @click="closeSidebar">
   
  <aside v-if="sidebar" :class="['translate-x-0']" class="fixed top-[55px] z-50 bane h-screen transition-transform -translate-x-full sm:translate-x-0 sidebar-color custom-side-shadow" aria-label="Sidebar">
@@ -261,7 +261,7 @@ export default {
 @media only screen and (max-width: 450px) {
   .bane {
    width: 40%; /* Largura de 45% de 450px */
-  max-width: 490px; /* Largura máxima de 450px */
+  max-width: 450px; /* Largura máxima de 450px */
   }
 }
   

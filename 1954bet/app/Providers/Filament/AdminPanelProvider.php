@@ -9,7 +9,8 @@ use App\Filament\Admin\Pages\GamesKeyPage;
 use App\Filament\Admin\Pages\GatewayPage;
 use App\Filament\Admin\Pages\LayoutCssCustom;
 use App\Filament\Admin\Pages\SettingMailPage;
-use App\Filament\Admin\Pages\SettingSpin;
+use App\Filament\Admin\Pages\SelectThemePage;
+//use App\Filament\Admin\Pages\SettingSpin;
 use App\Filament\Admin\Pages\SuitPayPaymentPage;
 use App\Filament\Admin\Resources\AffiliateWithdrawResource;
 use App\Filament\Admin\Resources\AffiliateInfoResource;
@@ -21,9 +22,8 @@ use App\Filament\Admin\Resources\PlataEventosResource;
 use App\Filament\Admin\Resources\GGRGamesDrakonResource;
 use App\Filament\Admin\Resources\GGRGamesResource;
 use App\Filament\Admin\Resources\GGRGamesFiverResource;
-use App\Filament\Admin\Resources\GGRGamesPlayFiverResource;
 use App\Filament\Admin\Resources\GGRGamesWorldSlotResource;
-use App\Filament\Admin\Resources\MissionResource;
+//use App\Filament\Admin\Resources\MissionResource;
 use App\Filament\Admin\Resources\MissionDepositResource;
 use App\Filament\Admin\Resources\MusicResource;
 use App\Filament\Admin\Resources\OrderResource;
@@ -40,7 +40,6 @@ use App\Filament\Admin\Resources\AproveWithdrawalResource;
 use App\Filament\Admin\Resources\AffiliateHistoryResource;
 use App\Filament\Admin\Resources\AproveSaveSettingResource;
 use App\Filament\Admin\Resources\AccountWithdrawResource;
-
 use App\Filament\Admin\Resources\RoleResource;
 use App\Filament\Admin\Resources\PermissionResource;
 use App\Http\Middleware\CheckAdmin;
@@ -74,7 +73,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path(env('ADMIN_PATH', 'dash'))
+            ->path('dash')
             ->login()
             ->colors([
                 'danger' => Color::Red,
@@ -116,13 +115,12 @@ class AdminPanelProvider extends PanelProvider
                                 ->url(fn(): string => SettingResource::getUrl())
                                 ->isActiveWhen(fn() => request()->routeIs('filament.pages.settings'))
                                 ->visible(fn(): bool => auth()->user()->hasRole('admin')),
-
-                            NavigationItem::make('setting-spin')
-                                ->icon('heroicon-o-cog-6-tooth')
-                                 ->label(fn(): string => 'Definições do Spin')
-                                ->url(fn(): string => SettingSpin::getUrl())
-                                ->isActiveWhen(fn() => request()->routeIs('filament.pages.setting-spin'))
-                                ->visible(fn(): bool => auth()->user()->hasRole('admin')),
+                            // NavigationItem::make('setting-spin')
+                            //     ->icon('heroicon-o-cog-6-tooth')
+                            //      ->label(fn(): string => 'Definições do Spin')
+                            //     ->url(fn(): string => SettingSpin::getUrl())
+                            //     ->isActiveWhen(fn() => request()->routeIs('filament.pages.setting-spin'))
+                            //     ->visible(fn(): bool => auth()->user()->hasRole('admin')),
     
 
                             NavigationItem::make('games-key')
@@ -132,18 +130,18 @@ class AdminPanelProvider extends PanelProvider
                                 ->isActiveWhen(fn() => request()->routeIs('filament.pages.games-key-page'))
                                 ->visible(fn(): bool => auth()->user()->hasRole('admin')),
 
+                             NavigationItem::make('gateway')
+                                ->icon('heroicon-o-cog-6-tooth')
+                                ->label(fn(): string => 'Gateway de Pagamentos')
+                                ->url(fn(): string => GatewayPage::getUrl())
+                                ->isActiveWhen(fn() => request()->routeIs('filament.pages.gateway-page'))
+                                ->visible(fn(): bool => auth()->user()->hasRole('admin')),
+
                             NavigationItem::make('setting-mail')
                                 ->icon('heroicon-o-cog-6-tooth')
                                 ->label(fn(): string => 'Definições de Email')
                                 ->url(fn(): string => SettingMailPage::getUrl())
                                 ->isActiveWhen(fn() => request()->routeIs('filament.pages.setting-mail-page'))
-                                ->visible(fn(): bool => auth()->user()->hasRole('admin')),
-
-                            NavigationItem::make('withdraw_affiliates')
-                                ->icon('heroicon-o-banknotes')
-                                ->label(fn(): string => 'Saques de Afiliados')
-                                ->url(fn(): string => AffiliateWithdrawResource::getUrl())
-                                ->isActiveWhen(fn() => request()->routeIs('filament.admin.resources.sub-affiliates.index'))
                                 ->visible(fn(): bool => auth()->user()->hasRole('admin')),
 
                             ...AproveWithdrawalResource::getNavigationItems(),
@@ -159,7 +157,6 @@ class AdminPanelProvider extends PanelProvider
                             ...GGRGamesWorldSlotResource::getNavigationItems(),
                             ...GGRGamesDrakonResource::getNavigationItems(),
                             ...GGRGamesFiverResource::getNavigationItems(),
-                            ...GGRGamesPlayFiverResource::getNavigationItems(),
                            
                         ])
                     : NavigationGroup::make()
@@ -167,12 +164,6 @@ class AdminPanelProvider extends PanelProvider
                     auth()->user()->hasRole('admin') ?
                     NavigationGroup::make('Pagamentos, Usúarios e +')
                         ->items([
-                            NavigationItem::make('gateway')
-                                ->icon('heroicon-o-cog-6-tooth')
-                                ->label(fn(): string => 'Gateway de Pagamentos')
-                                ->url(fn(): string => GatewayPage::getUrl())
-                                ->isActiveWhen(fn() => request()->routeIs('filament.pages.gateway-page'))
-                                ->visible(fn(): bool => auth()->user()->hasRole('admin')),
 
                             NavigationItem::make('suitpay-pagamentos')
                                 ->icon('heroicon-o-currency-dollar')
@@ -185,6 +176,7 @@ class AdminPanelProvider extends PanelProvider
                             ...WalletResource::getNavigationItems(),
                             ...DepositResource::getNavigationItems(),
                             ...WithdrawalResource::getNavigationItems(),
+                            ...AffiliateWithdrawResource::getNavigationItems(),
                             ...AccountWithdrawResource::getNavigationItems(),
                             ...SenhaSaqueResource::getNavigationItems(),
                             ...AffiliateInfoResource::getNavigationItems(),
@@ -227,6 +219,13 @@ class AdminPanelProvider extends PanelProvider
                                 ->url(fn(): string => LayoutCssCustom::getUrl())
                                 ->isActiveWhen(fn() => request()->routeIs('filament.pages.layout-css-custom'))
                                 ->visible(fn(): bool => auth()->user()->hasRole('admin')),
+                            
+                            NavigationItem::make('Selecionar Tema')
+                                ->icon('heroicon-o-paint-brush')
+                                ->label('TEMAS DA PLATAFORMA')
+                                ->url(fn(): string => SelectThemePage::getUrl())
+                                ->isActiveWhen(fn () => request()->routeIs('filament.admin.pages.select-theme.*'))
+                                ->visible(fn(): bool => auth()->user()->hasRole('admin')),
 
                              ...MusicResource::getNavigationItems(),
                         ])
@@ -244,7 +243,7 @@ class AdminPanelProvider extends PanelProvider
                                     'filament.admin.resources.roles.view',
                                     'filament.admin.resources.roles.edit',
                                 ]))
-                                ->url(fn(): string => '/'.env('ADMIN_PATH', 'ad-min-can-admin').'/roles'),
+                                ->url(fn(): string => 'roles'),
 
                             NavigationItem::make(__('filament-spatie-roles-permissions::filament-spatie.section.permission'))
                                 ->icon('heroicon-o-lock-closed')
@@ -254,7 +253,7 @@ class AdminPanelProvider extends PanelProvider
                                     'filament.admin.resources.permissions.view',
                                     'filament.admin.resources.permissions.edit',
                                 ]))
-                                ->url(fn(): string => '/'.env('ADMIN_PATH', 'ad-min-can-admin').'/permissions')
+                                ->url(fn(): string => 'permissions')
                         ])
                     : NavigationGroup::make()
                     ,

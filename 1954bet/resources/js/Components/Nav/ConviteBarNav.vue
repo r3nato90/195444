@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed background-bottom-navigation top-0 z-50 p-2 bordas w-full max-w-[490px]">
+  <nav class="fixed background-bottom-navigation top-0 z-50 p-2 bordas w-full max-w-[450px]">
     <div class="container mx-auto flex justify-between items-center">
       <button @click="$router.push('/')" class="back-button ml-2" style="width: 12px; height: auto;">
         <img :src="`/storage/` + setting.icon_wt_10" alt="Home" class="home-icon" style="width: 10px; height: auto;">

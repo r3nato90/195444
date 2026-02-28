@@ -1,5 +1,5 @@
 <template>
-    <div class="header-title flex justify-between max-w-[490px]">
+    <div class="header-title flex justify-between max-w-[450px]">
         <h1 class="mb-4 text-3xl leading-none  text-gray-900 md:text-3xl lg:text-3xl dark:text-white">
             <slot name="header"></slot>
         </h1>

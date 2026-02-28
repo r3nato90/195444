@@ -8,8 +8,6 @@ use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TextArea;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -71,345 +69,6 @@ class LayoutCssCustom extends Page implements HasForms
         return $data;
     }
 
-
-    protected $skins = [
-        'black_yellow' => [
-            'name' => 'Grafite com Amarelo',
-            'colors' => [
-                'primary_color' => '#f7f7f7',
-                'title_color' => '#ffffff',
-                'text_color' => '#ffffff',
-                'sub_text_color' => '#ffffff',
-                'placeholder_color' => '#ffffff',
-                'background_color_cassino' => '#3d4145',
-                'background_base' => '#93979d',
-                'background_base_dark' => '#93979d',
-                'carousel_banners' => '#000000',
-                'carousel_banners_dark' => '#000000',
-                'sidebar_color' => '#46494e',
-                'sidebar_color_dark' => '#46494e',
-                'navtop_color' => '#33363b',
-                'navtop_color_dark' => '#33363b',
-                'side_menu' => '#61646b',
-                'side_menu_dark' => '#61646b',
-                'footer_color' => '#33363b',
-                'footer_color_dark' => '#33363b',
-                'search_border_color' => '#33363b',
-                'Border_bottons_and_selected' => '#f4d142',
-                'background_bottom_navigation' => '#33363b',
-                'background_bottom_navigation_dark' => '#33363b',
-                'borders_and_dividers_colors' => '#4e5359',
-                'search_back' => '#4e5359',
-                'color_bt_1' => '#3E95FE',
-                'color_bt_2' => '#F45C4E',
-                'color_bt_3' => '#ca50f3',
-                'color_bt_4' => '#f4d142',
-                'value_color_jackpot' => '#fefe93',
-                'value_wallet_navtop' => '#f4d142',
-                'bonus_color_dep' => '#f4d142',
-                'colors_deposit_value' => '#f4d142',
-                'color_players' => '#ffffff',
-                'placeholder_background' => '#33363b',
-                'card_transaction' => '#46494e',
-                'back_sub_color' => '#3d4145',
-                'item_sub_color' => '#000000',
-                'text_sub_color' => '#ffffff',
-                'title_sub_color' => '#ffffff',
-                'botao_deposito_background_nav' => '#f4d142',
-                'botao_deposito_text_nav' => '#000000',
-                'botao_login_background_nav' => '#f4d142',
-                'botao_login_text_nav' => '#000000',
-                'botao_registro_text_nav' => '#ffffff',
-                'botao_login_background_modal' => '#f4d142',
-                'botao_login_text_modal' => '#000000',
-                'botao_registro_background_modal' => '#f4d142',
-                'botao_registro_text_modal' => '#000000',
-                'botao_registro_border_nav' => '#ffffff',
-                'botao_login_border_nav' => '',
-                'botao_deposito_border_nav' => '',
-                'botao_deposito_text_dep' => '#000000',
-                'botao_deposito_background_dep' => '#f4d142',
-                'botao_deposito_border_dep' => '#f4d142',
-                'botao_deposito_text_saq' => '#ffffff',
-                'botao_deposito_border_saq' => '#010463',
-                'background_color_category' => '#33363b',
-                'background_color_jackpot' => '#33363b',
-                'navb_icon_color' => '#f4d142',
-            ]
-        ],
-        'black_green' => [
-            'name' => 'Grafite com Verde',
-            'colors' => [
-                'primary_color' => '#f7f7f7',
-                'title_color' => '#ffffff',
-                'text_color' => '#ffffff',
-                'sub_text_color' => '#ffffff',
-                'placeholder_color' => '#ffffff',
-                'background_color_cassino' => '#3d4145',
-                'background_base' => '#93979d',
-                'background_base_dark' => '#93979d',
-                'carousel_banners' => '#000000',
-                'carousel_banners_dark' => '#000000',
-                'sidebar_color' => '#46494e',
-                'sidebar_color_dark' => '#46494e',
-                'navtop_color' => '#33363b',
-                'navtop_color_dark' => '#33363b',
-                'side_menu' => '#61646b',
-                'side_menu_dark' => '#61646b',
-                'footer_color' => '#33363b',
-                'footer_color_dark' => '#33363b',
-                'search_border_color' => '#33363b',
-                'Border_bottons_and_selected' => '#38e040',
-                'background_bottom_navigation' => '#33363b',
-                'background_bottom_navigation_dark' => '#33363b',
-                'borders_and_dividers_colors' => '#4e5359',
-                'search_back' => '#4e5359',
-                'color_bt_1' => '#3E95FE',
-                'color_bt_2' => '#F45C4E',
-                'color_bt_3' => '#ca50f3',
-                'color_bt_4' => '#38e040',
-                'value_color_jackpot' => '#fefe93',
-                'value_wallet_navtop' => '#38e040',
-                'bonus_color_dep' => '#38e040',
-                'colors_deposit_value' => '#38e040',
-                'color_players' => '#ffffff',
-                'placeholder_background' => '#33363b',
-                'card_transaction' => '#46494e',
-                'back_sub_color' => '#3d4145',
-                'item_sub_color' => '#000000',
-                'text_sub_color' => '#ffffff',
-                'title_sub_color' => '#ffffff',
-                'botao_deposito_background_nav' => '#38e040',
-                'botao_deposito_text_nav' => '#000000',
-                'botao_login_background_nav' => '#38e040',
-                'botao_login_text_nav' => '#000000',
-                'botao_registro_text_nav' => '#ffffff',
-                'botao_login_background_modal' => '#38e040',
-                'botao_login_text_modal' => '#000000',
-                'botao_registro_background_modal' => '#38e040',
-                'botao_registro_text_modal' => '#000000',
-                'botao_registro_border_nav' => '#ffffff',
-                'botao_login_border_nav' => '',
-                'botao_deposito_border_nav' => '',
-                'botao_deposito_text_dep' => '#000000',
-                'botao_deposito_background_dep' => '#38e040',
-                'botao_deposito_border_dep' => '#38e040',
-                'botao_deposito_text_saq' => '#ffffff',
-                'botao_deposito_border_saq' => '#010463',
-                'background_color_category' => '#33363b',
-                'background_color_jackpot' => '#33363b',
-                'navb_icon_color' => '#38e040',
-            ]
-        ],
-        'blue' => [
-            'name' => 'Azul',
-            'colors' => [
-                'primary_color' => '#f7f7f7',
-                'title_color' => '#ffffff',
-                'text_color' => '#ffffff',
-                'sub_text_color' => '#ffffff',
-                'placeholder_color' => '#ffffff',
-                'background_color_cassino' => '#3187f0',
-                'background_base' => '#5e97e2',
-                'background_base_dark' => '#5e97e2',
-                'carousel_banners' => '#3187f0',
-                'carousel_banners_dark' => '#3187f0',
-                'sidebar_color' => '#1a6ad5',
-                'sidebar_color_dark' => '#1a6ad5',
-                'navtop_color' => '#025dd4',
-                'navtop_color_dark' => '#025dd4',
-                'side_menu' => '#2c7be4',
-                'side_menu_dark' => '#2c7be4',
-                'footer_color' => '#025dd4',
-                'footer_color_dark' => '#025dd4',
-                'search_border_color' => '#151d29',
-                'Border_bottons_and_selected' => '#f4d142',
-                'background_bottom_navigation' => '#025dd4',
-                'background_bottom_navigation_dark' => '#025dd4',
-                'borders_and_dividers_colors' => '#3187f0',
-                'search_back' => '#025dd4',
-                'color_bt_1' => '#3E95FE',
-                'color_bt_2' => '#F45C4E',
-                'color_bt_3' => '#ca50f3',
-                'color_bt_4' => '#fbaf01',
-                'value_color_jackpot' => '#fefe93',
-                'value_wallet_navtop' => '#f4d142',
-                'bonus_color_dep' => '#f4d142',
-                'colors_deposit_value' => '#f4d142',
-                'color_players' => '#ffffff',
-                'placeholder_background' => '#025dd4',
-                'card_transaction' => '#3187f0',
-                'back_sub_color' => '#3187f0',
-                'item_sub_color' => '#025dd4',
-                'text_sub_color' => '#ffffff',
-                'title_sub_color' => '#ffffff',
-                'botao_deposito_background_nav' => '#eab700',
-                'botao_deposito_text_nav' => '#000000',
-                'botao_login_background_nav' => '#f4d142',
-                'botao_login_text_nav' => '#000000',
-                'botao_registro_text_nav' => '#ffffff',
-                'botao_login_background_modal' => '#f4d142',
-                'botao_login_text_modal' => '#000000',
-                'botao_registro_background_modal' => '#f4d142',
-                'botao_registro_text_modal' => '#000000',
-                'botao_registro_border_nav' => '#ffffff',
-                'botao_login_border_nav' => '#',
-                'botao_deposito_border_nav' => '#',
-                'botao_deposito_text_dep' => '#000000',
-                'botao_deposito_background_dep' => '#f4d142',
-                'botao_deposito_border_dep' => '#f4d142',
-                'botao_deposito_text_saq' => '#ffffff',
-                'botao_deposito_border_saq' => '#010463',
-                'background_color_category' => '#025dd4',
-                'background_color_jackpot' => '#025dd4',
-                'navb_icon_color' => '#ffffff',
-            ]
-        ],
-        'purple' => [
-            'name' => 'Roxo',
-            'colors' => [
-                'primary_color' => '#f7f7f7',
-                'title_color' => '#ffffff',
-                'text_color' => '#ffffff',
-                'sub_text_color' => '#ffffff',
-                'placeholder_color' => '#ffffff',
-                'background_color_cassino' => '#9431f0',
-                'background_base' => '#af5ee2',
-                'background_base_dark' => '#af5ee2',
-                'carousel_banners' => '#a731f0',
-                'carousel_banners_dark' => '#a731f0',
-                'sidebar_color' => '#7b1ad5',
-                'sidebar_color_dark' => '#7b1ad5',
-                'navtop_color' => '#8002d4',
-                'navtop_color_dark' => '#8002d4',
-                'side_menu' => '#ab3fff',
-                'side_menu_dark' => '#ab3fff',
-                'footer_color' => '#8002d4',
-                'footer_color_dark' => '#8002d4',
-                'search_border_color' => '#151d29',
-                'Border_bottons_and_selected' => '#f4d142',
-                'background_bottom_navigation' => '#8002d4',
-                'background_bottom_navigation_dark' => '#8002d4',
-                'borders_and_dividers_colors' => '#a731f0',
-                'search_back' => '#8002d4',
-                'color_bt_1' => '#3E95FE',
-                'color_bt_2' => '#F45C4E',
-                'color_bt_3' => '#ca50f3',
-                'color_bt_4' => '#fbaf01',
-                'value_color_jackpot' => '#fefe93',
-                'value_wallet_navtop' => '#f4d142',
-                'bonus_color_dep' => '#f4d142',
-                'colors_deposit_value' => '#f4d142',
-                'color_players' => '#ffffff',
-                'placeholder_background' => '#8002d4',
-                'card_transaction' => '#a731f0',
-                'back_sub_color' => '#a731f0',
-                'item_sub_color' => '#8002d4',
-                'text_sub_color' => '#ffffff',
-                'title_sub_color' => '#ffffff',
-                'botao_deposito_background_nav' => '#eab700',
-                'botao_deposito_text_nav' => '#000000',
-                'botao_login_background_nav' => '#f4d142',
-                'botao_login_text_nav' => '#000000',
-                'botao_registro_text_nav' => '#ffffff',
-                'botao_login_background_modal' => '#f4d142',
-                'botao_login_text_modal' => '#000000',
-                'botao_registro_background_modal' => '#f4d142',
-                'botao_registro_text_modal' => '#000000',
-                'botao_registro_border_nav' => '#ffffff',
-                'botao_login_border_nav' => '#',
-                'botao_deposito_border_nav' => '#',
-                'botao_deposito_text_dep' => '#000000',
-                'botao_deposito_background_dep' => '#f4d142',
-                'botao_deposito_border_dep' => '#f4d142',
-                'botao_deposito_text_saq' => '#ffffff',
-                'botao_deposito_border_saq' => '#010463',
-                'background_color_category' => '#8002d4',
-                'background_color_jackpot' => '#8002d4',
-                'navb_icon_color' => '#ffffff',
-            ]
-        ],
-        'green' => [
-            'name' => 'Verde',
-            'colors' => [
-                'primary_color' => '#f7f7f7',
-                'title_color' => '#ffffff',
-                'text_color' => '#ffffff',
-                'sub_text_color' => '#ffffff',
-                'placeholder_color' => '#ffffff',
-                'background_color_cassino' => '#1d91a4',
-                'background_base' => '#1caeb2',
-                'background_base_dark' => '#1caeb2',
-                'carousel_banners' => '#23b6c5',
-                'carousel_banners_dark' => '#23b6c5',
-                'sidebar_color' => '#10657b',
-                'sidebar_color_dark' => '#10657b',
-                'navtop_color' => '#007588',
-                'navtop_color_dark' => '#007588',
-                'side_menu' => '#2a879b',
-                'side_menu_dark' => '#2a879b',
-                'footer_color' => '#007588',
-                'footer_color_dark' => '#007588',
-                'search_border_color' => '#151d29',
-                'Border_bottons_and_selected' => '#f4d142',
-                'background_bottom_navigation' => '#007588',
-                'background_bottom_navigation_dark' => '#007588',
-                'borders_and_dividers_colors' => '#23b6c5',
-                'search_back' => '#007588',
-                'color_bt_1' => '#3E95FE',
-                'color_bt_2' => '#F45C4E',
-                'color_bt_3' => '#ca50f3',
-                'color_bt_4' => '#fbaf01',
-                'value_color_jackpot' => '#fefe93',
-                'value_wallet_navtop' => '#f4d142',
-                'bonus_color_dep' => '#f4d142',
-                'colors_deposit_value' => '#f4d142',
-                'color_players' => '#ffffff',
-                'placeholder_background' => '#007588',
-                'card_transaction' => '#23b6c5',
-                'back_sub_color' => '#23b6c5',
-                'item_sub_color' => '#007588',
-                'text_sub_color' => '#ffffff',
-                'title_sub_color' => '#ffffff',
-                'botao_deposito_background_nav' => '#eab700',
-                'botao_deposito_text_nav' => '#000000',
-                'botao_login_background_nav' => '#f4d142',
-                'botao_login_text_nav' => '#000000',
-                'botao_registro_text_nav' => '#ffffff',
-                'botao_login_background_modal' => '#f4d142',
-                'botao_login_text_modal' => '#000000',
-                'botao_registro_background_modal' => '#f4d142',
-                'botao_registro_text_modal' => '#000000',
-                'botao_registro_border_nav' => '#ffffff',
-                'botao_login_border_nav' => '#',
-                'botao_deposito_border_nav' => '#',
-                'botao_deposito_text_dep' => '#000000',
-                'botao_deposito_background_dep' => '#f4d142',
-                'botao_deposito_border_dep' => '#f4d142',
-                'botao_deposito_text_saq' => '#ffffff',
-                'botao_deposito_border_saq' => '#010463',
-                'background_color_category' => '#007588',
-                'background_color_jackpot' => '#007588',
-                'navb_icon_color' => '#ffffff',
-            ]
-        ],
-    ];
-
-
-    public function applySkinColors($selectedSkin)
-    {
-        // Verifica se a skin selecionada existe
-        if (isset($this->skins[$selectedSkin])) {
-            $skin = $this->skins[$selectedSkin];
-
-            // Aplica as cores com base na skin selecionada
-            foreach ($skin['colors'] as $colorKey => $colorValue) {
-                $this->data[$colorKey] = $colorValue;  // Presumindo que '$this->data' seja uma variável de estado reativo
-            }
-        }
-    }
-
-
     /**
      * @param Form $form
      * @return Form
@@ -418,27 +77,6 @@ class LayoutCssCustom extends Page implements HasForms
     {
         return $form
             ->schema([
-
-                Section::make('Escolher Cores pré-definidas')
-                ->description('A escolha de uma cor será aplicada após a confirmação do save.')
-                ->schema([
-                    Select::make('selected_skin')
-                        ->label('Escolha uma cor pré-definida e aplique:')
-                        ->options(
-                            collect($this->skins)
-                                ->mapWithKeys(fn($skin, $key) => [
-                                    $key => $skin['name']  // Apenas o nome da skin
-                                ])
-                                ->toArray()
-                        )
-                        ->reactive()
-                        ->afterStateUpdated(function ($state) {
-                            if (isset($this->skins[$state])) {
-                                $this->applySkinColors($state); // Aplica as cores da skin
-                            }
-                        })
-                ]),
-
                 Section::make()
                     ->label('Background')
                     ->schema([
@@ -499,11 +137,6 @@ class LayoutCssCustom extends Page implements HasForms
                         ColorPicker::make('background_bottom_navigation_dark')
                             ->label('Bottom Navigation (Dark)')
                             ->required(),
-
-                        ColorPicker::make('navb_icon_color')
-                        ->label('Cor dos icones do Bottom Navigation')
-                        ->required(),
-
                         ColorPicker::make('value_wallet_navtop')
                             ->label('Cor do valor do saldo na NAVTOP')
                             ->required(),
@@ -667,6 +300,9 @@ class LayoutCssCustom extends Page implements HasForms
                         ColorPicker::make('card_transaction')
                             ->label('Background transações')
                             ->required(),
+                        ColorPicker::make('value_color_jackpot')
+                            ->label('Cor do Valor Do Jackpot')
+                            ->required(),
                         ColorPicker::make('bonus_color_dep')
                             ->label('Cor do bonus na pagina de deposito')
                             ->required(),
@@ -701,50 +337,50 @@ class LayoutCssCustom extends Page implements HasForms
                             ->label('Border Radius')
                             ->required(),
                     ])->columns(4),
-
-
-                Section::make('Jackpot')
-                    ->description('Jackpot e suporte telegram flutuante')
+                Section::make('Customização botões do JACKPOT')
+                    ->description('Personalize a aparência como desejar')
                     ->collapsible()
                     ->collapsed(true)
-                    ->schema([ 
-                        Toggle::make('disable_jackpot')
-                            ->label('Ativar Jackpot')
-                            ->helperText('Se tiver desmarcado é porque está inativo o Jackpot de Bônus da Home'),
-                            ColorPicker::make('value_color_jackpot')
-                            ->label('Cor do Valor Do Jackpot')
-                    ])->columns(3),
-
-
-                    Section::make('Outras funções')
-                    ->description('Permite habilitar outras funções do website')
+                    ->schema([
+                        ColorPicker::make('color_bt_1')
+                            ->label('Cor do botão 1')
+                            ->required(),
+                        ColorPicker::make('color_bt_2')
+                            ->label('Cor do botão 2')
+                            ->required(),
+                        ColorPicker::make('color_bt_3')
+                            ->label('Cor do botão 3')
+                            ->required(),
+                        ColorPicker::make('color_bt_4')
+                            ->label('Cor do botão 4')
+                            ->required(),
+                    ])->columns(4),
+                Section::make('Links dos botoes do jackpot')
+                    ->description('Adicione os links nos botoes jackpot e suporte telegram flutuante')
                     ->collapsible()
                     ->collapsed(true)
-                    ->schema([ 
-
-                        Toggle::make('disable_slider_text')
-                            ->label('Ativar Slider de Mensagens na Home')
-                            ->helperText('Se tiver marcado é porque está ativo.'),
-                        
-                        Toggle::make('disable_button_float')
-                            ->label('Ativar Botão Flutuante (PROMOÇÕES) na Home')
-                            ->helperText('Se tiver marcado é porque está ativo.'),
-                        
-                        Toggle::make('disable_last_winners')
-                            ->label('Ativar últimos Ganhadores na Home')
-                            ->helperText('Exibe lista de 60 ganhadores fakes.'),
-                        
+                    ->schema([
+                        TextInput::make('bt_1_link')
+                            ->label('Botão 1  do jackpot')
+                            ->placeholder('Digite o LINK do botão 1')
+                            ->maxLength(191),
+                        TextInput::make('bt_2_link')
+                            ->label('Botão 2  do jackpot')
+                            ->placeholder('Digite o LINK do botão 2')
+                            ->maxLength(191),
+                        TextInput::make('bt_3_link')
+                            ->label('Botão 3  do jackpot')
+                            ->placeholder('Digite o LINK do botão 3')
+                            ->maxLength(191),
+                        TextInput::make('bt_4_link')
+                            ->label('Botão 4  do jackpot')
+                            ->placeholder('Digite o LINK do botão 4')
+                            ->maxLength(191),
                         TextInput::make('bt_5_link')
-                            ->label('Botão flutuante na Home para suporte')
+                            ->label('Botão suporte flutuante')
                             ->placeholder('Digite o LINK do botão 5')
                             ->maxLength(191),
-
-                        Toggle::make('disable_jackpot')
-                            ->label('Ativar Jackpot')
-                            ->helperText('Se tiver desmarcado é porque está inativo o Jackpot de Bônus da Home'),
-                     
-                    ])->columns(1),
-
+                    ])->columns(4),
                 Section::make('Customização subordinados')
                     ->description('Personalize a aparência dossubordinados')
                     ->collapsible()

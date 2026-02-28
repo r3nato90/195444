@@ -700,9 +700,4 @@ text-underline-offset: 2px;
   border-right: 1px solid var(--borders-and-dividers-colors); /* Garante que a borda direita seja sempre aplicada */
   box-shadow: none; /* Remove qualquer sombra que possa aparecer */
 }
-
-button[disabled] {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
 </style>

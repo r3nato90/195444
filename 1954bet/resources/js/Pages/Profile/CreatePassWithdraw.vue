@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 flex justify-center w-full max-w-[490px] background-bottom-navigation bordf items-center relative h-12 p-4">
+  <div class="fixed top-0 flex justify-center w-full max-w-[450px] background-bottom-navigation bordf items-center relative h-12 p-4">
     <button type="button" @click="navigateTohome" class="absolute left-0 ml-5">
       <i class="fa-light fa-chevron-left text-white"></i>
     </button>
@@ -88,7 +88,7 @@
           <span class="tegh">{{ $t('Atenção: A senha de saque protege seus fundos e é extremamente importante. Mantenha-a em segredo para evitar qualquer perda financeira.') }}</span>
         </div>
 
-        <div class="fixed bottom-0 flex justify-center w-full max-w-[490px] cister p-2 background-bottom-navigation">
+        <div class="fixed bottom-0 flex justify-center w-full max-w-[450px] cister p-2 background-bottom-navigation">
           <button type="submit" class="btnh mb-4"><span>Confirmar</span></button>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default {
     await this.checkUserHasPin();
   } else {
     // Caso não esteja autenticado, redireciona para a página de login ou tratamento alternativo
-    this.navigateTohome()
+    this.navigateTohome();
   }
 },
   methods: {
@@ -290,9 +290,7 @@ export default {
       // Enviar senha de saque ao backend
       try {
         await this.submitSaquePassword();
-        // Redirecionamento usando Vue Router
-        this.$router.push('/profile/financas?tab=gerenciaraccount');
-       // this.navigateTohome(); // Navegar para a home após sucesso
+        this.navigateTohome(); // Navegar para a home após sucesso
       } catch (error) {
         this.errorMessage = 'Erro ao salvar a senha de saque.';
       }
@@ -310,7 +308,6 @@ export default {
           pin: pin
         });
         console.log(response.data.message);
-        
       } catch (error) {
         console.error('Erro ao salvar a senha de saque:', error.response.data);
         throw error;

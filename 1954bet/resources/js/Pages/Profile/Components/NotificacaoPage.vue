@@ -1,5 +1,5 @@
 <template>
-  <div class="notification-list w-full max-w-[490px]">
+  <div class="notification-list w-full max-w-[450px]">
     <LoadingComponent v-if="isLoading" />
     <div v-else>
       <template v-if="notifications.length > 0">

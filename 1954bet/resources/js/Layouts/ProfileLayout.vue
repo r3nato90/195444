@@ -1,6 +1,6 @@
 <template>
 
-    <div class="sm:ml-0 mt-0 max-w-[490px] mx-auto">
+    <div class="sm:ml-0 mt-0 max-w-[450px] mx-auto">
         <div class="relative ">
             <slot></slot>
 

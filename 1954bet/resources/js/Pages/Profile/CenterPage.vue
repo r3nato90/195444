@@ -1,6 +1,6 @@
 <template>
   <BauLayout>
-    <nav class="fixed background-bottom-navigation top-0 z-50 pl-2 pr-2 custom-font bordas items-center w-full h-12 max-w-[490px]">
+    <nav class="fixed background-bottom-navigation top-0 z-50 pl-2 pr-2 custom-font bordas items-center w-full h-12 max-w-[450px]">
       <div class="container mx-auto flex h-12">
         <!-- Botão Home que redireciona para uma URL diferente -->
         <button @click="$router.push('/')" class="back-button ml-2 mr-1" style="width: 12px; height: auto;">

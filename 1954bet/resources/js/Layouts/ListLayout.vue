@@ -1,5 +1,5 @@
 <template>
-     <div class="ml-0 md:ml-0 mt-0 max-w-[490px]" :class="'mb-[0px]'">
+     <div class="ml-0 md:ml-0 mt-0 max-w-[450px]" :class="'mb-[0px]'">
          
         <div class="relative">
              <slot></slot>

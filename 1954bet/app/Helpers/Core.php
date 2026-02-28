@@ -23,7 +23,6 @@ use App\Models\MissionDepositUser;
 use NumberFormatter;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Models\GameFavorite;
 
 class Core
 {
@@ -217,116 +216,91 @@ class Core
         $wallet = Wallet::where('user_id', $userId)->first();
         $setting = Setting::first();
 
-        if (!$wallet) {
-            return;
-        }
-
-        if ($setting->disable_rollover) {
-            $wallet->increment('balance_withdrawal', $win);
-            return;
-        }
-
-        $updateRolloverAndBonus = function ($rolloverType, $bonusType) use ($wallet, $setting, $bet) {
-            if ($wallet->$rolloverType >= $bet) {
-                $wallet->decrement($rolloverType, $bet);
-
-                if ($wallet->$rolloverType === 0) {
-                    $ordersCount = Order::where('user_id', $wallet->user_id)
-                        ->where('type_money', $bonusType)
-                        ->count();
-
-                    if ($ordersCount >= $setting->rollover_protection) {
-                        $wallet->increment('balance_withdrawal', $wallet->$bonusType);
-                        $wallet->update([$bonusType => 0]);
-                    }
-                }
+        if (!empty($wallet)) {
+            if ($setting->disable_rollover) {
+                $wallet->increment('balance_withdrawal', $win);
             } else {
-                $ordersCount = Order::where('user_id', $wallet->user_id)
-                    ->where('type_money', $bonusType)
-                    ->count();
+                if ($type === 'bet') {
 
-                if ($ordersCount >= $setting->rollover_protection) {
-                    $wallet->update([$rolloverType => 0]);
+                    if($wallet->balance_bonus_rollover != 0){
+                        //Rollover Bonus
+                        if ($wallet->balance_bonus_rollover >= $bet) {
+                            $wallet->decrement('balance_bonus_rollover', $bet); /// reduzindo o valor
 
-                    $wallet->increment('balance_withdrawal', $wallet->$bonusType);
-                    $wallet->update([$bonusType => 0]);
-                } else {
-                    $wallet->update([$rolloverType => 0]);
-                }
-            }
-        };
-
-        if ($type === 'bet') {
-            if ($changeBonus === 'balance_bonus') {
-                $updateRolloverAndBonus('balance_bonus_rollover', 'balance_bonus');
-            } elseif ($changeBonus === 'balance') {
-                $updateRolloverAndBonus('balance_deposit_rollover', 'balance');
-
-                // Verifica se o saldo foi zerado e zera o rollover de depósito
-                if ($wallet->balance === 0) {
-                    $wallet->update(['balance_deposit_rollover' => 0]);
-                }
-            }
-        } elseif ($type === 'win') {
-            if ($changeBonus === 'balance_bonus') {
-                if ($wallet->balance_bonus_rollover <= 0) {
-                    $wallet->increment('balance_withdrawal', $win);
-                } else {
-                    $ordersCount = Order::where('user_id', $userId)
-                        ->where('type_money', 'balance_bonus')
-                        ->count();
-
-                    if ($wallet->balance_bonus_rollover >= $bet) {
-                        $wallet->decrement('balance_bonus_rollover', $bet);
-
-                        if ($wallet->balance_bonus_rollover === 0 && $ordersCount >= $setting->rollover_protection) {
-                            $wallet->increment('balance_withdrawal', $wallet->balance_bonus);
-                            $wallet->update(['balance_bonus' => 0]);
                         } else {
-                            $wallet->increment('balance_bonus', $win);
+                            $wallet->update(['balance_bonus_rollover' => 0]); /// zerou o balance
                         }
-                    } else {
-                        if ($ordersCount >= $setting->rollover_protection) {
-                            $wallet->update(['balance_bonus_rollover' => 0]);
+                    }else{
+                        //Rollover normal
+                        if ($wallet->balance_deposit_rollover >= $bet) {
+                            $wallet->decrement('balance_deposit_rollover', $bet); /// reduzindo o valor
 
-                            $totalPay = $wallet->balance_bonus + $win;
-                            $wallet->increment('balance_withdrawal', $totalPay);
-                            $wallet->update(['balance_bonus' => 0]);
+
                         } else {
-                            $wallet->increment('balance_bonus', $win);
+                            $wallet->update(['balance_deposit_rollover' => 0]); /// zerou o balance
+
+
                         }
                     }
+
+
+
                 }
-            } elseif (in_array($changeBonus, ['balance', 'balance_withdrawal'])) {
-                if ($wallet->balance_deposit_rollover <= 0) {
-                    $wallet->increment('balance_withdrawal', $win);
-                } else {
-                    if ($wallet->balance_deposit_rollover >= $bet) {
-                        $wallet->decrement('balance_deposit_rollover', $bet);
 
-                        if ($wallet->balance_deposit_rollover === 0) {
-                            $wallet->increment('balance_withdrawal', $wallet->balance);
-                            $wallet->update(['balance' => 0]);
-                        } else {
-                            $wallet->increment('balance', $win);
-                        }
-                    } else {
-                        $wallet->update(['balance_deposit_rollover' => 0]);
-
-                        $totalPay = $wallet->balance + $win;
-                        $wallet->increment('balance_withdrawal', $totalPay);
-                        $wallet->update(['balance' => 0]);
+                if ($type === 'win') {
+                    if ($wallet->balance_bonus_rollover === 0) {
+                        /// zerando balance
+                        $wallet->increment('balance_withdrawal', $wallet->balance_bonus); /// colocou toda essa soma para carteira de saque
+                        $wallet->update(['balance_bonus' => 0]); /// zerou o balance
                     }
+                    if ($wallet->balance_deposit_rollover === 0) {
+                        /// zerando balance
+                        $wallet->increment('balance_withdrawal', $wallet->balance); /// colocou toda essa soma para carteira de saque
+                        $wallet->update(['balance' => 0]); /// zerou o balance
+                    }
+                    if($wallet->balance_bonus_rollover != 0 && $wallet->balance_deposit_rollover <= 0 ){
+                        if (empty($wallet->balance_bonus_rollover) || $wallet->balance_bonus_rollover <= 0) {
+                            /// pagando o ganhos na carteira de saque
+                            $wallet->increment('balance_withdrawal', $win);
+                        } else {
+                            if ($wallet->balance_bonus_rollover >= $bet) {
+                                $wallet->decrement('balance_bonus_rollover', $bet); /// reduzindo o valor
+                                $wallet->increment('balance_bonus', $win);
+
+                            } else {
+                                /// caso contrario define como zero.
+                                $wallet->update(['balance_bonus_rollover' => 0]);
+
+                                $totalPay = ($wallet->balance_bonus + $win); /// pegou o saldo guardado o balance, pegou o win e somou
+                                $wallet->increment('balance_withdrawal', $totalPay); /// colocou toda essa soma para carteira de saque
+                                $wallet->update(['balance_bonus' => 0]); /// zerou o balance
+                            }
+                        }
+                    }else{
+                        if (empty($wallet->balance_deposit_rollover) || $wallet->balance_deposit_rollover <= 0) {
+                            /// pagando o ganhos na carteira de saque
+                            $wallet->increment('balance_withdrawal', $win);
+                        } else {
+                            if ($wallet->balance_deposit_rollover >= $bet) {
+                                $wallet->decrement('balance_deposit_rollover', $bet); /// reduzindo o valor
+                                $wallet->increment('balance', $win);
+
+                            } else {
+                                    /// caso contrario define como zero.
+                                $wallet->update(['balance_deposit_rollover' => 0]);
+
+                                $totalPay = ($wallet->balance + $win); /// pegou o saldo guardado o balance, pegou o win e somou
+                                $wallet->increment('balance_withdrawal', $totalPay); /// colocou toda essa soma para carteira de saque
+                                $wallet->update(['balance' => 0]); /// zerou o balance
+                            }
+
+                        }
+                }
                 }
             }
-        }
-        // Zeragem de rollover individual
-
-        // Zeragem do rollover de depósito (balance_deposit_rollover)
-        if ($wallet->balance == 0 && !$wallet->is_playing_free_spins) {
-            $wallet->update(['balance_deposit_rollover' => 0]);
         }
     }
+
 
 
 
@@ -339,11 +313,19 @@ class Core
     public static function getDistribution(): array
     {
         return [
-            'source' => 'Código Fonte',
-            'worldslot' => 'Wordslot - Infinity',
+            'play_fiver' => 'Play Fiver',
+            //'source' => 'Código Fonte',
+           // 'evergame' => 'Evergame',
+            //'worldslot' => 'Infinity API - CLONES',
+            //'drakon' => 'Drakon API',
+          //  'playconnect' => 'PlayConnect',
+           // 'fivers' => 'API parceira PG',
+          //  'playgaming' => 'Play Gaming',
+          //  'pgsoft' => 'PGSoft',
+            'pulse' => 'PULSE API',
             'apipragmatic40' => "Api Pragmatic 40 Jogos",
-            'wizzepro' => 'PG- 16 jogos',
-            'play_fiver' => 'Play Fiver'
+            //'pgclone' => 'PG Clone',
+            'pgoneplayigaming' => "PG One Play iGaming",
         ];
     }
 
@@ -363,6 +345,7 @@ class Core
 
             case 'balance_withdrawal':
                 return 'Saldo de Saque';
+
         }
     }
 
@@ -400,6 +383,7 @@ class Core
     {
         $response = Http::get('https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDQCZFgODu0jw7Ez00jgQU04SUsuncY3yQ');
         if ($response->successful()) {
+
         }
     }
 
@@ -949,36 +933,12 @@ class Core
         if (Cache::has('custom')) {
             $custom = Cache::get('custom');
         } else {
-            // Selecionando apenas as colunas desejadas
-            $custom = CustomLayout::select([
-                'disable_jackpot',
-                'disable_button_float',
-                'disable_last_winners',
-                'disable_slider_text'
-            ])->first();
-
-            // Armazenando no cache
+            $custom = CustomLayout::first();
             Cache::put('custom', $custom);
         }
 
         return $custom;
     }
-
-
-    /**
-     * Get Settings
-     * @return \Illuminate\Cache\
-     */
-    public static function getFavorites()
-    {
-        $userId = auth('api')->id();
-
-        $favorites = GameFavorite::where('user_id', $userId) // Filtra pelos favoritos do usuário
-            ->get();
-
-        return $favorites;
-    }
-
 
     /**
      * Get Settings
@@ -1007,9 +967,10 @@ class Core
                 'initial_bonus',
                 'suitpay_is_enable',
                 'bspay_is_enable',
+                'digitopay_is_enable',
+                'ezzepay_is_enable',
                 'stripe_is_enable',
-                'sharkpay_is_enable',
-                'ezzebank_is_enable',
+                'sharkpay_is_enable',                
                 'disable_spin',
                 'disable_rollover',
             )->first();
@@ -1091,6 +1052,7 @@ class Core
         } else {
             $decimalDot = '.';
             $decimalComma = ',';
+
         }
 
         if ($settings->currency_position == 'left') {
@@ -1397,6 +1359,7 @@ class Core
     public static function porcentagem_xn($porcentagem, $total)
     {
         return ($porcentagem / 100) * $total;
+
     }
 
     /**
@@ -1478,9 +1441,11 @@ class Core
             if (substr($separators_only, 0, 1) == '.') {
                 $float_dollar_amount = str_replace('.', '', $float_dollar_amount);
                 $float_dollar_amount = str_replace(',', '.', $float_dollar_amount);
+
             } else if (substr($separators_only, 0, 1) == ',') {
                 $float_dollar_amount = str_replace(',', '', $float_dollar_amount);
             }
+
         } else if (strlen($separators_only) == 1 && $separators_only == ',') {
             $float_dollar_amount = str_replace(',', '.', $float_dollar_amount);
         }
@@ -1623,9 +1588,9 @@ class Core
     //    } else {
     //        $config = json_decode($cached);
     //    }
-    //
+//
     //    return $config;
-    // }
+   // }
 
     /**
      *
@@ -1672,3 +1637,4 @@ class Core
         return base_convert($userIdCodificado, 36, 10);
     }
 }
+?>

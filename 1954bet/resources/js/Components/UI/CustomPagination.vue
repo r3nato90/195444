@@ -9,7 +9,7 @@
         <nav
             v-bind="$attrs"
             aria-label="Pagination"
-            class="flex justify-center items-center w-full  max-w-[490px]"
+            class="flex justify-center items-center w-full  max-w-[450px]"
         >
             <button
                 :disabled="!slotProps.computed.prevPageUrl"

@@ -1,8 +1,8 @@
 <template>
     <WalletLayout>
-        <div class="fixed top-0 flex flex-col relative w-full max-w-[490px] background-color-cassino custom-font">
+        <div class="fixed top-0 flex flex-col relative w-full max-w-[450px] background-color-cassino custom-font">
 
-            <nav class="flex items-center relative w-full max-w-[490px] fixed top-0 px-2 p-2 borders background-bottom-navigation">
+            <nav class="flex items-center relative w-full max-w-[450px] fixed top-0 px-2 p-2 borders background-bottom-navigation">
                 <button @click="$router.push('/profile/profile')" class="absolute left-2 w-6 h-6">
                     <img :src="`/storage/` + setting.icon_wt_10" class="w-auto h-5">
                 </button>
@@ -76,7 +76,7 @@
 
             </div>
 
-            <div class="flex w-full max-w-[490px] grid grid-cols-2 gap-2 fixed bottom-0 p-2 borders background-bottom-navigation">
+            <div class="flex w-full max-w-[450px] grid grid-cols-2 gap-2 fixed bottom-0 p-2 borders background-bottom-navigation">
                 <button @click="$router.push('/profile/profile')" class="flex justify-center p-2 items-center text-center borderse">Retornar</button>
                 <button @click="updateProfile" class="flex justify-center p-2 bordersa items-center text-center">Salvar</button>
             </div>

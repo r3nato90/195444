@@ -275,7 +275,7 @@ methods: {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 40;
   background-color: rgba(0, 0, 0, 0.5);
 }

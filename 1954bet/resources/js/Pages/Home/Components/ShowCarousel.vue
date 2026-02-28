@@ -5,13 +5,13 @@
             <div class="flex">
                 <RouterLink
                     :to="{ name: 'casinosAll', params: { provider: 'slotegrator', game: category.slug } }"
-                    class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-1 py-2 mr-2 rounded">
+                    class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-3 py-2 mr-2 rounded">
                     {{ $t('See all') }}
                 </RouterLink>
-                <button @click.prevent="ckCarousel.prev()" class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-1 py-2 rounded">
+                <button @click.prevent="ckCarousel.prev()" class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-3 py-2 rounded">
                     <i class="fa-solid fa-angle-left"></i>
                 </button>
-                <button @click.prevent="ckCarousel.next()" class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-1 py-2 rounded">
+                <button @click.prevent="ckCarousel.next()" class="hover:bg-gray-500/20 bg-gray-400/20 dark:bg-gray-800 hover:dark:bg-gray-700 px-3 py-2 rounded">
                     <i class="fa-solid fa-angle-right"></i>
                 </button>
             </div>

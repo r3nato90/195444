@@ -3,7 +3,9 @@
     <div v-if="!isLoading" class="content-wrapper">
       <!-- Conteúdo Principal com Jackpot -->
       <div v-if="filteredCategories.length > 0" class="content-container">
-   
+        <!-- JackpotComponent inserido aqui para rolar junto com os jogos -->
+        <JackpotComponent /> 
+
         <FavoritesExpandComponent /> 
 
         <div class="relative pr-2 pl-2 w-full">
@@ -13,7 +15,7 @@
               <h2 class="text-color custom-font text-[18px] ml-1">{{ category.name }}</h2>
             </div>
 
-            <div :class="['grid', `grid-cols-${setting.collum_games}`, 'gap-2', 'mb-2']">
+            <div :class="['grid', `grid-cols-${setting.collum_games}`, 'gap-3', 'mb-2']">
               <CassinoGameCard 
                 v-for="(game, gameIndex) in getDisplayedGames(category)" 
                 :key="gameIndex" 
@@ -185,7 +187,6 @@ body {
   font-family: 'Helvetica', sans-serif;
   font-style: normal;
   line-height: normal;
-  font-weight: bold;
-  font-size: calc(min(100vw, 490px)* .032);
+  font-weight: 400;
 }
 </style>

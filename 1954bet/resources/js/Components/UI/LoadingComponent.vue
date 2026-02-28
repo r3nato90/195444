@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isLoading" class="is-loading-component w-full background-bottom-navigation max-w-[490px] h-[calc(100vh-60px)] z-[999999]">
+    <div v-if="isLoading" class="is-loading-component w-full background-bottom-navigation max-w-[450px] h-[calc(100vh-60px)] z-[999999]">
         <div class="text-center flex-col">
             <div role="status" class="absolute grid -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
                 <!-- Exibe a div que contém a imagem APENAS se a imagem existir -->

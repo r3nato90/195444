@@ -13,7 +13,7 @@
         <!-- Fim do header -->
 
          <div class="p-2 h-12 flex justify-center items-center relative">
-        <a :href="custom?.bt_5_link" class="flex justify-center items-center text-color vgdfd">Recuperar PIN</a>
+        <a :href="custom.bt_5_link" class="flex justify-center items-center text-color vgdfd">Recuperar PIN</a>
       </div>
       </div>
     </div>
@@ -62,7 +62,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 40;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -70,7 +70,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 40;
+  z-index: 50;
 }
 .modal-content {
   background: var(--background-bottom-navigation);

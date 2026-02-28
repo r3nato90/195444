@@ -1,7 +1,7 @@
 <template>
     <NavTopComponent :simple="false" />
     <div class="" :class="''">
-        <div class="relative max-w-[490px]">
+        <div class="relative max-w-[450px]">
             <slot></slot>
 
             <FooterComponent v-once />

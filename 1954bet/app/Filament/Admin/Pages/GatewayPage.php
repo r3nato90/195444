@@ -3,135 +3,146 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Models\Gateway;
-use App\Models\AproveSaveSetting;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\TextInput;
+use App\Models\AproveSaveSetting; // Importação do modelo para verificação de senha
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
-use Filament\Pages\Page;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Hash;
+use Filament\Pages\Page;
+use Filament\Support\Exceptions\Halt;
+use Illuminate\Support\Facades\Hash; // Importação para verificação da senha
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
+use Illuminate\Support\HtmlString;
 
 class GatewayPage extends Page
 {
-    protected static ?string $navigationIcon = 'heroicon-o-key';
+    use InteractsWithForms;
+
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
     protected static string $view = 'filament.pages.gateway-page';
-    protected static ?string $title = 'Credenciais de Gateways';
+
     public ?array $data = [];
+    public Gateway $setting;
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole('admin');
+    }
 
     public function mount(): void
     {
         $gateway = Gateway::first();
-        if ($gateway) { $this->form->fill($gateway->toArray()); }
+        if (!empty($gateway)) {
+            $this->setting = $gateway;
+            $this->form->fill($this->setting->toArray());
+        } else {
+            $this->form->fill();
+        }
     }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Tabs::make('Credenciais de API')
-                    ->tabs([
-                        Tabs\Tab::make('WishPag')
-                            ->icon('heroicon-o-qr-code')
-                            ->schema([
-                                TextInput::make('bspay_uri')->label('URL API')->default('https://api.wishpag.com/v1'),
-                                TextInput::make('bspay_cliente_id')->label('Secret Key')->password()->required(),
-                                TextInput::make('bspay_cliente_secret')->label('Company ID')->required(),
-                                
-                                Section::make('URLs de Webhook (Copie e cole no painel da WishPag)')
-                                    ->schema([
-                                        TextInput::make('wishpag_webhook_in')
-                                            ->label('Webhook de Depósitos (Cash-in)')
-                                            ->formatStateUsing(fn () => url('/api/webhooks/wishpag/cashin'))
-                                            ->readOnly()
-                                            ->dehydrated(false),
-                                            
-                                        TextInput::make('wishpag_webhook_out')
-                                            ->label('Webhook de Saques (Cash-out)')
-                                            ->formatStateUsing(fn () => url('/api/webhooks/wishpag/cashout'))
-                                            ->readOnly()
-                                            ->dehydrated(false),
-                                    ])->columns(2),
-                            ])->columns(2),
-
-                        Tabs\Tab::make('Pixup')
-                            ->icon('heroicon-o-currency-dollar')
-                            ->schema([
-                                TextInput::make('digitopay_uri')->label('URL API')->default('https://api.pixup.com.br/v2'),
-                                TextInput::make('digitopay_cliente_id')->label('Client ID')->required(),
-                                TextInput::make('digitopay_cliente_secret')->label('Client Secret')->password()->required(),
-
-                                Section::make('URL de Webhook (Copie e cole no painel da Pixup)')
-                                    ->schema([
-                                        TextInput::make('pixup_webhook_in')
-                                            ->label('Webhook de Depósitos (Cash-in)')
-                                            ->formatStateUsing(fn () => url('/api/webhooks/pixup/cashin'))
-                                            ->readOnly()
-                                            ->dehydrated(false)
-                                            ->columnSpanFull(),
-                                    ]),
-                            ])->columns(2),
-
-                        Tabs\Tab::make('Versell Pay')
-                            ->icon('heroicon-o-banknotes')
-                            ->schema([
-                                TextInput::make('ezzebank_uri')->label('URL API')->default('https://api.versellpay.com'),
-                                TextInput::make('ezzebank_cliente_id')->label('Client ID (vspi)')->required(),
-                                TextInput::make('ezzebank_cliente_secret')->label('Client Secret (vsps)')->password()->required(),
-
-                                Section::make('URL de Webhook (Copie e cole no painel da Versell)')
-                                    ->schema([
-                                        TextInput::make('versell_webhook_in')
-                                            ->label('Webhook de Depósitos (Cash-in)')
-                                            ->formatStateUsing(fn () => url('/api/webhooks/versell/cashin'))
-                                            ->readOnly()
-                                            ->dehydrated(false)
-                                            ->columnSpanFull(),
-                                    ]),
-                            ])->columns(2),
-
-                        Tabs\Tab::make('SuitPay')
-                            ->icon('heroicon-o-credit-card')
-                            ->schema([
-                                TextInput::make('suitpay_uri')->label('URL API'),
-                                TextInput::make('suitpay_cliente_id')->label('Client ID'),
-                                TextInput::make('suitpay_cliente_secret')->label('Client Secret')->password(),
-
-                                Section::make('URL de Webhook (Copie e cole no painel da SuitPay)')
-                                    ->schema([
-                                        TextInput::make('suitpay_webhook_in')
-                                            ->label('Webhook de Callback')
-                                            ->formatStateUsing(fn () => url('/api/gateways/suitpay/callback'))
-                                            ->readOnly()
-                                            ->dehydrated(false)
-                                            ->columnSpanFull(),
-                                    ]),
-                            ])->columns(2),
-                    ])->columnSpanFull(),
-
-                Section::make('Segurança')
+                Section::make('Ecompaga')
+                    ->description(new HtmlString('<div style="display: flex; align-items: center;">Precisa de uma conta Ecompag? Registre-se agora mesmo aprovação instantânea sem verificação de documentos:
+                            <a class="dark:text-white" style="font-size: 14px;font-weight: 600;width: 127px;display: flex;background-color: #00b54d;padding: 10px;border-radius: 11px;justify-content: center;margin-left: 10px;" href="https://ecompag.com" target="_blank">Dashboard</a>
+                            <a class="dark:text-white" style="font-size: 14px;font-weight: 600;width: 127px;display: flex;background-color: #00b54d;padding: 10px;border-radius: 11px;justify-content: center;margin-left: 10px;" href="https://chat.whatsapp.com/KJfzzoFs4U35XFvsL9hO2M" target="_blank">Comunidade Ecompag</a>
+                        </div>'))
                     ->schema([
-                        TextInput::make('approval_password_save')->label('Senha Admin')->password()->required(),
+                        TextInput::make('suitpay_uri')
+                            ->label('Client URI')
+                            ->placeholder('Digite a URL da API')
+                            ->maxLength(191)
+                            ->columnSpanFull(),
+                        TextInput::make('suitpay_cliente_id')
+                            ->label('Client ID')
+                            ->placeholder('Digite o Client ID')
+                            ->maxLength(191)
+                            ->columnSpanFull(),
+                        TextInput::make('suitpay_cliente_secret')
+                            ->label('Client Secret')
+                            ->placeholder('Digite o Client Secret')
+                            ->maxLength(191)
+                            ->columnSpanFull(),
+                        TextInput::make('callback_url')
+                            ->label('Callback URL')
+                            ->placeholder('Digite a URL de callback')
+                            ->maxLength(191)
+                            ->columnSpanFull(),
                     ]),
-            ])->statePath('data');
+                Section::make('Digite a senha de confirmação')
+                    ->description('Obrigatório digitar sua senha de confirmação!')
+                    ->schema([
+                        TextInput::make('approval_password_save')
+                            ->label('Senha de Aprovação')
+                            ->password()
+                            ->required()
+                            ->helperText('Digite a senha para salvar as alterações.')
+                            ->maxLength(191),
+                    ])->columns(2),
+            ])
+            ->statePath('data');
     }
 
     public function submit(): void
     {
-        if (env('APP_DEMO')) {
-            Notification::make()->title('Atenção')->danger()->send(); return;
-        }
+        try {
+            if (env('APP_DEMO')) {
+                Notification::make()
+                    ->title('Atenção')
+                    ->body('Você não pode realizar esta alteração na versão demo')
+                    ->danger()
+                    ->send();
+                return;
+            }
 
-        $approval = AproveSaveSetting::first();
-        if (!$approval || !Hash::check($this->data['approval_password_save'], $approval->approval_password_save)) {
-            Notification::make()->title('Senha Incorreta')->danger()->send(); return;
+            $approvalSettings = AproveSaveSetting::first();
+            $inputPassword = $this->data['approval_password_save'] ?? '';
+
+            if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
+                Notification::make()
+                    ->title('Erro de Autenticação')
+                    ->body('Senha incorreta. Por favor, tente novamente.')
+                    ->danger()
+                    ->send();
+                return;
+            }
+
+            $setting = Gateway::first();
+            if (!empty($setting)) {
+                $setting->callback_url = $this->data['callback_url'] ?? $setting->callback_url;
+                $setting->bspay_uri = $this->data['bspay_uri'] ?? $setting->bspay_uri;
+                $setting->bspay_cliente_id = $this->data['bspay_cliente_id'] ?? $setting->bspay_cliente_id;
+                $setting->bspay_cliente_secret = $this->data['bspay_cliente_secret'] ?? $setting->bspay_cliente_secret;
+                $setting->suitpay_uri = $this->data['suitpay_uri'] ?? $setting->suitpay_uri;
+                $setting->suitpay_cliente_id = $this->data['suitpay_cliente_id'] ?? $setting->suitpay_cliente_id;
+                $setting->suitpay_cliente_secret = $this->data['suitpay_cliente_secret'] ?? $setting->suitpay_cliente_secret;
+
+                $setting->save();
+
+                Notification::make()
+                    ->title('Chaves Alteradas')
+                    ->body('Suas chaves foram alteradas com sucesso!')
+                    ->success()
+                    ->send();
+            } else {
+                Gateway::create($this->data);
+
+                Notification::make()
+                    ->title('Chaves Criadas')
+                    ->body('Suas chaves foram criadas com sucesso!')
+                    ->success()
+                    ->send();
+            }
+        } catch (Halt $exception) {
+            Notification::make()
+                ->title('Erro ao alterar dados!')
+                ->body('Erro ao alterar dados!')
+                ->danger()
+                ->send();
         }
-        $updateData = $this->data;
-        unset($updateData['approval_password_save']);
-        
-        $gateway = Gateway::first() ?? new Gateway();
-        $gateway->fill($updateData)->save();
-        
-        Notification::make()->title('Chaves Guardadas')->success()->send();
     }
 }

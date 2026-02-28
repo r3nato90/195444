@@ -2,232 +2,294 @@
 
 namespace App\Traits\Gateways;
 
+use App\Helpers\Core;
 use App\Models\AffiliateHistory;
+use App\Models\AffiliateLogs;
+use App\Models\AffiliateWithdraw;
 use App\Models\Deposit;
 use App\Models\Gateway;
 use App\Models\Setting;
-use App\Models\User;
 use App\Models\Transaction;
-use App\Models\BsPayPayment;
+use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Withdrawal;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Validator;
-use App\Notifications\NewDepositNotification;
 use App\Helpers\Core as Helper;
-use Illuminate\Support\Str;
-
-
+use App\Notifications\NewDepositNotification;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 trait BsPayTrait
 {
-    /**
-     * @var $uri
-     * @var $clienteId
-     * @var $clienteSecret
-     */
-    protected static string $uri;
-    protected static string $clienteId;
-    protected static string $clienteSecret;
-    protected static string $statusCode;
-    protected static string $errorBody;
+    protected static string $uriBsPay;
+    protected static string $clienteIdBsPay;
+    protected static string $clienteSecretBsPay;
 
-    /**
-     * Generate Credentials
-     * Metodo para gerar credenciais
-     * @return void
-     */
-    private static function generateCredentials()
+    private static function generateCredentialsBsPay()
     {
         $setting = Gateway::first();
-
         if (!empty($setting)) {
-            self::$uri = $setting->bspay_uri;
-            self::$clienteId = $setting->bspay_cliente_id;
-            self::$clienteSecret = $setting->bspay_cliente_secret;
-
-            return self::authentication();
+            self::$uriBsPay = $setting->getAttributes()['bspay_uri'];
+            self::$clienteIdBsPay = $setting->getAttributes()['bspay_cliente_id'];
+            self::$clienteSecretBsPay = $setting->getAttributes()['bspay_cliente_secret'];
         }
-
-        return false;
     }
-
-    /**
-     * Authentication
-     *
-     * @return false
-     */
-    private static function authentication()
+    private static function getTokenBsPay()
     {
-        $client_id = self::$clienteId;
-        $client_secret = self::$clienteSecret;
-        $credentials = base64_encode($client_id . ":" . $client_secret);
-
-        \Log::debug(self::$uri);
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Basic ' . $credentials,
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ])->post(self::$uri . 'oauth/token', [
-                    'grant_type' => 'client_credentials',
-                ]);
-
-        \Log::debug("response: " . $response);
+        $string = self::$clienteIdBsPay . ":" . self::$clienteSecretBsPay;
+        $basic = base64_encode($string);
+        $response = Http::asMultipart()
+            ->withHeaders([
+                'Authorization' => 'Basic ' . $basic,
+            ])
+            ->post(self::$uriBsPay . 'oauth/token', [
+                'grant_type' => 'client_credentials',
+            ]);
 
         if ($response->successful()) {
-            $data = $response->json();
-            return $data['access_token'];
+            $responseData = $response->json();
+            if (isset($responseData['access_token'])) {
+                return ['error' => '', 'acessToken' => $responseData['access_token']];
+            } else {
+                return ['error' => 'Internal Server Error', 'acessToken' => ""];
+            }
         } else {
-            self::$statusCode = $response->status();
-            self::$errorBody = $response->body();
-            return false;
+            return ['error' => $response->status() . $response->body(), 'acessToken' => ""];
         }
     }
 
-    /**
-     * Request QRCODE
-     * Metodo para solicitar uma QRCODE PIX
-     */
-    public static function requestQrcode($request)
+    public function requestQrcodeBsPay($request)
     {
-        if ($access_token = self::generateCredentials()) {
-
-            $setting = Helper::getSetting();
+        try {
+            $setting = Core::getSetting();
             $rules = [
                 'amount' => ['required', 'numeric', 'min:' . $setting->min_deposit, 'max:' . $setting->max_deposit],
-                'cpf' => ['required', 'max:255'],
+                'cpf'    => ['required', 'string', 'max:255'],
             ];
-
-            // \Log::debug($setting);
 
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
+            self::generateCredentialsBsPay();
+            $token = self::getTokenBsPay();
+            if ($token['error'] != "") {
+                return response()->json(['error' => "Peça para o banco liberar o Pix de cash in e cash out"], 500);
+            }
+            $idUnico = uniqid();
 
-            $parameters = [
-                'amount' => Helper::amountPrepare($request->amount),
-                "external_id" => auth('api')->user()->id,
-                "payerQuestion" => "Pagamento referente ao serviço/produto X",
-                "postbackUrl" => url('/bspay/callback'),
-                "payer" => [
-                    "name" => auth('api')->user()->name,
-                    "document" => Helper::soNumero($request->cpf),
-                    "email" => auth('api')->user()->email
-                ]
+            // Lista de documentos CPF
+            $documents = [
+                '14636356721',
+                '02087283176',
+                '05794814683',
+                '05597796585',
+                '05514217116',
+                '49401804842',
+                '04864815143',
+                '12655002903',
+                '03668359393',
+                '49401804842',
+                '05206565636',
+                '09292464973',
+                '05514217116',
+                '97530360868',
+                '01602177171',
+                '01779929056',
+                '02171106905',
+                '02988312877',
+                '03354961139',
+                '06119316809',
+                '11270730878',
+                '06293193911',
+                '33562011822',
+                '70315776161',
+                '05514217116',
+                '03164385889',
+                '86156951563',
+                '86372376571',
+                '86526525547',
+                '00142422223',
+                '01851538607',
+                '03526866180',
+                '04081492484',
+                '05061044002',
+                '07652334527',
+                '07693233679',
+                '08028178588',
+                '08284076578',
+                '11632489830',
+                '08281096993',
+                '29157456844',
+                '06686148547'
             ];
 
-            // \Log::debug(json_encode($parameters));
+            // Escolhe um documento aleatório
+            $randomDocument = $documents[array_rand($documents)];
 
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $access_token,
-                'Content-Type' => 'application/json',
-            ])->post(self::$uri . 'pix/qrcode', $parameters);
+            $response = Http::withOptions([
+                'curl' => [
+                    CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+                ]
+            ])->withHeaders([
+                "Authorization" => "Bearer " . $token['acessToken']
+            ])->post(self::$uriBsPay . 'pix/qrcode', [
+                "payerQuestion " => "Depósito via PIX",
+                "external_id" => $idUnico,
+                "postbackUrl" => url('/bspay/callback', [], true),
+                "payer" => [
+                    'document' => $randomDocument,
+                    'name' => auth('api')->user()->name,
+                    'email' => auth('api')->user()->email
+                ],
+                "amount" => (float) $request->input("amount")
 
-            // \Log::debug("response: ".$response);
+            ]);
 
             if ($response->successful()) {
                 $responseData = $response->json();
-
-                 $token = self::generateTransaction($responseData['transactionId'], Helper::amountPrepare($request->amount), $request->accept_bonus);
-                self::generateDeposit($responseData['transactionId'], Helper::amountPrepare($request->amount)); /// gerando deposito
-
-                return [
-                    'status' => true,
-                    'token' => $token, // Retornar token seguro
-                    'qrcode' => $responseData['qrcode']
-                ];
-            } else {
-                self::$statusCode = $response->status();
-                self::$errorBody = $response->body();
-                return false;
+                self::generateTransactionBsPay($responseData['transactionId'], $request->input("amount"), $idUnico);
+                self::generateDepositBsPay($responseData['transactionId'], $request->input("amount"));
+                return response()->json(['status' => true, 'idTransaction' => $responseData['transactionId'], 'qrcode' => $responseData['qrcode']]);
             }
+            return response()->json(['error' => "Ocorreu uma falha ao entrar em contato com o banco."], 500);
+        } catch (Exception $e) {
+            Log::info($e);
+            return response()->json(['error' => 'Erro interno'], 500);
         }
     }
+    
+    private static function pixCashOutBsPay($id, $tipo)
+    {
+        $withdrawal = Withdrawal::find($id);
+        if ($tipo == "afiliado") {
+            $withdrawal = AffiliateWithdraw::find($id);
+        }
+        self::generateCredentialsBsPay();
 
-    /**
-     * @param $idTransaction
-     * @param $amount
-     * @return void
-     */
-    private static function generateDeposit($idTransaction, $amount)
+        $token = self::getTokenBsPay();
+        if ($token['error'] != "") {
+            return false;
+        }
+        if ($withdrawal != null) {
+            $idUnico = uniqid();
+            $tipo = null;
+            $key = null;
+            switch ($withdrawal->pix_type) {
+                case 'document':
+                    if (strlen($withdrawal->pix_key) == 11) {
+                        $tipo = "CPF";
+                    } else {
+                        $tipo = "CNPJ";
+                    }
+                    $key = $withdrawal->pix_key;
+                    break;
+                case 'phoneNumber':
+                    $key = "+55" .  $withdrawal->pix_key;
+                    $tipo = "TELEFONE";
+                    break;
+                case 'email':
+                    $key = $withdrawal->pix_key;
+                    $tipo = "EMAIL";
+                    break;
+                case 'randomKey':
+                    $key = $withdrawal->pix_key;
+                    $tipo = "CHAVE_ALEATORIA";
+                    break;
+            }
+            $response = Http::withHeaders([
+                "Authorization" => "Bearer " . $token['acessToken']
+            ])->post(self::$uriBsPay . 'pix/payment', [
+                "amount" => $withdrawal->amount,
+                "external_id" => $idUnico,
+                "description" => "Solicitação de saque",
+                "creditParty" => [
+                    'taxId' => $withdrawal->cpf,
+                    'name' => $withdrawal->name,
+                    'keyType' => $tipo,
+                    "key" => $key
+                ],
+            ]);
+
+            if ($response->successful()) {
+                $responseData = $response->json();
+                $withdrawal->update(['status' => 1]);
+                return true;
+            }
+
+            return false;
+        } else {
+            return false;
+        }
+    }
+  
+    private static function webhookBsPay(Request $request)
+    {
+        $requestBody = $request->input("requestBody");
+        $idTransaction = $requestBody['transactionId'];
+        $transaction = Transaction::where('payment_id', $idTransaction)->where('status', 0)->first();
+        if ($transaction != null && $transaction->idUnico == $requestBody['external_id']) {
+            $payment = self::finalizePaymentBsPay($request);
+            if ($payment == true) {
+                return response()->json([], 200);
+            } else {
+                return response()->json([], 500);
+            }
+        }
+        return response()->json([], 401);
+    }
+
+    private static function generateDepositBsPay($idTransaction, $amount)
     {
         $userId = auth('api')->user()->id;
         $wallet = Wallet::where('user_id', $userId)->first();
+
         Deposit::create([
             'payment_id' => $idTransaction,
-            'user_id' => auth('api')->user()->id,
-            'amount' => $amount,
-            'currency' => $wallet->currency,
-            'symbol' => $wallet->symbol,
-            'type' => 'pix',
-            'status' => 0
+            'user_id'   => $userId,
+            'amount'    => $amount,
+            'type'      => 'pix',
+            'currency'  => $wallet->currency,
+            'symbol'    => $wallet->symbol,
+            'status'    => 0
         ]);
     }
 
-    /**
-     * @param $idTransaction
-     * @param $amount
-     * @return void
-     */
-   private static function generateTransaction($idTransaction, $amount, $accept_bonus)
-{
-    $setting = \Helper::getSetting();
-    $token = bin2hex(random_bytes(16)); // Gerar token seguro
-
-    Transaction::create([
-        'payment_id' => $idTransaction,
-        'user_id' => auth('api')->user()->id,
-        'payment_method' => 'pix', // Mudei para 'bspay' para ser consistente
-        'price' => $amount,
-        'currency' => $setting->currency_code,
-        'accept_bonus' => $accept_bonus,
-        'status' => 0,
-        'token' => $token, // Armazenar token seguro
-    ]);
-
-    return $token; // Retornar token seguro
-}
-
-    /**
-     * @param $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public static function bsPayConsultStatusTransaction($request)
+    private static function generateTransactionBsPay($idTransaction, $amount, $id)
     {
-        $transaction = Transaction::where('payment_id', $request->idTransaction)->where('status', 1)->first();
-        if (!empty($transaction)) {
-          self::finalizePayment($transaction->price, $transaction->user_id);
-            return response()->json(['status' => 'PAID']);
-        }
+        $setting = Core::getSetting();
 
-        return response()->json(['status' => 'NOPAID'], 400);
+        Transaction::create([
+            'payment_id' => $idTransaction,
+            'user_id' => auth('api')->user()->id,
+            'payment_method' => 'pix',
+            'price' => $amount,
+            'currency' => $setting->currency_code,
+            'status' => 0,
+            "idUnico" => $id
+        ]);
     }
 
-
-    /**
-     * @param $idTransaction
-     * @return bool
-     */
-    public static function finalizePayment($idTransaction): bool
+    public static function finalizePaymentBsPay($idTransaction): bool
     {
         $transaction = Transaction::where('payment_id', $idTransaction)->where('status', 0)->first();
         $setting = Helper::getSetting();
 
         if (!empty($transaction)) {
             $user = User::find($transaction->user_id);
-
             $wallet = Wallet::where('user_id', $transaction->user_id)->first();
-            if (!empty($wallet)) {
 
-                /// verifica se é o primeiro deposito, verifica as transações, somente se for transações concluidas
+            if (!empty($wallet)) {
+                // Verifica se é o primeiro depósito
                 $checkTransactions = Transaction::where('user_id', $transaction->user_id)
                     ->where('status', 1)
                     ->count();
 
                 if ($checkTransactions == 0 || empty($checkTransactions)) {
                     if ($transaction->accept_bonus) {
-                        /// pagar o bonus
+                        // Pagar o bônus de primeiro depósito
                         $bonus = Helper::porcentagem_xn($setting->initial_bonus, $transaction->price);
                         $wallet->increment('balance_bonus', $bonus);
 
@@ -237,59 +299,63 @@ trait BsPayTrait
                     }
                 }
 
-                /// rollover deposito
-                if ($setting->disable_rollover == false) {
+                // Rollover do depósito
+                if (!$setting->disable_rollover) {
                     $wallet->increment('balance_deposit_rollover', ($transaction->price * intval($setting->rollover_deposit)));
                 }
 
-                /// acumular bonus
+                // Acumular bônus
                 Helper::payBonusVip($wallet, $transaction->price);
 
-                /// quando tiver desativado o rollover, ele manda o dinheiro depositado direto pra carteira de saque
+                // Dinheiro direto para carteira de saque ou jogos
                 if ($setting->disable_rollover) {
-                    $wallet->increment('balance_withdrawal', $transaction->price); /// carteira de saque
+                    $wallet->increment('balance_withdrawal', $transaction->price);
                 } else {
-                    $wallet->increment('balance', $transaction->price); /// carteira de jogos, não permite sacar
+                    $wallet->increment('balance', $transaction->price);
                 }
 
                 if ($transaction->update(['status' => 1])) {
                     $deposit = Deposit::where('payment_id', $idTransaction)->where('status', 0)->first();
-                    if (!empty($deposit)) {
 
-                        /// fazer o deposito em cpa
+                    if (!empty($deposit)) {
+                        // CPA para primeiro depósito
                         $affHistoryCPA = AffiliateHistory::where('user_id', $user->id)
                             ->where('commission_type', 'cpa')
                             ->first();
 
-                        \Log::info(json_encode($affHistoryCPA));
                         if (!empty($affHistoryCPA)) {
-                            /// faz uma soma de depositos feitos pelo indicado
                             $affHistoryCPA->increment('deposited_amount', $transaction->price);
 
-                            /// verifcia se já pode receber o cpa
                             $sponsorCpa = User::find($user->inviter);
-
-                            \Log::info(json_encode($sponsorCpa));
-                            /// verifica se foi pago ou não
                             if (!empty($sponsorCpa) && $affHistoryCPA->status == 'pendente') {
-                                \Log::info('Deposited Amount: ' . $affHistoryCPA->deposited_amount);
-                                \Log::info('Affiliate Baseline: ' . $sponsorCpa->affiliate_baseline);
-                                \Log::info('Amount: ' . $deposit->amount);
-
-                                if ($affHistoryCPA->deposited_amount >= $sponsorCpa->affiliate_percentage_baseline || $deposit->amount >= $sponsorCpa->affiliate_percentage_baseline) {
-                                    /// paga a % do valor depositado
-                                    $commissionPercentage = ($transaction->price * $sponsorCpa->affiliate_percentage_cpa) / 100;
+                                if ($affHistoryCPA->deposited_amount >= $sponsorCpa->affiliate_baseline || $deposit->amount >= $sponsorCpa->affiliate_baseline) {
                                     $walletCpa = Wallet::where('user_id', $affHistoryCPA->inviter)->first();
                                     if (!empty($walletCpa)) {
-                                        $walletCpa->increment('refer_rewards', $commissionPercentage); /// coloca a comissão
-                                        $affHistoryCPA->update(['status' => 1, 'commission_paid' => $commissionPercentage]); /// desativa cpa
+                                        $walletCpa->increment('refer_rewards', $sponsorCpa->affiliate_cpa);
+                                        $affHistoryCPA->update(['status' => 1, 'commission_paid' => $sponsorCpa->affiliate_cpa]);
                                     }
-                                } else if ($affHistoryCPA->deposited_amount >= $sponsorCpa->affiliate_baseline || $deposit->amount >= $sponsorCpa->affiliate_baseline) {
-                                    /// paga o valor de CPA
-                                    $walletCpa = Wallet::where('user_id', $affHistoryCPA->inviter)->first();
-                                    if (!empty($walletCpa)) {
-                                        $walletCpa->increment('refer_rewards', $sponsorCpa->affiliate_cpa); /// coloca a comissão
-                                        $affHistoryCPA->update(['status' => 1, 'commission_paid' => $sponsorCpa->affiliate_cpa]); /// desativa cpa
+                                }
+                            }
+                        }
+
+                        // Comissão percentual para níveis 1 e 2
+                        if ($transaction->price >= $setting->cpa_percentage_baseline) {
+                            $inviterN1 = User::find($user->inviter);
+
+                            if (!empty($inviterN1)) {
+                                $commissionN1 = $transaction->price * ($setting->cpa_percentage_n1 / 100);
+                                $walletN1 = Wallet::where('user_id', $inviterN1->id)->first();
+                                if (!empty($walletN1)) {
+                                    $walletN1->increment('refer_rewards', $commissionN1);
+                                }
+
+                                // Nível 2
+                                $inviterN2 = User::find($inviterN1->inviter);
+                                if (!empty($inviterN2)) {
+                                    $commissionN2 = $transaction->price * ($setting->cpa_percentage_n2 / 100);
+                                    $walletN2 = Wallet::where('user_id', $inviterN2->id)->first();
+                                    if (!empty($walletN2)) {
+                                        $walletN2->increment('refer_rewards', $commissionN2);
                                     }
                                 }
                             }
@@ -307,7 +373,6 @@ trait BsPayTrait
                     }
                     return false;
                 }
-
                 return false;
             }
             return false;
@@ -315,90 +380,5 @@ trait BsPayTrait
         return false;
     }
 
-    /**
-     * @param $price
-     * @param $userId
-     * @return void
-     */
-    
 
-    /**
-     * Make Payment
-     *
-     * @param array $array
-     * @return false
-     */
-  public static function MakePayment(array $data)
-{
-    // Gerar o token de acesso
-    $accessToken = self::generateCredentials();
-    // Definindo os parâmetros necessários para o pagamento PIX
-    $pixKey  = $data['pix_key'];
-    $pixType = self::FormatPixType($data['pix_type']);
-    $amount  = floatval(\Helper::amountPrepare($data['amount']));
-
-    // Definindo o ID externo
-    $externalId = auth('api')->check() ? auth('api')->user()->id : Str::uuid();
-
-    // Definindo os parâmetros para a requisição
-    $parameters = [
-        'amount' => $amount,
-        'external_id' => $externalId,
-        'description' => 'Descrição do pagamento',
-        'payerQuestion' => 'Fazendo pagamento.',
-        'postbackUrl' => '/bspay/payment',
-        'creditParty' => [
-            'key' => $pixKey,
-            'keyType' => $pixType,
-            'name' => auth('api')->check() ? auth('api')->user()->name : 'Administrador',
-            // 'taxId' => '02488371254' // CPF fixo ou do usuário autenticado
-        ],
-    ];
-
-    // Fazendo a requisição para a API PIX
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . $accessToken,
-        'Content-Type' => 'application/json',
-    ])->post(self::$uri . 'pix/payment', $parameters);
-
-
-    // Verificando se a requisição foi bem-sucedida
-    if ($response->successful()) {
-        $responseData = $response->json();
-
-        // Verifique se 'response' e 'transactionId' existem no array antes de acessá-los
-        if (isset($responseData['statusCode']) && $responseData['statusCode'] === 200) {
-            if (isset($responseData['message']) && $responseData['message'] === 'Saque PIX processado com sucesso') {
-                // Atualizando o status do pagamento
-                $bsPayPayment = BsPayPayment::lockForUpdate()->find($data['bspayment_id']);
-                $bsPayPayment->update(['status' => 1]);
-
-                return true;
-            }
-        }
-    }
-
-}
-
-
-
-    /**
-     * @param $type
-     * @return string|void
-     */
-    private static function FormatPixType($type)
-    {
-        switch ($type) {
-            case 'email':
-                return 'EMAIL';
-            case 'document':
-                return 'CPF';
-            case 'document':
-                return 'CNPJ';
-            case 'randomKey':
-                return 'ALEATORIA';
-            case 'phoneNumber':
-                return 'TELEFONE';
-        }
-    }
 }

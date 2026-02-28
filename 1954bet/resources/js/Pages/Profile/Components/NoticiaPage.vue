@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-cols-2 w-full max-w-[490px] p-2 background-bottom-navigation rounded-lg">
+    <div class="flex flex-cols-2 w-full max-w-[450px] p-2 background-bottom-navigation rounded-lg">
 
     </div>
  

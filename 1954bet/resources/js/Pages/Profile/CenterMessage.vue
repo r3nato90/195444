@@ -1,13 +1,13 @@
 <template>
   <WalletLayout>
-    <div class="w-full items-center max-w-[490px] top-0 fixed background-bottom-navigation mx-auto custom-font bordas flex h-12 p-2">
+    <div class="w-full items-center max-w-[450px] top-0 fixed background-bottom-navigation mx-auto custom-font bordas flex h-12 p-2">
       <button @click="$router.push('/')" class="absolute left-2 ml-2 mr-1">
         <img :src="`/storage/` + setting.icon_wt_10" alt="Home" class="h-5 w-auto">
       </button>
       <span class="custom-font text-color text-[16px] mx-auto">Centro de mensagens</span>
     </div>
 
-    <nav class="fixed background-bottom-navigation top-12 z-50 pl-2 pr-2 custom-font bordas items-center w-full h-12 max-w-[490px]">
+    <nav class="fixed background-bottom-navigation top-12 z-50 pl-2 pr-2 custom-font bordas items-center w-full h-12 max-w-[450px]">
       <div class="container mx-auto flex h-12">
         <div class="container mx-auto w-full flex overflow-x-auto whitespace-nowrap">
           <button @click="activateTab('support')" 
@@ -33,7 +33,7 @@
         </div>
       </div>
     </nav>
-<div class="top-24 fixed p-2 w-full h-full max-w-[490px]">
+<div class="top-24 fixed p-2 w-full h-full max-w-[450px]">
     <!-- Conteúdo das Tabs -->
     <div v-if="activeTab === 'support'">
       <!-- Conteúdo da aba Suporte -->

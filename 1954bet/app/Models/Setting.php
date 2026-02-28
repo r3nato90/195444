@@ -32,6 +32,7 @@ class Setting extends Model
         'software_logo_black',
         'software_background',
         'software_loading',
+        'image_jackpot',
         'image_cassino_sidebar',
         'image_favoritos_sidebar',
         'image_wallet_sidebar',
@@ -111,7 +112,8 @@ class Setting extends Model
         'saldo_ini',
         'cpa_value',
         'cpa_baseline',
-        'cpa_percentage',
+        'cpa_percentage_n1',
+        'cpa_percentage_n2',
         'cpa_percentage_baseline',
 
         /// soccer

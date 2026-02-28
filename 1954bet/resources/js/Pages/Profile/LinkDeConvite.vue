@@ -1,6 +1,6 @@
 <template>
   <ConviteLayout>
-   <nav class="fixed top-10 background-bottom-navigation bordec z-40 pl-2 pr-2 w-full max-w-[490px] h-12">
+   <nav class="fixed top-10 background-bottom-navigation bordec z-40 pl-2 pr-2 w-full max-w-[450px] h-12">
         <div class="container mx-auto flex overflow-x-auto whitespace-nowrap hide-scrollbar custom-font-title h-12">
           <button @click="activateTab('convite')" :class="['btn-nav', { active: activeTab === 'convite' }]" ref="conviteBtn">
   {{ $t('Link de Convite') }}
@@ -173,24 +173,24 @@
       </div>
        </div>
 
-      <div v-if="activeTab === 'meusdados'" class="w-full max-w-[490px] back-sub-color h-screen">
+      <div v-if="activeTab === 'meusdados'" class="w-full max-w-[450px] back-sub-color h-screen">
 
         <MeusDados />
       </div>
       
 
      <!-- sessao DOIS -->
-      <div v-if="activeTab === 'desempenho'" class="w-full max-w-[490px] back-sub-color h-screen">
+      <div v-if="activeTab === 'desempenho'" class="w-full max-w-[450px] back-sub-color h-screen">
         <DesempenhoAdd />
          </div>
    
-<div v-if="activeTab === 'meudesempenho'" class="w-full max-w-[490px] back-sub-color p-2 h-screen">
+<div v-if="activeTab === 'meudesempenho'" class="w-full max-w-[450px] back-sub-color p-2 h-screen">
        <MeuDesempenho />
         </div>
        
 
         <!-- sessao TRES -->
-      <div v-if="activeTab === 'subordinados'" class="w-full max-w-[490px] back-sub-color h-screen">
+      <div v-if="activeTab === 'subordinados'" class="w-full max-w-[450px] back-sub-color h-screen">
 
         <CardListSubordinados />
       </div>

@@ -162,13 +162,6 @@ class CustomLayout extends Model
         'brightness_percentage',
         'contrast_percentage',
 
-        'navb_icon_color',
-
-        'disable_jackpot',
-        'disable_button_float',
-        'disable_last_winners',
-        'disable_slider_text',
-
     ];
 
 }

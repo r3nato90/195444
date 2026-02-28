@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid navtop-color rounded-lg mt-1">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-12">
         <div class="gains-slider-container">
@@ -8,7 +8,7 @@
               <img src="/assets/images/trofeu.webp" alt="">
             </div>
             <div class="title-gains">
-              <h1>ÚLTIMOS <br> GANHADORES</h1>
+              <h1>ÚLTIMOS <br> GANHOS</h1>
             </div>
           </div>
           <div class="gains-con rounded-lg">
@@ -35,37 +35,22 @@
 export default {
   data() {
     return {
-      names: [
-        'Camila', 'Guilherme', 'Rafaela', 'Hugo', 'Fernando', 'Isabela', 'Gabriela', 'Thales', 'Maria', 'Vitor', 
-        'Vinícius', 'Aline', 'Priscila', 'Mariana', 'Rodrigo', 'Carla', 'Renato', 'Fernanda', 'Lucas', 'Ana',
-        'Pedro', 'Juliana', 'Matheus', 'Gabriel', 'Isabella', 'Amanda', 'Patrícia', 'Thiago', 'Larissa', 'Eduarda',
-        'André', 'Bianca', 'Rafael', 'Luana', 'Felipe', 'Sofia', 'Júlio', 'Clara', 'João', 'Verônica', 
-        'Henrique', 'Bárbara', 'César', 'Michele', 'Ricardo', 'Natália', 'Cássio', 'Nicole', 'Bruno', 'Tatiane',
-        'Caio', 'Helena', 'Daniel', 'Laura', 'Diego', 'Melissa', 'Marcelo', 'Olívia', 'Leandro', 'Carolina'
-      ],
-      lastNames: [
-        'Silv***', 'Sant***', 'Olivei***', 'Lim***', 'Pereir***', 'Fernand***', 'Almeid***', 'Souz***', 'Cost***', 'Rodrigu***',
-        'Marti***', 'Roch***', 'Alv***', 'Mend***', 'Cardos***', 'Gom***', 'Araúj***', 'Freit***', 'Barbos***', 'Ribeir***',
-        'Cast***', 'Nascim***', 'Carvalh***', 'Di***', 'Monta***', 'Cru***', 'Corre***', 'Figueired***', 'Teixeir***', 'Vieir***',
-        'Camar***', 'Fari***', 'Amar***', 'Pachec***', 'Morai***', 'Moraes***', 'Campo***', 'Duart***', 'Ram***', 'Batis***',
-        'Mou***', 'Cavalcant***', 'Borg***', 'Pinhei***', 'Neve***', 'Rezend***', 'Ferreir***', 'Marqu***', 'Tavare***', 'Azeved***',
-        'Cuelh***', 'Nun***', 'Leit***', 'Barros***', 'Mel***', 'Antun***', 'Aguiar***', 'Prad***', 'Assi***', 'Mac***'
-      ],
+      names: ['Camila', 'Guilherme', 'Rafaela', 'Hugo', 'Fernando', 'Isabela', 'Gabriela', 'Thales', 'Maria', 'Vitor', 'Vinícius', 'Aline', 'Priscila', 'Mariana', 'Rodrigo', 'Carla', 'Renato', 'Fernanda', 'Lucas', 'Ana', 'Pedro', 'Juliana', 'Matheus', 'Gabriel', 'Isabella', 'Amanda', 'Patrícia'],
+      lastNames: ['Si****', 'Sa****', 'Ol****', 'Li****', 'Pe****', 'Fe****', 'Al****', 'So****', 'Co****', 'Ro****', 'Ma****', 'Ro****', 'Al****', 'Me****', 'Ca****', 'Go****', 'Ar****', 'Fe****', 'Ba****', 'Ri****', 'Ca****', 'Na****', 'Ca****', 'Di****', 'Mo****', 'Cr****', 'Co****'],
       games: [
-  { name: 'Fortune Tiger', image: new URL('/assets/images/games/tigre.webp', import.meta.url).href },
-  { name: 'Big Bass', image: new URL('/assets/images/games/big.png', import.meta.url).href },
-  { name: 'The Dog House', image: new URL('/assets/images/games/dog.png', import.meta.url).href },
-  { name: 'Fruit Party', image: new URL('/assets/images/games/fruit.png', import.meta.url).href },
-  { name: 'Ganesha Gold', image: new URL('/assets/images/games/gold.webp', import.meta.url).href },
-  { name: 'Gates of Olympus', image: new URL('/assets/images/games/gates.webp', import.meta.url).href },
-  { name: 'Ganesha Fortune', image: new URL('/assets/images/games/ganesha.webp', import.meta.url).href },
-  { name: 'Fortune Mouse', image: new URL('/assets/images/games/mouse.webp', import.meta.url).href },
-  { name: 'Fortune Ox', image: new URL('/assets/images/games/ox.webp', import.meta.url).href },
-  { name: 'Fortune Rabbit', image: new URL('/assets/images/games/rabbit.webp', import.meta.url).href },
-  { name: 'Prosperity Fortune', image: new URL('/assets/images/games/tree.webp', import.meta.url).href },
-  { name: 'Sugar Rush', image: new URL('/assets/images/games/sugar.png', import.meta.url).href },
-],
-
+        { name: 'Fortune Tiger', image: '/assets/images/games/tigre.webp' },
+        { name: 'Big Bass', image: '/assets/images/games/big.png' },
+        { name: 'The Dog House', image: '/assets/images/games/dog.png' },
+        { name: 'Fruit Party', image: '/assets/images/games/fruit.png' },
+        { name: 'Ganesha Gold', image: '/assets/images/games/gold.webp' },
+        { name: 'Gates of Olympus', image: '/assets/images/games/gates.webp' },
+        { name: 'Ganesha Fortune', image: '/assets/images/games/ganesha.webp' },
+        { name: 'Fortune Mouse', image: '/assets/images/games/mouse.webp' },
+        { name: 'Fortune Ox', image: '/assets/images/games/ox.webp' },
+        { name: 'Fortune Rabbit', image: '/assets/images/games/rabbit.webp' },
+        { name: 'Prosperity Fortune', image: '/assets/images/games/tree.webp' },
+        { name: 'Sugar Rush', image: '/assets/images/games/sugar.png' },
+      ],
       gains: [], // Lista vazia para armazenar os ganhos gerados aleatoriamente
     };
   },
@@ -115,21 +100,20 @@ export default {
 .gains-section {
   width: 220px;
   height: 100px;
-  background: linear-gradient(90deg, var(--background-color-category) 0%, var(--background-color-cassino) 50%, var(--background-color-category) 100%);
+  background: linear-gradient(90deg, #42EAA9 0%, #35AB7D 50%, #1D533E 100%);
   z-index: 10;
   display: flex;
   align-items: center;
   gap: 15px;
-  border-radius: 6px;
-  padding-right: 10px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
 }
 
 .icon-trofeu img {
   width: 90px;
 }
 
-.title-gains {
-  font-size: calc(min(100vw, 490px)* .032) !important;
+.title-gains h1 {
   color: #fff;
   font-weight: 800;
   font-size: 25px;
@@ -176,7 +160,7 @@ export default {
 }
 
 .slide-gains {
-  background: linear-gradient(90deg, var(--background-color-category) 0%, var(--background-color-cassino) 50%, var(--background-color-category) 100%);
+  background: linear-gradient(90deg, #42EAA9 0%, #2B8B66 25%, #1D533E 75%);
   margin-right: 15px;
   width: 200px;
   overflow: hidden;
@@ -233,6 +217,9 @@ export default {
     width: 60px;
   }
 
+  .title-gains h1 {
+    font-size: 14px;
+  }
 
   .gains-slider {
     padding-left: 170px;

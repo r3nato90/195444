@@ -2,15 +2,62 @@
   <ProfileLayout>
    <div class="profile-container overflow-auto"> 
 
+
+
+
     <div class="user-profile justify-center items-center background-bottom-navigation" style="position: relative;">
+    <img class="w-full" :src="`/storage/`+setting.background_perfil_top" style="position: relative; z-index: 1;">
+    <img class="w-full" :src="`/storage/`+setting.sub_background_perfil_top" style="position: absolute; bottom: 0; left: 0; z-index: 2;">
     <div class="flex p-3" style="position: absolute; top: 0; right: 0; z-index: 3;">
-      <button @click="$router.push({ path: '/profile/messages', query: { tab: 'support' } })" :class="['w-6 h-auto', { active: isActive('') }]"> <img  src="/public/assets/images/suportesh.png">  </button>
-      <button @click="$router.push({ path: '/profile/messages', query: { tab: 'notification' } })" :class="['w-6 h-auto ml-4', { active: isActive('') }]"> <img  src="/public/assets/images/messagess.png">  </button>
-      <button @click="$router.push('/profile/settings')" class="w-5 h-auto ml-4"> <img  src="/public/assets/images/icons/config.png">  </button>
+    <button @click="$router.push({ path: '/profile/messages', query: { tab: 'support' } })" :class="['w-6 h-auto', { active: isActive('') }]"> <img  src="/public/assets/images/suportesh.png">  </button>
+    <button @click="$router.push({ path: '/profile/messages', query: { tab: 'notification' } })" :class="['w-6 h-auto ml-4', { active: isActive('') }]"> <img  src="/public/assets/images/messagess.png">  </button>
+    <button @click="$router.push('/profile/settings')" class="w-5 h-auto ml-4"> <img  src="/public/assets/images/icons/config.png">  </button>
     </div>
+    <!-- Conteúdo informativo -->
+    <div class="w-full" style="position: absolute; height: 100px; bottom: 0; left: 0; z-index: 10;">
+        <div class="w-full relative">
+            <div class="absolute h-16 w-18 left-6">
+                <img :src="currentLevelImage" alt="" class="h-16">
+            </div>
+            <div class="absolute h-16 w-full max-w-[70%] right-6 custom-font">
+                <div class="flex w-full justify">
+                    <span class="text-[14px] text-[#d48c0b]">Restantes 
+                        <span class="text-[14px] text-black">VIP{{ nextLevel?.bet_level }} 
+                            <span class="text-[14px] text-[#d48c0b] ml-1">Valor restante para apostas 
+                                <span class="text-[14px] text-black">{{ nextLevel?.bet_required }}</span> 
+                            </span> 
+                        </span>
+                    </span> 
+                    <button @click="$router.push({ path: '/profile/promocoes', query: { tab: 'vip' } })" 
+                    :class="['w-10 h-10', { active: isActive('') }]"> 
+                    <i class="fa-light text-black fa-chevron-right"></i></button>
+                </div>
+       <div class="flex w-full items-center mt-2">
+    <!-- Texto à esquerda -->
+    <span class="text-[14px] text-[#d48c0b]">
+      Apostas para promoção
+    </span>
+    <!-- Contêiner da barra de progresso à direita -->
+    <div class="relative flex-1 ml-4 h-3 bg-[#d2af63] rounded-full">
+      <!-- Barra preenchida -->
+      <div
+        class="absolute inset-0 bg-[#5ce1e6] rounded-full h-full"
+        :style="{ width: progressBarWidth }"
+      ></div>
+      <!-- Span dentro da barra -->
+      <span class="absolute inset-0 flex items-center justify-center text-[12px] text-black">
+        {{ difference.toFixed(2) }} / {{ nextLevel.bet_required }}
+      </span>
+    </div>
+  </div>
 
 
 
+
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -24,7 +71,7 @@
   <!-- Seção do Avatar -->
   <div class="avatar-section flex w-auto">
     <img 
-      class="bordafoto w-20 h-20 cursor-pointer" 
+      class="bordafoto w-12 h-12 cursor-pointer" 
       :src="avatarUrl || (userData?.avatar ? '/storage/' + userData.avatar : (setting && setting.image_user_nav ? '/storage/' + setting.image_user_nav : '/default-avatar.jpg'))" 
       alt="Avatar" 
       @click="openImagePicker"
@@ -57,23 +104,23 @@
     </div>
 
     <!-- Seção do Saldo -->
-    <div class="flex flex-col ml-2 mt-1 custom-font">
+    <div class="flex flex-col ml-2 custom-font">
       <div class="flex background-bottom-navigation p-2 borisg">
         <div class="flex mr-2 imghd">
         <img class="w-6 h-6 rounded-full ml-2 mr-2" src="/public/assets/images/br.png">
         </div>
         <button
       v-if="wallet?.total_balance !== undefined && !isLoadingWallet"
-      @click="$router.push('/profile/wallet')" 
+      @click="$router.push('/profile/wallet')"
       type="button"
-      class="flex justify-center items-center mgd text-2xl"
+      class="flex justify-center items-center mgd"
     >
       <div>
         <strong class="textsss">{{ formatBalance(displayedBalance || 0, 0) }}</strong>
       </div>
     </button>
 
-    <button @click="refreshWallet" type="button" class="flex justify-center items-center ml-1 text-2xl">
+    <button @click="refreshWallet" type="button" class="flex justify-center items-center ml-1">
       <img
         :class="{'spin': isLoadingWallet}"
         src="/public/assets/images/refresh.png"
@@ -86,9 +133,7 @@
   </div>
 </div>
 
-
-
-         <div class="w-full flex grid grid-cols-3 gap-2 p-2 justify-center items-center custom-font">
+         <div class="w-full flex grid grid-cols-3 mt-3 gap-2 p-2 justify-center items-center custom-font">
           <button @click="$router.push({ path: '/profile/financas', query: { tab: 'saque' } })" 
                     :class="['items-center flex flex-col imghds', { active: isActive('') }]">
             <img :src="`/storage/`+setting.icon_wt_3" class="w-auto h-8 mb-1">
@@ -105,11 +150,9 @@
           </button>
          </div>
 
-        
-
         <div class="w-full flex p-1 justify-center items-center custom-font">
     <button @click="toggleExpand" class="items-center flex text-color">
-      {{ !isExpanded ? 'Mostrar Menos' : 'Mostrar Mais' }}
+      {{ isExpanded ? 'Mostrar Menos' : 'Mostrar Mais' }}
       <img 
         src="/public/assets/images/maismi.png" 
         class="ml-3 w-4 h-4" 
@@ -119,10 +162,8 @@
     </button>
   </div>
 
-
-
          <!-- Área a ser controlada pelo botão de Mostrar Mais -->
-      <div class="w-full flex grid grid-cols-3 mt-3 gap-2 p-2 justify-center items-center custom-font" v-if="!isExpanded">
+      <div class="w-full flex grid grid-cols-3 mt-3 gap-2 p-2 justify-center items-center custom-font" v-if="isExpanded">
         <div class="flex flex-col justify-center items-center">
           <h1 class="text-[14px] values-deposit">Saldo saque</h1>
           <h1 class="text-[14px] values-deposit">{{ state.currencyFormat(parseFloat(wallet.balance_withdrawal), wallet.currency) }}</h1>
@@ -141,60 +182,6 @@
 
 
       </div>
-
-
-
-
-      <div class="w-full background-cassino ">
-              <!-- Conteúdo informativo -->
-    <div class="w-full mt-6" style=" height: 100px; bottom: 0; left: 0; z-index: 10;">
-        <div class="w-full relative">
-            <div class="absolute h-16 w-18 left-6">
-                <img :src="currentLevelImage" alt="" class="h-16">
-            </div>
-            <div class="absolute h-16 w-full max-w-[70%] right-6 custom-font">
-                <div class="flex w-full justify">
-                    <span class="text-[14px] text-[var(--text-color)]"> 
-                      <div>Restantes</div>
-                        <span class="text-[14px] text-[var(--text-color)] font-bold">VIP{{ nextLevel?.bet_level }} 
-                            <span class="text-[14px] text-[var(--text-color)] ml-1">Valor restante para apostas 
-                                <span class="text-[14px] text-[var(--text-color)]">{{ nextLevel?.bet_required }}</span> 
-                            </span> 
-                        </span>
-                    </span> 
-                    <button @click="$router.push({ path: '/profile/promocoes', query: { tab: 'vip' } })" 
-                    :class="['w-10 h-10', { active: isActive('') }]"> 
-                    <i class="fa-light text-[var(--text-color)] fa-chevron-right"></i></button>
-                </div>
-       <div class="flex w-full items-center mt-2">
-    <!-- Texto à esquerda -->
-    <span class="text-[14px] text-[var(--text-color)] font-bold">
-      Apostas para promoção
-    </span>
-    <!-- Contêiner da barra de progresso à direita -->
-    <div class="relative flex-1 ml-4 h-3 bg-[#d2af63] rounded-full">
-      <!-- Barra preenchida -->
-      <div
-        class="absolute inset-0 bg-[#5ce1e6] rounded-full h-full"
-        :style="{ width: progressBarWidth }"
-      ></div>
-      <!-- Span dentro da barra -->
-      <span class="absolute inset-0 flex items-center justify-center text-[12px] text-black">
-        {{ difference.toFixed(2) }} / {{ nextLevel.bet_required }}
-      </span>
-    </div>
-  </div>
-            </div>
-        </div>
-    </div>
-    <!-- Conteúdo informativo -->
-         </div>
-
-
-
-
-
-
       
       <!-- Botões -->
       <div class="wallet-info p-2 rounded-lg grid grid-cols-1 custom-font-1">
@@ -586,11 +573,6 @@ export default {
 </script>
 
 <style scoped>
-
-.background-cassino {
-  background-color: var(--background-color-cassino);
-}
-
 .imghd{
    border-right: 1px solid var(--borders-and-dividers-colors);
 }
@@ -645,7 +627,7 @@ export default {
   margin-right: auto;
 }
 .btn-nav {
-  margin-top: 1px;
+  margin-top: 8px;
   padding: 8px 8px;
   color: #fff;
   cursor: pointer;

@@ -3,7 +3,7 @@
 
     <SideBarComponent v-once />
 
-    <div class="sm:ml-0 mt-[56px] max-w-[490px] mx-auto">
+    <div class="sm:ml-0 mt-[56px] max-w-[450px] mx-auto">
         <div class="relative ">
             <slot></slot>
 

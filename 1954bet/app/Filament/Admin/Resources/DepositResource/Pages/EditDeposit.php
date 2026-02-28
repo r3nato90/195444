@@ -14,6 +14,7 @@ use Filament\Forms\Components\TextInput; // Aqui está o namespace correto para 
 
 class EditDeposit extends EditRecord
 {
+    use DrakonTrait;
     protected static string $resource = DepositResource::class;
 
     protected function getHeaderActions(): array
