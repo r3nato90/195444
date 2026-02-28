@@ -4,71 +4,77 @@ namespace App\Http\Controllers\Api\Wallet;
 
 use App\Http\Controllers\Controller;
 use App\Models\Withdrawal;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Traits\Gateways\PixupTrait;
 
 class WithdrawController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use PixupTrait;
+
     public function index(Request $request)
     {
         $userId = auth('api')->id();
-
         $query = Withdrawal::whereUserId($userId);
-
         if ($request->has('filter')) {
             $filter = $request->input('filter');
-
             switch ($filter) {
-                case 'today':
-                    $startOfDay = Carbon::today();
-                    $endOfDay = Carbon::tomorrow()->subSecond();
-                    $query->whereBetween('created_at', [$startOfDay, $endOfDay]);
-                    break;
-
-                case 'week':
-                    $startOfWeek = Carbon::now()->startOfWeek();
-                    $endOfWeek = Carbon::now()->endOfWeek();
-                    $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
-                    break;
-
-                case 'month':
-                    $startOfMonth = Carbon::now()->startOfMonth();
-                    $endOfMonth = Carbon::now()->endOfMonth();
-                    $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
-                    break;
-
-                case 'year':
-                    $startOfYear = Carbon::now()->startOfYear();
-                    $endOfYear = Carbon::now()->endOfYear();
-                    $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
-                    break;
+                case 'today': $query->whereBetween('created_at', [Carbon::today(), Carbon::tomorrow()->subSecond()]); break;
+                case 'week': $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]); break;
+                case 'month': $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]); break;
+                case 'year': $query->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()]); break;
             }
         }
-
-        $withdraws = $query->paginate();
-
-        return response()->json(['withdraws' => $withdraws], 200);
+        return response()->json(['withdraws' => $query->paginate()], 200);
     }
-
 
     public function verifyPassword(Request $request)
     {
+        $request->validate(['password' => 'required|string|min:6|max:6']);
+        $user = auth('api')->user();
+        return response()->json(['valid' => Hash::check($request->password, $user->withdrawal_password)], 200);
+    }
+
+    public function makeWithdraw(Request $request)
+    {
         $request->validate([
-            'password' => 'required|string|min:6|max:6',
+            'amount' => 'required|numeric|min:10',
+            'pix_key' => 'required|string',
+            'pix_type' => 'required|string',
         ]);
 
         $user = auth('api')->user();
+        $wallet = $user->wallet;
+        $amount = (float) $request->amount;
 
-        // Verifica se a senha fornecida corresponde à senha armazenada no banco de dados
-        if (Hash::check($request->password, $user->withdrawal_password)) {
-            return response()->json(['valid' => true], 200);
-        } else {
-            return response()->json(['valid' => false], 401);
+        if ($wallet->balance < $amount) {
+            return response()->json(['status' => false, 'error' => 'Saldo insuficiente.'], 400);
         }
-    }
 
+        $setting = Setting::first();
+        $transactionId = Str::uuid()->toString();
+
+        // Forçamos a verificação de 'suitpay' que no backend chamará o PixUP
+        if ($setting && ($setting->default_gateway === 'suitpay' || $setting->default_gateway === 'pixup')) {
+            $response = self::pixupCashOut($amount, $request->pix_key, $request->pix_type, $transactionId);
+
+            if ($response['status']) {
+                $wallet->decrement('balance', $amount);
+                Withdrawal::create([
+                    'user_id' => $user->id,
+                    'amount' => $amount,
+                    'pix_key' => $request->pix_key,
+                    'pix_type' => $request->pix_type,
+                    'status' => 'pending', 
+                    'transaction_id' => $transactionId,
+                ]);
+                return response()->json(['status' => true, 'msg' => 'Saque solicitado com sucesso!'], 200);
+            }
+            return response()->json(['status' => false, 'error' => 'A PixUP recusou o processamento.'], 400);
+        }
+        return response()->json(['status' => false, 'error' => 'Gateway de saque não configurado.'], 400);
+    }
 }

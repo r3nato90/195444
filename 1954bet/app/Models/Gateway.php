@@ -49,7 +49,11 @@ class Gateway extends Model
         'ezzebank_cliente_secret',
         'ezze_user',
         'ezze_senha',
-      
+        
+
+        'pixup_client_id',
+        'pixup_client_secret',
+
 
         'bspay_uri',
         'bspay_cliente_id',

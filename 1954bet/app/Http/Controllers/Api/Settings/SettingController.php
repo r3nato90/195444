@@ -4,62 +4,33 @@ namespace App\Http\Controllers\Api\Settings;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return response()->json(['setting' => \Helper::getSetting()], 200);
-    }
+        $setting = \Helper::getSetting();
+        $custom = \Helper::getCustom();
+        
+        // Garante que o retorno seja um array para evitar erro de 'null' no VueJS
+        $settingData = $setting ? (is_array($setting) ? $setting : $setting->toArray()) : [];
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Blindagem contra tela preta: bt_5_link, modal_active, etc.
+        if (!isset($settingData['custom_layout']) || empty($settingData['custom_layout'])) {
+            $settingData['custom_layout'] = [
+                'bt_5_link' => '/support',
+                'icon_bottom_left' => 'fa fa-user',
+                'icon_bottom_right' => 'fa fa-bars',
+                'modal_active' => false,
+                'bet_required' => 0
+            ];
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'setting' => $settingData,
+            'custom' => $custom,
+            'favorites' => [] 
+        ], 200);
     }
 }

@@ -29,9 +29,6 @@ class GatewayPage extends Page implements HasForms
 
     protected static string $view = 'filament.resources.setting-resource.pages.gateway-page';
 
-    /**
-     * @return string|Htmlable
-     */
     public function getTitle(): string|Htmlable
     {
         return 'Gateways';
@@ -40,20 +37,11 @@ class GatewayPage extends Page implements HasForms
     public Setting $record;
     public ?array $data = [];
 
-    /**
-     * @dev @anonymous
-     * @param Model $record
-     * @return bool
-     */
     public static function canView(Model $record): bool
     {
         return auth()->user()->hasRole('admin');
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
     public function mount(): void
     {
         $setting = Setting::first();
@@ -61,32 +49,19 @@ class GatewayPage extends Page implements HasForms
         $this->form->fill($setting->toArray());
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
     public function save()
     {
         try {
             if (env('APP_DEMO')) {
-                Notification::make()
-                    ->title('Atenção')
-                    ->body('Você não pode realizar está alteração na versão demo')
-                    ->danger()
-                    ->send();
+                Notification::make()->title('Atenção')->body('Você não pode realizar está alteração na versão demo')->danger()->send();
                 return;
             }
 
-            // Verificação da senha
             $approvalSettings = AproveSaveSetting::first();
             $inputPassword = $this->data['approval_password_save'] ?? '';
 
             if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
-                Notification::make()
-                    ->title('Erro de Autenticação')
-                    ->body('Senha incorreta. Por favor, tente novamente.')
-                    ->danger()
-                    ->send();
+                Notification::make()->title('Erro de Autenticação')->body('Senha incorreta. Por favor, tente novamente.')->danger()->send();
                 return;
             }
 
@@ -94,26 +69,13 @@ class GatewayPage extends Page implements HasForms
 
             if ($setting->update($this->data)) {
                 Cache::put('setting', $setting);
-
-                Notification::make()
-                    ->title('Dados alterados')
-                    ->body('Dados alterados com sucesso!')
-                    ->success()
-                    ->send();
-
-               // redirect(route('filament.admin.resources.settings.payment', ['record' => $this->record->id]));
-
+                Notification::make()->title('Dados alterados')->body('Dados alterados com sucesso!')->success()->send();
             }
         } catch (Halt $exception) {
             return;
         }
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @param Form $form
-     * @return Form
-     */
     public function form(Form $form): Form
     {
         return $form
@@ -122,26 +84,18 @@ class GatewayPage extends Page implements HasForms
                     ->description('Ativa ou desative seus gateway de Pagamento')
                     ->schema([
                         Select::make('default_gateway')
-                            ->label('Gateway Padrão para Saque')
+                            ->label('Gateway Padrão para Saque e Depósito')
                             ->options([
-                                'suitpay' => 'Ecompag',
-                            ])->columnSpanFull()
-                            ,
-                            Toggle::make('suitpay_is_enable')
-                                ->label('Ecompag Ativo'),
-                        // Toggle::make('bspay_is_enable')
-                        //     ->label('BsPay Ativo'),
-                        // Toggle::make('digitopay_is_enable')
-                        //     ->label('DigitoPay Ativo'),
-                        // Toggle::make('ezzepay_is_enable')
-                        //     ->label('EzzePay Ativo'),
-                        // Toggle::make('stripe_is_enable')
-                        //     ->label('Stripe Ativo'),
+                                'suitpay' => 'Suitpay', // Deixe como estava no original
+                            ])->columnSpanFull(),
+                            
+                        Toggle::make('suitpay_is_enable')
+                            ->label('Suitpay Ativo'),
                     ])->columns(2),
+                    
                 Section::make('Digite a senha de confirmação')
                     ->description('Obrigatório digitar sua senha de confirmação!')
                     ->schema([
-                        // Campo de senha
                         TextInput::make('approval_password_save')
                             ->label('Senha de Aprovação')
                             ->password()
