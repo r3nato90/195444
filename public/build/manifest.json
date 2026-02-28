@@ -1,0 +1,489 @@
+{
+  "assets/images/cassino-small.png": {
+    "file": "assets/cassino-small-3b2680a4.png",
+    "src": "assets/images/cassino-small.png"
+  },
+  "assets/images/cassino.png": {
+    "file": "assets/cassino-527189c0.png",
+    "src": "assets/images/cassino.png"
+  },
+  "assets/images/games/big.png": {
+    "file": "assets/big-866f9115.png",
+    "src": "assets/images/games/big.png"
+  },
+  "assets/images/games/dog.png": {
+    "file": "assets/dog-47d105e9.png",
+    "src": "assets/images/games/dog.png"
+  },
+  "assets/images/games/fruit.png": {
+    "file": "assets/fruit-56f063b6.png",
+    "src": "assets/images/games/fruit.png"
+  },
+  "assets/images/games/ganesha.webp": {
+    "file": "assets/ganesha-ae5d047f.webp",
+    "src": "assets/images/games/ganesha.webp"
+  },
+  "assets/images/games/gates.webp": {
+    "file": "assets/gates-d8fc8f7d.webp",
+    "src": "assets/images/games/gates.webp"
+  },
+  "assets/images/games/gold.webp": {
+    "file": "assets/gold-66acbe7e.webp",
+    "src": "assets/images/games/gold.webp"
+  },
+  "assets/images/games/mouse.webp": {
+    "file": "assets/mouse-9429a548.webp",
+    "src": "assets/images/games/mouse.webp"
+  },
+  "assets/images/games/ox.webp": {
+    "file": "assets/ox-abd6bd4a.webp",
+    "src": "assets/images/games/ox.webp"
+  },
+  "assets/images/games/rabbit.webp": {
+    "file": "assets/rabbit-b6dcf92b.webp",
+    "src": "assets/images/games/rabbit.webp"
+  },
+  "assets/images/games/sugar.png": {
+    "file": "assets/sugar-1cca2417.png",
+    "src": "assets/images/games/sugar.png"
+  },
+  "assets/images/games/tigre.webp": {
+    "file": "assets/tigre-519739d8.webp",
+    "src": "assets/images/games/tigre.webp"
+  },
+  "assets/images/games/tree.webp": {
+    "file": "assets/tree-8977d686.webp",
+    "src": "assets/images/games/tree.webp"
+  },
+  "assets/images/sport-small.png": {
+    "file": "assets/sport-small-5e566ee2.png",
+    "src": "assets/images/sport-small.png"
+  },
+  "assets/images/sport.png": {
+    "file": "assets/sport-a0e04fbf.png",
+    "src": "assets/images/sport.png"
+  },
+  "assets/images/trofeu.webp": {
+    "file": "assets/trofeu-7af8cf64.webp",
+    "src": "assets/images/trofeu.webp"
+  },
+  "lang/en.json": {
+    "file": "assets/en-cb657782.js",
+    "isDynamicEntry": true,
+    "src": "lang/en.json"
+  },
+  "lang/es.json": {
+    "file": "assets/es-7382c326.js",
+    "isDynamicEntry": true,
+    "src": "lang/es.json"
+  },
+  "lang/php_en.json": {
+    "file": "assets/php_en-3b824abd.js",
+    "isDynamicEntry": true,
+    "src": "lang/php_en.json"
+  },
+  "lang/php_es.json": {
+    "file": "assets/php_es-f7b21b4e.js",
+    "isDynamicEntry": true,
+    "src": "lang/php_es.json"
+  },
+  "lang/php_pt_BR.json": {
+    "file": "assets/php_pt_BR-e1fd2c5e.js",
+    "isDynamicEntry": true,
+    "src": "lang/php_pt_BR.json"
+  },
+  "lang/pt_BR.json": {
+    "file": "assets/pt_BR-fa4c2ca6.js",
+    "isDynamicEntry": true,
+    "src": "lang/pt_BR.json"
+  },
+  "public/assets/images/XXXGHFFF.png": {
+    "file": "assets/XXXGHFFF-047798f7.png",
+    "src": "public/assets/images/XXXGHFFF.png"
+  },
+  "public/assets/images/avancar.png": {
+    "file": "assets/avancar-18095aa4.png",
+    "src": "public/assets/images/avancar.png"
+  },
+  "public/assets/images/baus.gif": {
+    "file": "assets/baus-079a6d95.gif",
+    "src": "public/assets/images/baus.gif"
+  },
+  "public/assets/images/br.png": {
+    "file": "assets/br-9a12d2b8.png",
+    "src": "public/assets/images/br.png"
+  },
+  "public/assets/images/caa.png": {
+    "file": "assets/caa-973a620a.png",
+    "src": "public/assets/images/caa.png"
+  },
+  "public/assets/images/cab.png": {
+    "file": "assets/cab-e1f6a724.png",
+    "src": "public/assets/images/cab.png"
+  },
+  "public/assets/images/cac.png": {
+    "file": "assets/cac-392157a0.png",
+    "src": "public/assets/images/cac.png"
+  },
+  "public/assets/images/cad.png": {
+    "file": "assets/cad-202b03cb.png",
+    "src": "public/assets/images/cad.png"
+  },
+  "public/assets/images/cae.png": {
+    "file": "assets/cae-b47c65ff.png",
+    "src": "public/assets/images/cae.png"
+  },
+  "public/assets/images/caf.png": {
+    "file": "assets/caf-ae18ba7c.png",
+    "src": "public/assets/images/caf.png"
+  },
+  "public/assets/images/cag.png": {
+    "file": "assets/cag-a37e21b0.png",
+    "src": "public/assets/images/cag.png"
+  },
+  "public/assets/images/facebook.png": {
+    "file": "assets/facebook-b353c949.png",
+    "src": "public/assets/images/facebook.png"
+  },
+  "public/assets/images/icon_normal_pix.png": {
+    "file": "assets/icon_normal_pix-2fcd284f.png",
+    "src": "public/assets/images/icon_normal_pix.png"
+  },
+  "public/assets/images/icons/agendasc.png": {
+    "file": "assets/agendasc-4d631ed2.png",
+    "src": "public/assets/images/icons/agendasc.png"
+  },
+  "public/assets/images/icons/config.png": {
+    "file": "assets/config-f53d5b6b.png",
+    "src": "public/assets/images/icons/config.png"
+  },
+  "public/assets/images/icons/eventos.png": {
+    "file": "assets/eventos-5a0ea730.png",
+    "src": "public/assets/images/icons/eventos.png"
+  },
+  "public/assets/images/icons/historic.png": {
+    "file": "assets/historic-443e20bb.png",
+    "src": "public/assets/images/icons/historic.png"
+  },
+  "public/assets/images/icons/presentec.png": {
+    "file": "assets/presentec-1e60b6ce.png",
+    "src": "public/assets/images/icons/presentec.png"
+  },
+  "public/assets/images/icons/reyc.png": {
+    "file": "assets/reyc-39dddb01.png",
+    "src": "public/assets/images/icons/reyc.png"
+  },
+  "public/assets/images/instagram.png": {
+    "file": "assets/instagram-8296df69.png",
+    "src": "public/assets/images/instagram.png"
+  },
+  "public/assets/images/left.png": {
+    "file": "assets/left-41aaefac.png",
+    "src": "public/assets/images/left.png"
+  },
+  "public/assets/images/loading.png": {
+    "file": "assets/loading-71046455.png",
+    "src": "public/assets/images/loading.png"
+  },
+  "public/assets/images/maismi.png": {
+    "file": "assets/maismi-f9a1ace9.png",
+    "src": "public/assets/images/maismi.png"
+  },
+  "public/assets/images/messagess.png": {
+    "file": "assets/messagess-fe4c6dc9.png",
+    "src": "public/assets/images/messagess.png"
+  },
+  "public/assets/images/pix_img.png": {
+    "file": "assets/pix_img-771dd974.png",
+    "src": "public/assets/images/pix_img.png"
+  },
+  "public/assets/images/populareshv.png": {
+    "file": "assets/populareshv-47276d3c.png",
+    "src": "public/assets/images/populareshv.png"
+  },
+  "public/assets/images/refresh.png": {
+    "file": "assets/refresh-8742e9f8.png",
+    "src": "public/assets/images/refresh.png"
+  },
+  "public/assets/images/right.png": {
+    "file": "assets/right-f504926b.png",
+    "src": "public/assets/images/right.png"
+  },
+  "public/assets/images/setacentro.png": {
+    "file": "assets/setacentro-3492256b.png",
+    "src": "public/assets/images/setacentro.png"
+  },
+  "public/assets/images/setacentroesquerdabaixo.png": {
+    "file": "assets/setacentroesquerdabaixo-e9c12ccf.png",
+    "src": "public/assets/images/setacentroesquerdabaixo.png"
+  },
+  "public/assets/images/setacentrotopo.png": {
+    "file": "assets/setacentrotopo-4bc945be.png",
+    "src": "public/assets/images/setacentrotopo.png"
+  },
+  "public/assets/images/setadireita.png": {
+    "file": "assets/setadireita-ad45120d.png",
+    "src": "public/assets/images/setadireita.png"
+  },
+  "public/assets/images/setadireitabaixo.png": {
+    "file": "assets/setadireitabaixo-bc7d512b.png",
+    "src": "public/assets/images/setaesquerdabaixo.png"
+  },
+  "public/assets/images/setadireitatopo.png": {
+    "file": "assets/setadireitatopo-f463c612.png",
+    "src": "public/assets/images/setadireitatopo.png"
+  },
+  "public/assets/images/setaesquerda.png": {
+    "file": "assets/setaesquerda-d84077cd.png",
+    "src": "public/assets/images/setaesquerda.png"
+  },
+  "public/assets/images/setaesquerdabaixo.png": {
+    "file": "assets/setadireitabaixo-bc7d512b.png",
+    "src": "public/assets/images/setaesquerdabaixo.png"
+  },
+  "public/assets/images/setaesquerdatopo.png": {
+    "file": "assets/setaesquerdatopo-5885d789.png",
+    "src": "public/assets/images/setaesquerdatopo.png"
+  },
+  "public/assets/images/suportepage.png": {
+    "file": "assets/suportepage-ddb07eab.png",
+    "src": "public/assets/images/suportepage.png"
+  },
+  "public/assets/images/suportesh.png": {
+    "file": "assets/suportesh-a871fd49.png",
+    "src": "public/assets/images/suportesh.png"
+  },
+  "public/assets/images/telegram.png": {
+    "file": "assets/telegram-71dc6546.png",
+    "src": "public/assets/images/telegram.png"
+  },
+  "public/assets/images/whatsapp.png": {
+    "file": "assets/whatsapp-d2d8cf59.png",
+    "src": "public/assets/images/whatsapp.png"
+  },
+  "public/assets/images/youtube.png": {
+    "file": "assets/youtube-6e5559c1.png",
+    "src": "public/assets/images/youtube.png"
+  },
+  "public/storage/quitar.png": {
+    "file": "assets/quitar-1e05ecd0.png",
+    "src": "public/storage/quitar.png"
+  },
+  "public/storage/som/sombauopen.mp3": {
+    "file": "assets/sombauopen-72f1b46a.mp3",
+    "src": "public/storage/som/sombauopen.mp3"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-4ed993c7.js",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/Components/UI/ModalPopUp.css": {
+    "file": "assets/ModalPopUp-0858c437.css",
+    "src": "resources/js/Components/UI/ModalPopUp.css"
+  },
+  "resources/js/Components/UI/ModalPopUp.vue": {
+    "css": [
+      "assets/ModalPopUp-0858c437.css"
+    ],
+    "file": "assets/ModalPopUp-291fde33.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Components/UI/ModalPopUp.vue"
+  },
+  "resources/js/Pages/Auth/ResetPassword.css": {
+    "file": "assets/ResetPassword-bacecc92.css",
+    "src": "resources/js/Pages/Auth/ResetPassword.css"
+  },
+  "resources/js/Pages/Auth/ResetPassword.vue": {
+    "css": [
+      "assets/ResetPassword-bacecc92.css"
+    ],
+    "file": "assets/ResetPassword-e3739997.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Auth/ResetPassword.vue"
+  },
+  "resources/js/Pages/Cassino/AllCategories.css": {
+    "file": "assets/AllCategories-28ab77f7.css",
+    "src": "resources/js/Pages/Cassino/AllCategories.css"
+  },
+  "resources/js/Pages/Cassino/AllCategories.vue": {
+    "css": [
+      "assets/AllCategories-28ab77f7.css"
+    ],
+    "file": "assets/AllCategories-b1ad38c0.js",
+    "imports": [
+      "resources/js/app.js",
+      "resources/js/Pages/Home/Components/JackpotComponent.vue"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Cassino/AllCategories.vue"
+  },
+  "resources/js/Pages/Home/Components/CategoriesComponent.css": {
+    "file": "assets/CategoriesComponent-d5e82947.css",
+    "src": "resources/js/Pages/Home/Components/CategoriesComponent.css"
+  },
+  "resources/js/Pages/Home/Components/CategoriesComponent.vue": {
+    "assets": [
+      "assets/avancar-18095aa4.png"
+    ],
+    "css": [
+      "assets/CategoriesComponent-d5e82947.css"
+    ],
+    "file": "assets/CategoriesComponent-3be7f202.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Home/Components/CategoriesComponent.vue"
+  },
+  "resources/js/Pages/Home/Components/JackpotComponent.css": {
+    "file": "assets/JackpotComponent-ef77615e.css",
+    "src": "resources/js/Pages/Home/Components/JackpotComponent.css"
+  },
+  "resources/js/Pages/Home/Components/JackpotComponent.vue": {
+    "css": [
+      "assets/JackpotComponent-ef77615e.css"
+    ],
+    "file": "assets/JackpotComponent-f4612493.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Home/Components/JackpotComponent.vue"
+  },
+  "resources/js/Pages/Home/Components/LastWinnersComponent.css": {
+    "file": "assets/LastWinnersComponent-2f350f38.css",
+    "src": "resources/js/Pages/Home/Components/LastWinnersComponent.css"
+  },
+  "resources/js/Pages/Home/Components/LastWinnersComponent.vue": {
+    "assets": [
+      "assets/trofeu-7af8cf64.webp",
+      "assets/tigre-519739d8.webp",
+      "assets/big-866f9115.png",
+      "assets/dog-47d105e9.png",
+      "assets/fruit-56f063b6.png",
+      "assets/gold-66acbe7e.webp",
+      "assets/gates-d8fc8f7d.webp",
+      "assets/ganesha-ae5d047f.webp",
+      "assets/mouse-9429a548.webp",
+      "assets/ox-abd6bd4a.webp",
+      "assets/rabbit-b6dcf92b.webp",
+      "assets/tree-8977d686.webp",
+      "assets/sugar-1cca2417.png"
+    ],
+    "css": [
+      "assets/LastWinnersComponent-2f350f38.css"
+    ],
+    "file": "assets/LastWinnersComponent-1a3948bc.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Home/Components/LastWinnersComponent.vue"
+  },
+  "resources/js/Pages/Home/Components/ShowCarousel.vue": {
+    "file": "assets/ShowCarousel-e53190b1.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Home/Components/ShowCarousel.vue"
+  },
+  "resources/js/Pages/Home/Components/SliderTextComponent.css": {
+    "file": "assets/SliderTextComponent-b4de99d7.css",
+    "src": "resources/js/Pages/Home/Components/SliderTextComponent.css"
+  },
+  "resources/js/Pages/Home/Components/SliderTextComponent.vue": {
+    "css": [
+      "assets/SliderTextComponent-b4de99d7.css"
+    ],
+    "file": "assets/SliderTextComponent-c553829d.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/Pages/Home/Components/SliderTextComponent.vue"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-ef4bc654.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "assets": [
+      "assets/baus-079a6d95.gif",
+      "assets/br-9a12d2b8.png",
+      "assets/refresh-8742e9f8.png",
+      "assets/pix_img-771dd974.png",
+      "assets/historic-443e20bb.png",
+      "assets/presentec-1e60b6ce.png",
+      "assets/agendasc-4d631ed2.png",
+      "assets/reyc-39dddb01.png",
+      "assets/eventos-5a0ea730.png",
+      "assets/left-41aaefac.png",
+      "assets/right-f504926b.png",
+      "assets/instagram-8296df69.png",
+      "assets/telegram-71dc6546.png",
+      "assets/whatsapp-d2d8cf59.png",
+      "assets/facebook-b353c949.png",
+      "assets/youtube-6e5559c1.png",
+      "assets/populareshv-47276d3c.png",
+      "assets/loading-71046455.png",
+      "assets/quitar-1e05ecd0.png",
+      "assets/suportesh-a871fd49.png",
+      "assets/messagess-fe4c6dc9.png",
+      "assets/config-f53d5b6b.png",
+      "assets/maismi-f9a1ace9.png",
+      "assets/setaesquerda-d84077cd.png",
+      "assets/setadireita-ad45120d.png",
+      "assets/setacentro-3492256b.png",
+      "assets/setadireitabaixo-bc7d512b.png",
+      "assets/setacentroesquerdabaixo-e9c12ccf.png",
+      "assets/setacentrotopo-4bc945be.png",
+      "assets/setaesquerdatopo-5885d789.png",
+      "assets/setadireitatopo-f463c612.png",
+      "assets/cab-e1f6a724.png",
+      "assets/cad-202b03cb.png",
+      "assets/cac-392157a0.png",
+      "assets/cag-a37e21b0.png",
+      "assets/cae-b47c65ff.png",
+      "assets/caf-ae18ba7c.png",
+      "assets/caa-973a620a.png",
+      "assets/icon_normal_pix-2fcd284f.png",
+      "assets/sombauopen-72f1b46a.mp3",
+      "assets/XXXGHFFF-047798f7.png",
+      "assets/suportepage-ddb07eab.png",
+      "assets/cassino-527189c0.png",
+      "assets/cassino-small-3b2680a4.png",
+      "assets/sport-a0e04fbf.png",
+      "assets/sport-small-5e566ee2.png"
+    ],
+    "css": [
+      "assets/app-ef4bc654.css"
+    ],
+    "dynamicImports": [
+      "resources/js/Pages/Home/Components/ShowCarousel.vue",
+      "resources/js/Pages/Home/Components/LastWinnersComponent.vue",
+      "resources/js/Pages/Home/Components/CategoriesComponent.vue",
+      "resources/js/Pages/Home/Components/SliderTextComponent.vue",
+      "resources/js/Pages/Home/Components/JackpotComponent.vue",
+      "resources/js/Components/UI/ModalPopUp.vue",
+      "resources/js/Pages/Auth/ResetPassword.vue",
+      "resources/js/Pages/Cassino/AllCategories.vue",
+      "lang/en.json",
+      "lang/es.json",
+      "lang/php_en.json",
+      "lang/php_es.json",
+      "lang/php_pt_BR.json",
+      "lang/pt_BR.json"
+    ],
+    "file": "assets/app-7d55152f.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}
