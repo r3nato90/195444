@@ -25,7 +25,6 @@ class Setting extends Model
         'software_name',
         'software_description',
         'message_home_page',
-        'pixup_is_enable',
 
         /// logos e background
         'software_favicon',

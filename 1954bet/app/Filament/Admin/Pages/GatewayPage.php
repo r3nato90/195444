@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Pages;
 
 use App\Models\Gateway;
-use App\Models\AproveSaveSetting;
+use App\Models\AproveSaveSetting; // Importação do modelo para verificação de senha
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -11,7 +11,8 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Hash; // Importação para verificação da senha
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 use Illuminate\Support\HtmlString;
 
 class GatewayPage extends Page
@@ -72,23 +73,6 @@ class GatewayPage extends Page
                             ->maxLength(191)
                             ->columnSpanFull(),
                     ]),
-                
-                // --- NOVA SEÇÃO PIXUP ---
-                Section::make('PixUP')
-                    ->description('Configurações da API de Pagamentos PixUP')
-                    ->schema([
-                        TextInput::make('pixup_client_id')
-                            ->label('Client ID')
-                            ->placeholder('Ex: luanbcsc_03484...')
-                            ->maxLength(191)
-                            ->columnSpanFull(),
-                        TextInput::make('pixup_client_secret')
-                            ->label('Token Secreto')
-                            ->placeholder('Ex: 9fd0756230...')
-                            ->maxLength(191)
-                            ->columnSpanFull(),
-                    ]),
-
                 Section::make('Digite a senha de confirmação')
                     ->description('Obrigatório digitar sua senha de confirmação!')
                     ->schema([
@@ -136,10 +120,6 @@ class GatewayPage extends Page
                 $setting->suitpay_uri = $this->data['suitpay_uri'] ?? $setting->suitpay_uri;
                 $setting->suitpay_cliente_id = $this->data['suitpay_cliente_id'] ?? $setting->suitpay_cliente_id;
                 $setting->suitpay_cliente_secret = $this->data['suitpay_cliente_secret'] ?? $setting->suitpay_cliente_secret;
-                
-                // Salvar dados da PixUP
-                $setting->pixup_client_id = $this->data['pixup_client_id'] ?? $setting->pixup_client_id;
-                $setting->pixup_client_secret = $this->data['pixup_client_secret'] ?? $setting->pixup_client_secret;
 
                 $setting->save();
 

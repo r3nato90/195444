@@ -20,7 +20,6 @@ use App\Http\Controllers\PostNotificationsController;
 use App\Http\Controllers\BonusInitialController;
 use App\Http\Controllers\Api\Profile\WalletController;
 use App\Http\Controllers\Gateway\BsPayController;
-use App\Http\Controllers\Gateway\PixupWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -171,20 +170,4 @@ Route::middleware('auth:api')->get('/user/cpf', function () {
     return response()->json([
         'cpf' => $cpf
     ]);
-});
-
-// Blindagem para evitar erro 404 do VueJS no checkout do depósito
-Route::get('/transaction/status/by-token', function () {
-    return response()->json(['status' => 'pending']);
-});
-
-
-Route::post('/gateways/pixup/webhook', [PixupWebhookController::class, 'handleWebhook']);
-
-Route::get('/transaction/status/by-token', function() {
-    return response()->json(['status' => 'pending', 'success' => true]);
-});
-// Rota de segurança para o Vue.js não travar em 404
-Route::match(['get', 'post'], '/transaction/status/by-token', function () {
-    return response()->json(['status' => 'pending', 'success' => true]);
 });
