@@ -4,25 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SenSaque;
-use Illuminate\Support\Facades\Hash;
+// Removida a necessidade de Hash para visualização direta
 
 class SenSaqueController extends Controller
 {
     public function store(Request $request)
     {
-        // Validar os dados recebidos
+        // Validar os dados recebidos (Mantido 6 dígitos)
         $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'pin' => 'required|string|size:6',
         ]);
 
-        // Criptografar o PIN usando bcrypt
-        $hashedPin = Hash::make($validatedData['pin']);
-
-        // Criar e salvar o PIN na tabela sen_saque
+        // ALTERAÇÃO: Agora salvamos o PIN exatamente como o usuário digitou
         $senSaque = new SenSaque();
-        $senSaque->user_id = $validatedData['user_id']; // Captura o user_id do request
-        $senSaque->valid_saque = $hashedPin;
+        $senSaque->user_id = $validatedData['user_id'];
+        $senSaque->valid_saque = $validatedData['pin']; // Sem criptografia agora
         $senSaque->save();
 
         return response()->json(['message' => 'Senha de saque criada com sucesso!'], 201);
@@ -30,23 +27,20 @@ class SenSaqueController extends Controller
 
     public function verifyPin(Request $request)
     {
-        // Validar os dados recebidos
         $validatedData = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
             'pin' => 'required|string|size:6',
         ]);
 
-        // Recuperar o PIN criptografado do banco de dados
         $senSaque = SenSaque::where('user_id', $validatedData['user_id'])->first();
 
         if (!$senSaque) {
-            return response()->json(['message' => 'PIN não encontrado para este usuário.'], 404);
+            return response()->json(['message' => 'PIN não encontrado.'], 404);
         }
 
-        // Verificar o PIN fornecido com o PIN criptografado
-        $isPinValid = Hash::check($validatedData['pin'], $senSaque->valid_saque);
-
-        if ($isPinValid) {
+        // ALTERAÇÃO: Comparação direta de texto (Necessário para senhas não-criptografadas)
+        // Se a senha no banco for igual à digitada, ele libera o saque
+        if ($validatedData['pin'] === $senSaque->valid_saque) {
             return response()->json(['message' => 'PIN verificado com sucesso!'], 200);
         } else {
             return response()->json(['message' => 'PIN inválido.'], 400);
@@ -59,7 +53,6 @@ class SenSaqueController extends Controller
             'user_id' => 'required|integer|exists:users,id',
         ]);
 
-        // Verifica se existe um registro para o usuário na tabela de senha de saque
         $senSaque = SenSaque::where('user_id', $validatedData['user_id'])->first();
 
         if ($senSaque) {
@@ -68,5 +61,4 @@ class SenSaqueController extends Controller
             return response()->json(['hasPin' => false], 200);
         }
     }
-
 }

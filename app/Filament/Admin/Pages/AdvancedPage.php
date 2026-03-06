@@ -19,7 +19,7 @@ use App\Traits\Providers\PlayConnectTrait;
 
 class AdvancedPage extends Page implements HasForms
 {
-    use InteractsWithForms, WorldSlotTrait, WithFileUploads;
+    use InteractsWithForms, WorldSlotTrait, WithFileUploads, EvergameTrait, DrakonTrait, PlayConnectTrait;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 

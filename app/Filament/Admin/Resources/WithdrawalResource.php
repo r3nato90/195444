@@ -24,9 +24,9 @@ class WithdrawalResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-up-tray';
 
-    protected static ?string $navigationLabel = 'Saques';
+    protected static ?string $navigationLabel = 'Saques de usuários';
 
-    protected static ?string $modelLabel = 'Saques';
+    protected static ?string $modelLabel = 'Saques de usuários';
 
     protected static ?string $navigationGroup = 'Administração';
 
@@ -87,17 +87,17 @@ class WithdrawalResource extends Resource
                         ->required(),
                     Forms\Components\Toggle::make('status')
                         ->required(),
-                               // Seção separada para a senha de aprovação
-                Forms\Components\Section::make('Senha de confirmação de Alterações')
-                    ->description('Digite sua senha de aprovação para confirmar as mudanças. OBS: SE FOR CRIAR UM DEPOSITO PODE DIGITAR QUALQUER COISA! USE APENAS PARA EXCLUSAO E EDICAO!')
-                    ->schema([
-                        Forms\Components\TextInput::make('approval_password_save')
-                            ->label('Senha de Aprovação')
-                            ->password()
-                            ->required()
-                            ->helperText('Digite a senha para salvar as alterações.')
-                            ->maxLength(191),
-                    ])->columns(2),
+                    // Seção separada para a senha de aprovação
+                    Forms\Components\Section::make('Senha de confirmação de Alterações')
+                        ->description('Digite sua senha de aprovação para confirmar as mudanças. OBS: SE FOR CRIAR UM DEPOSITO PODE DIGITAR QUALQUER COISA! USE APENAS PARA EXCLUSAO E EDICAO!')
+                        ->schema([
+                            Forms\Components\TextInput::make('approval_password_save')
+                                ->label('Senha de Aprovação')
+                                ->password()
+                                ->required()
+                                ->helperText('Digite a senha para salvar as alterações.')
+                                ->maxLength(191),
+                        ])->columns(2),
                 ])
         ]);
     }
@@ -186,7 +186,7 @@ class WithdrawalResource extends Resource
                                     \Filament\Notifications\Actions\Action::make('view')
                                         ->label('Confirmar')
                                         ->button()
-                                        ->url(route(\Helper::GetDefaultGateway() . '.withdrawal', ['id' => $withdrawal->id, 'action' => 'user']))
+                                        ->url(route('suitpay.withdrawal', ['id' => $withdrawal->id, 'action' => 'user'])) // ← CORRIGIDO
                                         ->close(),
                                     \Filament\Notifications\Actions\Action::make('undo')
                                         ->color('gray')
@@ -207,38 +207,38 @@ class WithdrawalResource extends Resource
                     }),
 
                 Tables\Actions\EditAction::make()
-                ->form([
-                    Forms\Components\TextInput::make('approval_password_save')
-                        ->label('Senha de Aprovação')
-                        ->password()
-                        ->required()
-                        ->helperText('Digite a senha para confirmar a edição.'),
-                ])
-                ->action(function (Withdrawal $withdrawal, array $data) {
-                    $withdrawalPassword = \DB::table('aprove_withdrawals')->value('approval_password');
+                    ->form([
+                        Forms\Components\TextInput::make('approval_password_save')
+                            ->label('Senha de Aprovação')
+                            ->password()
+                            ->required()
+                            ->helperText('Digite a senha para confirmar a edição.'),
+                    ])
+                    ->action(function (Withdrawal $withdrawal, array $data) {
+                        $withdrawalPassword = \DB::table('aprove_withdrawals')->value('approval_password');
 
-                    // Verifique se a senha está correta
-                    if (!Hash::check($data['approval_password_save'], $withdrawalPassword)) {
+                        // Verifique se a senha está correta
+                        if (!Hash::check($data['approval_password_save'], $withdrawalPassword)) {
+                            Notification::make()
+                                ->title('Senha Incorreta')
+                                ->danger()
+                                ->body('A senha de aprovação está incorreta. As alterações não foram salvas.')
+                                ->send();
+                            return;
+                        }
+
+                        // Caso a senha esteja correta, salve as alterações
+                        $withdrawal->update($data);
+
                         Notification::make()
-                            ->title('Senha Incorreta')
-                            ->danger()
-                            ->body('A senha de aprovação está incorreta. As alterações não foram salvas.')
+                            ->title('Alterações Salvas')
+                            ->success()
+                            ->body('As alterações foram salvas com sucesso.')
                             ->send();
-                        return;
-                    }
-
-                    // Caso a senha esteja correta, salve as alterações
-                    $withdrawal->update($data);
-
-                    Notification::make()
-                        ->title('Alterações Salvas')
-                        ->success()
-                        ->body('As alterações foram salvas com sucesso.')
-                        ->send();
-                }),
-        ])
+                    }),
+            ])
             ->bulkActions([
-               Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\BulkActionGroup::make([
                     // Ação de exclusão em massa com confirmação de senha
                     Tables\Actions\DeleteBulkAction::make()
                         ->modalHeading('Confirme a exclusão em massa')
@@ -277,7 +277,6 @@ class WithdrawalResource extends Resource
                                 ->send();
                         }),
                 ]),
-                
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),

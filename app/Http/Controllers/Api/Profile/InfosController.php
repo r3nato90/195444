@@ -421,7 +421,7 @@ private function getUserDepositWithdrawalData(User $referredUser, string $level)
         ->sum('amount');
 
     $betsMinuusWins = $totalWins - $totalBets;
-    $betsAlls = $totalWins + $totalBets;
+    $betsAlls = $totalBets;
     $numberBetsandWins = $totalWinsCount + $totalBetsCount;
 
     return [

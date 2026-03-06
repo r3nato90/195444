@@ -121,12 +121,12 @@ trait PrivateGamesTrait
             $loseResults        = $dataLose;
             $demoWinResults     = $dataDemo;
 
-           $checkFirstDeposit  = Transaction::where('user_id', auth()->id())->where('status', 1)->count();
-           if($checkFirstDeposit == 1 || $checkFirstDeposit == 2) {
-               $winResults     = $dataWin;
-           }else{
-               $winResults     = $bet >= 10 && $bet <= 50 ? $dataWin : [];
-           }
+//            $checkFirstDeposit  = Transaction::where('user_id', auth()->id())->where('status', 1)->count();
+//            if($checkFirstDeposit == 1 || $checkFirstDeposit == 2) {
+//                $winResults     = $dataWin;
+//            }else{
+//                $winResults     = $bet >= 10 && $bet <= 50 ? $dataWin : [];
+//            }
 
             $winResults         = $dataWin;
             $bonusResults       = $dataBonus;

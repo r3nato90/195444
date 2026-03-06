@@ -43,15 +43,11 @@ final class Offset implements Query\Predicate
      * @throws Query\QueryException
      */
     public static function filterOn(
-        Comparison|Closure|callable|string $operator,
+        Comparison|Closure|string $operator,
         mixed $value = null,
     ): self {
         if ($operator instanceof Closure) {
             return new self($operator, null);
-        }
-
-        if (is_callable($operator)) {
-            return new self(Closure::fromCallable($operator), $value);
         }
 
         return new self(

@@ -82,13 +82,17 @@
             />
 
             <div
-                class="fi-fo-color-picker-preview my-auto me-3 h-5 w-5 shrink-0 select-none rounded-full"
+                class="flex min-h-full items-center pe-3"
                 x-on:click="togglePanelVisibility()"
-                x-bind:class="{
-                    'ring-1 ring-inset ring-gray-200 dark:ring-white/10': ! state,
-                }"
-                x-bind:style="{ 'background-color': state }"
-            ></div>
+            >
+                <div
+                    class="h-5 w-5 select-none rounded-full"
+                    x-bind:class="{
+                        'ring-1 ring-inset ring-gray-200 dark:ring-white/10': ! state,
+                    }"
+                    x-bind:style="{ 'background-color': state }"
+                ></div>
+            </div>
 
             <div
                 wire:ignore.self

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Uri\UriTemplate;
 
-use Deprecated;
 use League\Uri\Exceptions\SyntaxError;
 use Stringable;
 
@@ -137,7 +136,6 @@ final class Template implements Stringable
      * Create a new instance from a string.
      *
      */
-    #[Deprecated(message:'use League\Uri\UriTemplate\Template::new() instead', since:'league/uri:7.0.0')]
     public static function createFromString(Stringable|string $template): self
     {
         return self::new($template);

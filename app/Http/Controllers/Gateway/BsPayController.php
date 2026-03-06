@@ -7,8 +7,10 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Deposit;
 use App\Models\Withdrawal;
 use App\Models\BsPayPayment;
+use App\Models\AffiliateWithdraw;
 use App\Traits\Affiliates\AffiliateHistoryTrait;
 use App\Traits\Gateways\BsPayTrait;
 use Filament\Notifications\Notification;
@@ -43,18 +45,31 @@ class BsPayController extends Controller
      */
     public function callbackMethod(Request $request)
     {
+        \Log::info('Processando o callback...');
+        
         $data = $request->requestBody;
-
-        ///\DB::table('debug')->insert(['text' => json_encode($request->all())]);
-
+    
+        \Log::info('Dados recebidos no callback: ' . json_encode($data));
+    
         if (isset($data['transactionId']) && $data['transactionType'] == 'RECEIVEPIX') {
+            \Log::info('Transação válida recebida!');
+            
             if ($data['status'] == "PAID") {
-                if (self::finalizePayment($data['transactionId'])) {
+                \Log::info('Status PAID encontrado!');
+                
+                if (self::finalizePaymentBsPay($data['transactionId'])) {
+                    \Log::info('Pagamento finalizado com sucesso!');
                     return response()->json([], 200);
+                } else {
+                    \Log::error('Falha ao finalizar o pagamento.');
+                    return response()->json(['error' => 'Falha ao processar pagamento'], 500);
                 }
             }
         }
+    
+        return response()->json(['error' => 'Callback não processado corretamente.'], 400);
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -71,19 +86,15 @@ class BsPayController extends Controller
      */
     public function confirmWithdrawalUser($id)
     {
-        
         $withdrawal = Withdrawal::find($id);
-
-        
-
-        if (!empty($withdrawal)) {
+        if (!empty($withdrawal)) { 
             $bspayment = BsPayPayment::create([
                 'withdrawal_id' => $withdrawal->id,
                 'user_id' => $withdrawal->user_id,
                 'pix_key' => $withdrawal->pix_key,
                 'pix_type' => $withdrawal->pix_type,
                 'amount' => $withdrawal->amount,
-                'observation' => 'PixUP',
+                'observation' => 'bspay',
             ]);
 
             if ($bspayment) {
@@ -93,7 +104,6 @@ class BsPayController extends Controller
                     'amount' => $withdrawal->amount,
                     'bspayment_id' => $bspayment->id
                 ];
-
 
                 $resp = self::MakePayment($parm);
 
@@ -292,4 +302,63 @@ class BsPayController extends Controller
             ], 404);
         }
     }
+
+    public function testCallback(Request $request)
+    {
+        \Log::info('Requisição recebida: ' . json_encode($request->all()));
+        
+        $transactionId = $request->input('transactionId');
+        if (!$transactionId) {
+            return response()->json(['error' => 'Transaction ID é obrigatório para o teste'], 400);
+        }
+    
+        try {
+            // Gera o mock com base nos dados reais do depósito
+            $mockRequest = self::mockCallbackBsPay($transactionId);
+    
+            // Processa o callback
+            return $this->callbackMethod($mockRequest);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+
+    private static function mockCallbackBsPay($transactionId)
+    {
+        // Recuperar o depósito real baseado no transactionId
+        $deposit = Deposit::where('payment_id', $transactionId)->first();
+
+        if (!$deposit) {
+            \Log::error("Depósito não encontrado para o transactionId: $transactionId");
+            return false;
+        }
+
+        // Mock de dados de retorno para simular o comportamento do sistema
+        $mockData = [
+            'requestBody' => [
+                'transactionType' => 'RECEIVEPIX',
+                'transactionId' => $transactionId,
+                'transactionType' => 'RECEIVEPIX',
+                'status' => 'PAID',
+                'amount' => $deposit->amount, // Pegue o valor do depósito real
+                'paymentType' => 'PIX',
+                'dateApproval' => now(),
+                'creditParty' => [
+                    'name' => $deposit->user->name,
+                    'email' => $deposit->user->email,
+                    'taxId' => $deposit->user->cpf
+                ],
+                'debitParty' => [
+                    'bank' => 'BSPAY SOLUCOES DE PAGAMENTOS LTDA',
+                    'taxId' => '46872831000154'
+                ]
+            ]
+        ];
+
+        // Simula a requisição real
+        return new Request($mockData);
+    }
+
+
 }

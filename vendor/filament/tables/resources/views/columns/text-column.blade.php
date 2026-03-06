@@ -43,17 +43,7 @@
             $arrayState = implode(
                 ', ',
                 array_map(
-                    function ($value) {
-                        if ($value instanceof \Filament\Support\Contracts\HasLabel) {
-                            return $value->getLabel();
-                        }
-
-                        if (is_array($value)) {
-                            return json_encode($value);
-                        }
-
-                        return $value;
-                    },
+                    fn ($value) => $value instanceof \Filament\Support\Contracts\HasLabel ? $value->getLabel() : $value,
                     $arrayState,
                 ),
             );

@@ -64,7 +64,7 @@
             ])
         >
             @if ($subNavigation)
-                <div class="contents md:hidden">
+                <div class="md:hidden">
                     {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_SUB_NAVIGATION_SELECT_BEFORE, scopes: $this->getRenderHookScopes()) }}
                 </div>
 
@@ -72,7 +72,7 @@
                     :navigation="$subNavigation"
                 />
 
-                <div class="contents md:hidden">
+                <div class="md:hidden">
                     {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::PAGE_SUB_NAVIGATION_SELECT_AFTER, scopes: $this->getRenderHookScopes()) }}
                 </div>
 

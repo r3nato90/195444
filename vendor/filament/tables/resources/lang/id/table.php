@@ -10,10 +10,6 @@ return [
 
     'columns' => [
 
-        'actions' => [
-            'label' => 'Aksi|Aksi',
-        ],
-
         'text' => [
 
             'actions' => [

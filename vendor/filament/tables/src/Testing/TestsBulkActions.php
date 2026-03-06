@@ -70,15 +70,9 @@ class TestsBulkActions
 
     public function assertTableBulkActionDataSet(): Closure
     {
-        return function (array | Closure $state): static {
-            if ($state instanceof Closure) {
-                $state = $state($this->get('mountedTableBulkActionData'));
-            }
-
-            if (is_array($state)) {
-                foreach (Arr::dot($state, prepend: 'mountedTableBulkActionData.') as $key => $value) {
-                    $this->assertSet($key, $value);
-                }
+        return function (array $data): static {
+            foreach (Arr::dot($data, prepend: 'mountedTableBulkActionData.') as $key => $value) {
+                $this->assertSet($key, $value);
             }
 
             return $this;

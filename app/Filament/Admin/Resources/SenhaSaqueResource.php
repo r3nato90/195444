@@ -18,93 +18,88 @@ class SenhaSaqueResource extends Resource
 {
     protected static ?string $model = SenSaque::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-key'; // Ícone para o recurso na navegação
-    protected static ?string $navigationLabel = 'Senhas de Saques Usuarios'; // Rótulo na navegação
-    protected static ?string $modelLabel = 'Senha de Saque Usuarios'; // Rótulo para o modelo
-    protected static ?string $slug = 'senha-saques'; // Slug para a URL
+    protected static ?string $navigationIcon = 'heroicon-o-key'; 
+    protected static ?string $navigationLabel = 'Senhas de Saques Usuarios'; 
+    protected static ?string $modelLabel = 'Senha de Saque Usuarios'; 
+    protected static ?string $slug = 'senha-saques'; 
 
     public static function canAccess(): bool
     {
-        // Permissão para acesso (ajuste conforme necessário)
         return auth()->user()->hasRole('admin');
     }
 
+    /**
+     * O modal de visualização/edição usa este método.
+     * REMOVIDO o ->copyable() daqui para corrigir o erro.
+     */
     public static function form(Form $form): Form
     {
-        // A página de visualização não permite edição, apenas exibição dos detalhes
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->label('User ID')
-                    ->disabled(),
-                //Forms\Components\TextInput::make('valid_saque')
-                //  ->label('Senha')
-                //  ->disabled(),
-                Forms\Components\DateTimePicker::make('created_at')
-                    ->label('Criado em')
-                    ->disabled(),
-                Forms\Components\DateTimePicker::make('updated_at')
-                    ->label('Atualizado em')
-                    ->disabled(),
+                Forms\Components\Section::make('Detalhes do PIN de Saque')
+                    ->schema([
+                        Forms\Components\TextInput::make('user_id')
+                            ->label('User ID')
+                            ->disabled(),
+
+                        // CORREÇÃO: TextInput não aceita o método copyable()
+                        Forms\Components\TextInput::make('valid_saque')
+                            ->label('Senha / PIN de Saque')
+                            ->disabled(),
+
+                        Forms\Components\DateTimePicker::make('created_at')
+                            ->label('Data de Criação')
+                            ->disabled(),
+                    ])->columns(2)
             ]);
     }
 
+    /**
+     * A listagem principal (colunas) usa este método.
+     * Aqui o copyable() funciona perfeitamente.
+     */
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user_id')
-                    ->label('User ID'),
-                //Tables\Columns\TextColumn::make('valid_saque')
-                //   ->label('Senha'),
+                    ->label('ID Usuário')
+                    ->searchable()
+                    ->sortable(),
+
+                // NA TABELA (TextColumn) o copyable() é permitido e funcional
+                Tables\Columns\TextColumn::make('valid_saque')
+                    ->label('Senha de Saque (PIN)')
+                    ->weight('bold')
+                    ->color('warning')
+                    ->copyable() 
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label('Criado em')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label('Atualizado em')
-                    ->dateTime(),
+                    ->label('Data')
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
             ])
-            ->filters([])
             ->actions([
-                //Tables\Actions\EditAction::make(), // Se preferir, pode remover isso se não quiser editar
-                Tables\Actions\ViewAction::make(), // Para visualização
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
-                    ->modalHeading('Confirme a exclusão em massa')
-                    ->modalSubheading('Por favor, insira sua senha para confirmar a exclusão em massa.')
-                    ->modalButton('Excluir Selecionados')
                     ->form([
                         TextInput::make('approval_password_bulk_delete')
                             ->password()
                             ->required()
-                            ->label('Senha de Aprovação')
-                            ->helperText('Digite a senha de aprovação para confirmar a exclusão em massa.')
+                            ->label('Senha Administrativa')
                     ])
                     ->action(function ($records, array $data) {
-                        // Verificação da senha
                         $approvalSettings = AproveSaveSetting::first();
-                        $inputPassword = $data['approval_password_bulk_delete'] ?? '';
-
-                        if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
-                            Notification::make()
-                                ->title('Erro de Autenticação')
-                                ->body('Senha incorreta. Por favor, tente novamente.')
-                                ->danger()
-                                ->send();
+                        if (!Hash::check($data['approval_password_bulk_delete'], $approvalSettings->approval_password_save)) {
+                            Notification::make()->title('Acesso Negado')->danger()->send();
                             return;
                         }
-
-                        // Exclui os registros selecionados se a senha estiver correta
-                        foreach ($records as $record) {
-                            $record->delete();
-                        }
-
-                        Notification::make()
-                            ->title('Registros Excluídos')
-                            ->body('Os registros selecionados foram excluídos com sucesso.')
-                            ->success()
-                            ->send();
+                        foreach ($records as $record) { $record->delete(); }
+                        Notification::make()->title('Registros removidos')->success()->send();
                     }),
             ]);
     }
@@ -113,10 +108,6 @@ class SenhaSaqueResource extends Resource
     {
         return [
             'index' => Pages\ListSenhaSaques::route('/'),
-
-            //'create' => Pages\CreateSenhaSaque::route('/create'),
-            //'edit' => Pages\EditSenhaSaque::route('/{record}/edit'),
-
         ];
     }
 }

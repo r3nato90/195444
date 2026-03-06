@@ -154,7 +154,6 @@ class SupportServiceProvider extends PackageServiceProvider
                 $this->optimizes(
                     optimize: 'filament:optimize', /** @phpstan-ignore-line */
                     clear: 'filament:optimize-clear', /** @phpstan-ignore-line */
-                    key: 'filament', /** @phpstan-ignore-line */
                 );
             }
         }

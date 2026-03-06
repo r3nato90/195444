@@ -19,9 +19,9 @@
           </div>
           <div class="mb-4 flex items-center">
             <select v-model="pixType" id="pixType" class="block w-full p-2 custom-select" required>
-              <option value="DOCUMENT">Utilizar somente CPF</option>
-              <!-- <option value="EMAIL">Email</option>
-              <option value="phoneNumber">Telefone</option> -->
+              <option value="DOCUMENT">CPF</option>
+              <option value="EMAIL">Email</option>
+              <option value="phoneNumber">Telefone</option>
             </select>
           </div>
           <div class="mb-4 flex items-center input-custom">
@@ -93,7 +93,6 @@ export default {
     }
   },
   methods: {
-
    async submitForm() {
     try {
       const data = {
@@ -101,7 +100,7 @@ export default {
         name: this.name,
         pix_type: this.pixType === 'phoneNumber' ? this.pixType : this.pixType.toLowerCase(), // Converte para minúsculas, exceto para telefone
         pix_key: this.pixType === 'phoneNumber' ? this.pixKey : this.pixKey.toLowerCase() // Não converte para minúsculas se for telefone
-      }; 
+      };
 
       if (this.pixType === 'EMAIL' || this.pixType === 'phoneNumber') {
         data.document = this.document.toLowerCase(); // Converte o CPF para minúsculas, se necessário
@@ -109,10 +108,6 @@ export default {
 
       const response = await axios.post('/account_withdraw', data);
       console.log(response.data.message);
-      
-      // Emite um evento para o componente pai
-      this.$emit('formSubmitted', response.data);
-
       this.closeModal();
     } catch (error) {
       console.error('Erro ao salvar os dados:', error.response.data);
@@ -135,7 +130,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 40;
   background: rgba(0, 0, 0, 0.5);
 }
@@ -145,7 +140,7 @@ export default {
     background-color: var(--botao-registro-background-modal);
 }
 .modal-container {
-  z-index: 40;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: center;

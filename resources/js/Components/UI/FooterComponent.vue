@@ -1,5 +1,5 @@
 <template>
-    <div class="footer-color p-2 pb-12 md:pb-5 max-w-[490px]">
+    <div class="footer-color p-2 pb-12 md:pb-5 max-w-[450px]">
 
     
 
@@ -57,7 +57,7 @@
                         <h3 class="custom-font-2 title-color">{{ $t('Suporte') }}</h3>
                         <ul class="list-none mt-2">
                          <li class="transition duration-700 text-color custom-font">
-                          <a :href="custom?.bt_5_link">{{ $t('Suporte online') }}</a>
+                          <a :href="custom.bt_5_link">{{ $t('Suporte online') }}</a>
                         </li>
                         <li class="transition duration-700 text-color custom-font">
                             <a @click="$router.push('/profile/messages')">{{ $t('Central de Ajuda') }}</a>
@@ -73,28 +73,28 @@
                     {{ setting.software_description }}
                 </div>
                <div v-if="custom" class="flex mt-5 justify-center">
-    <div v-if="custom?.instagram" class="flex justify-center mr-1 ml-1 items-center ">
-        <a :href="custom?.instagram" target="_blank" class="text-color p-1 instagram-icon">
+    <div v-if="custom.instagram" class="flex justify-center mr-1 ml-1 items-center ">
+        <a :href="custom.instagram" target="_blank" class="text-color p-1 instagram-icon">
             <img src="/public/assets/images/instagram.png" alt="Instagram" class=" h-10">
         </a>
     </div>
-    <div v-if="custom?.telegram" class="flex justify-center  mr-1 ml-1 items-center ">
-        <a :href="custom?.telegram" target="_blank" class="text-color p-1 telegram-icon">
+    <div v-if="custom.telegram" class="flex justify-center  mr-1 ml-1 items-center ">
+        <a :href="custom.telegram" target="_blank" class="text-color p-1 telegram-icon">
             <img src="/public/assets/images/telegram.png" alt="Telegram" class="h-10">
         </a>
     </div>
-    <div v-if="custom?.whastapp" class="flex justify-center  mr-1 ml-1 items-center ">
-        <a :href="custom?.whastapp" target="_blank" class="text-color p-1 whatsapp-icon">
+    <div v-if="custom.whastapp" class="flex justify-center  mr-1 ml-1 items-center ">
+        <a :href="custom.whastapp" target="_blank" class="text-color p-1 whatsapp-icon">
             <img src="/public/assets/images/whatsapp.png" alt="WhatsApp" class="h-10">
         </a>
     </div>
-    <div v-if="custom?.facebook" class="flex justify-center mr-1 ml-1 items-center ">
-        <a :href="custom?.facebook" target="_blank" class="text-color p-1 facebook-icon">
+    <div v-if="custom.facebook" class="flex justify-center mr-1 ml-1 items-center ">
+        <a :href="custom.facebook" target="_blank" class="text-color p-1 facebook-icon">
             <img src="/public/assets/images/facebook.png" alt="Facebook" class=" h-10">
         </a>
     </div>
-    <div v-if="custom?.youtube" class="flex justify-center  mr-1 ml-1 items-center">
-        <a :href="custom?.youtube" target="_blank" class="text-color p-1 youtube-icon">
+    <div v-if="custom.youtube" class="flex justify-center  mr-1 ml-1 items-center">
+        <a :href="custom.youtube" target="_blank" class="text-color p-1 youtube-icon">
             <img src="/public/assets/images/youtube.png" alt="YouTube" class="h-10">
         </a>
     </div>

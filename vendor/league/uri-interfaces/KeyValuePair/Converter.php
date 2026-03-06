@@ -34,20 +34,23 @@ use const PHP_QUERY_RFC3986;
 final class Converter
 {
     private const REGEXP_INVALID_CHARS = '/[\x00-\x1f\x7f]/';
+    /** @var non-empty-string */
+    private readonly string $separator;
 
     /**
-     * @param non-empty-string $separator the query string separator
      * @param array<string> $fromRfc3986 contains all the RFC3986 encoded characters to be converted
      * @param array<string> $toEncoding contains all the expected encoded characters
      */
     private function __construct(
-        private readonly string $separator,
+        string $separator,
         private readonly array $fromRfc3986 = [],
         private readonly array $toEncoding = [],
     ) {
-        if ('' === $this->separator) {
+        if ('' === $separator) {
             throw new SyntaxError('The separator character must be a non empty string.');
         }
+
+        $this->separator = $separator;
     }
 
     /**

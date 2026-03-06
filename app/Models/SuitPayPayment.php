@@ -34,7 +34,8 @@ class SuitPayPayment extends Model
         'pix_type',
         'amount',
         'observation',
-        'status'
+        'status',
+        'external_id'
     ];
 
 

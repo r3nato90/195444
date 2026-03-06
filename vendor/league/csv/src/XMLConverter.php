@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Csv;
 
-use Closure;
 use DOMAttr;
 use DOMDocument;
 use DOMElement;
@@ -35,8 +34,6 @@ class XMLConverter
     protected string $column_attr = '';
     /** XML offset attribute name. */
     protected string $offset_attr = '';
-    /** @var ?Closure(array, array-key): array */
-    public ?Closure $formatter = null;
 
     public static function create(): self
     {
@@ -58,10 +55,6 @@ class XMLConverter
      */
     public function convert(iterable $records): DOMDocument
     {
-        if (null !== $this->formatter) {
-            $records = MapIterator::fromIterable($records, $this->formatter);
-        }
-
         $doc = new DOMDocument('1.0');
         $node = $this->import($records, $doc);
         $doc->appendChild($node);
@@ -150,19 +143,6 @@ class XMLConverter
     {
         $clone = clone $this;
         $clone->root_name = $this->filterElementName($node_name);
-
-        return $clone;
-    }
-
-    /**
-     * Set a callback to format each item before json encode.
-     *
-     * @param ?callable(array, array-key): array $formatter
-     */
-    public function formatter(?callable $formatter): self
-    {
-        $clone = clone $this;
-        $clone->formatter = ($formatter instanceof Closure || null === $formatter) ? $formatter : $formatter(...);
 
         return $clone;
     }

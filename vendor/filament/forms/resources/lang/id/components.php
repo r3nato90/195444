@@ -11,67 +11,15 @@ return [
             ],
 
             'add' => [
-
                 'label' => 'Tambahkan :label',
-
-                'modal' => [
-
-                    'heading' => 'Tambah ke :label',
-
-                    'actions' => [
-
-                        'add' => [
-                            'label' => 'Tambah',
-                        ],
-
-                    ],
-
-                ],
-
             ],
 
             'add_between' => [
-
                 'label' => 'Sisipkan',
-
-                'modal' => [
-
-                    'heading' => 'Tambah ke :label',
-
-                    'actions' => [
-
-                        'add' => [
-                            'label' => 'Tambah',
-                        ],
-
-                    ],
-
-                ],
-
             ],
 
             'delete' => [
                 'label' => 'Hapus',
-            ],
-
-            'edit' => [
-
-                'label' => 'Ubah',
-
-                'modal' => [
-
-                    'heading' => 'Ubah blok',
-
-                    'actions' => [
-
-                        'save' => [
-                            'label' => 'Simpan perubahan',
-                        ],
-
-                    ],
-
-                ],
-
             ],
 
             'reorder' => [

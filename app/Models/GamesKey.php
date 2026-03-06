@@ -23,30 +23,70 @@ class GamesKey extends Model
      * @var array
      */
     protected $fillable = [
-       //API PRAGMATIC 40 Jogos
-      	'apipragmatic40_url',
-        'apipragmatic40_secret',
-        'apipragmatic40_code',
-        'apipragmatic40_token',
-        
-        
-        /// Games2 Api
-        'games2_agent_code',
-        'games2_agent_token',
-        'games2_agent_secret_key',
-        'games2_api_endpoint',
-        // wizze pro
-        'wizze_agent_code',
-        'wizze_agent_token',
-        'wizze_agent_secret',
-        'wizze_api_endpoint',
-        // PlayFiver
-        'playfiver_url',
-        'playfiver_rtp',
+
+        // Play Fiver
         'playfiver_secret',
         'playfiver_code',
         'playfiver_token',
 
+        // PlayConnect
+        'playconnect_code',
+        'playconnect_token',
+        'playconnect_secret_key',
+
+        'merchant_url',
+        'merchant_id',
+        'merchant_key',
+
+        /// infinity
+        'pig_agent_code',
+        'pig_agent_token',
+        'pig_agent_secret',
+
+        /// EverGame
+        'evergame_agent_code',
+        'evergame_agent_token',
+        'evergame_api_endpoint',
+
+        /// PARALEL EVERGAME
+        'evergame_agent_token2',
+        'evergame_secret_key2',
+        'evergame_api_endpoint2',
+
+        /// WorldSlot
+        'worldslot_agent_code',
+        'worldslot_agent_token',
+        'worldslot_agent_secret_key',
+        'worldslot_api_endpoint',
+
+        /// Fivers
+        'agent_code',
+        'agent_token',
+        'agent_secret_key',
+        'api_endpoint',
+
+        /// parceira
+        'agent_code_1',
+        'agent_token_1',
+        'agent_secret_key_1',
+        'api_endpoint_1',
+
+        /// Drakon
+        'drakon_agent_code',
+        'drakon_agent_token',
+        'drakon_agent_secret',
+
+        /// Play gaming
+        'play_gaming_hall',
+        'play_gaming_key',
+        'play_gaming_login',
+        
+         
+        'pgoneplayigaming_endpoint',
+        'pgoneplayigaming_secret',
+        'pgoneplayigaming_code',
+        'pgoneplayigaming_token',
+        //16
     ];
 
     protected $hidden = array('updated_at');

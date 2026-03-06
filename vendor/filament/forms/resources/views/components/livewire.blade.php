@@ -1,12 +1,4 @@
-<div
-    {{
-        $attributes
-            ->merge([
-                'id' => $getId(),
-            ], escape: false)
-            ->merge($getExtraAttributes(), escape: false)
-    }}
->
+<div>
     @if (filled($key = $getKey()))
         @livewire($getComponent(), $getComponentProperties(), key($key))
     @else

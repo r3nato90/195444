@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed background-bottom-navigation top-0 z-50 pl-2 pr-2 custom-font bordas w-full max-w-[490px] p-2">
+  <nav class="fixed background-bottom-navigation top-0 z-50 pl-2 pr-2 custom-font bordas w-full max-w-[450px] p-2">
     <div class="container mx-auto flex">
       <button @click="$router.push('/')" class="back-button ml-2 mr-1" style="width: 12px; height: auto;">
       <img :src="`/storage/` + setting.icon_wt_10" alt="Home" class="home-icon" style="width: 10px; height: auto;">

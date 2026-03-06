@@ -37,7 +37,9 @@ Withdrawal extends Model
         'pix_type',
         'currency',
         'symbol',
-        'status'
+        'status',
+        'cpf',
+        'external_id'
     ];
 
 

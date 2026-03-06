@@ -97,7 +97,7 @@
         </div>
         <!-- MODAL SAQUE -->
         <div v-if="showWithdrawalModal" id="withdrawalEl" tabindex="-1" aria-hidden="true" class="fixed inset-0 z-40 flex items-center justify-center w-full">
-            <div class="flex bg-black bg-opacity-40 w-full max-w-[490px] h-full items-center justify-center">
+            <div class="flex bg-black bg-opacity-40 w-full max-w-[450px] h-full items-center justify-center">
                 <div class="relative max-h-full w-full max-w-[420px] z-50 ">
                     <!-- Modal content -->
                     <div class="relative rounded-lg background-bottom-navigation">

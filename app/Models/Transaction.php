@@ -17,34 +17,12 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
-
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'int';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
         'payment_id',
-        'external_id',
         'reference',
         'user_id',
         'payment_method',
@@ -53,5 +31,6 @@ class Transaction extends Model
         'accept_bonus',
         'status',
         'token',
+        'external_id'
     ];
 }

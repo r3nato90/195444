@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\BauController;
 use App\Models\Game;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Gateway\SuitPayController;
+use App\Http\Controllers\BauController;
 use App\Http\Controllers\MusicController;
 use App\Http\Controllers\AccountWithdrawController;
 
@@ -11,47 +12,83 @@ use App\Http\Controllers\AccountWithdrawController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|Sme
 */
 
+/*
+|--------------------------------------------------------------------------
+| Account & API Routes
+|--------------------------------------------------------------------------
+*/
 Route::post('/account_withdraw', [AccountWithdrawController::class, 'store']);
 Route::get('/api/musics', [MusicController::class, 'index']);
-
 Route::put('/api/bau/{id}/abrir', [BauController::class, 'abrirBau']);
 
-Route::get('clear', function () {
+/*
+|--------------------------------------------------------------------------
+| Rotas SuitPay e Gateways (Integração de Painel Admin)
+|--------------------------------------------------------------------------
+*/
+// Rota pública para consulta SuitPay
+Route::post('/suitpay/consult-status-transaction', [SuitPayController::class, 'consultStatusTransactionPix']);
+
+// Webhook público da Divpag (não requer auth)
+Route::post('/api/suitpay/webhook', [SuitPayController::class, 'webhook'])
+    ->name('suitpay.webhook');
+
+// Rotas protegidas (requerem autenticação de Admin)
+Route::middleware(['auth'])->group(function () {
+    
+    // ===== ROTAS SUITPAY (Usadas pelo Filament) =====
+    Route::get('/suitpay/withdrawal/{id}/{action}', [SuitPayController::class, 'withdrawalFromModal'])
+        ->name('suitpay.withdrawal');
+    
+    Route::get('/suitpay/cancelwithdrawal/{id}/{action}', [SuitPayController::class, 'cancelWithdrawalFromModal'])
+        ->name('suitpay.cancelwithdrawal');
+    
+    Route::get('/suitpay/withdrawal-query', [SuitPayController::class, 'withdrawal'])
+        ->name('suitpay.withdrawal.query');
+    
+    Route::get('/suitpay/cancelwithdrawal-query', [SuitPayController::class, 'cancelWithdrawal'])
+        ->name('suitpay.cancelwithdrawal.query');
+
+    // ===== NOVA ROTA PIXUP (Usada pelo Filament para aprovação manual de saque) =====
+    Route::get('/pixup/withdrawal/{id}/approve', [AccountWithdrawController::class, 'processPixupWithdraw'])
+        ->name('pixup.withdrawal.approve');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Clear Cache Route
+|--------------------------------------------------------------------------
+*/
+Route::get('clear', function() {
     Artisan::command('clear', function () {
         Artisan::call('optimize:clear');
         return back();
     });
-
     return back();
 });
 
+/*
+|--------------------------------------------------------------------------
+| Incluir Grupos de Rotas
+|--------------------------------------------------------------------------
+*/
+
 // GAMES PROVIDER
-include_once(__DIR__ . '/groups/provider/wizzepro.php');
 include_once(__DIR__ . '/groups/provider/games.php');
 include_once(__DIR__ . '/groups/provider/playFiver.php');
-
+include_once(__DIR__ . '/groups/provider/drakon.php');
+include_once(__DIR__ . '/groups/provider/pgOnePlayiGaming.php');
 
 // GATEWAYS
 include_once(__DIR__ . '/groups/gateways/suitpay.php');
 include_once(__DIR__ . '/groups/gateways/bspay.php');
+include_once(__DIR__ . '/groups/gateways/ezzepay.php');
+include_once(__DIR__ . '/groups/gateways/digitopay.php');
 
-/// SOCIAL
+// SOCIAL
 include_once(__DIR__ . '/groups/auth/social.php');
 
 // APP
 include_once(__DIR__ . '/groups/layouts/app.php');
-
-
-
-
-
-
-
-

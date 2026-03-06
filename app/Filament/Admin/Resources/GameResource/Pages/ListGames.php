@@ -12,7 +12,7 @@ use App\Traits\Providers\DrakonTrait;
 
 class ListGames extends ListRecords
 {
-    use WorldSlotTrait;
+    use WorldSlotTrait, DrakonTrait;
 
     /**
      * @var string

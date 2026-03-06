@@ -25,7 +25,7 @@
                 </div>
 
                 <div v-else class="flex flex-col">
-                    <div class="grid grid-cols-4 mb-3 gap-2">
+                    <div class="grid grid-cols-3 md:grid-cols-6 mb-3 gap-4">
                         <CassinoGameCard
                             v-for="(game, index) in gamesSlotegrator.data"
                             :index="index"

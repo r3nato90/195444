@@ -31,7 +31,7 @@ class AffiliatePanelProvider extends PanelProvider
     {
         return $panel
             ->id('affiliate')
-            ->path('aff-xc-ve-proxy')
+            ->path('afiliado')
             ->login()
             ->colors([
                 'primary' => Color::Amber,

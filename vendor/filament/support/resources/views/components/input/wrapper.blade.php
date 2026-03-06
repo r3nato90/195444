@@ -106,7 +106,7 @@
                 wire:key="{{ \Illuminate\Support\Str::random() }}" {{-- Makes sure the loading indicator gets hidden again. --}}
             @endif
             @class([
-                'fi-input-wrp-prefix items-center gap-x-3 ps-3',
+                'items-center gap-x-3 ps-3',
                 'flex' => $hasPrefix,
                 'hidden' => ! $hasPrefix,
                 'pe-1' => $inlinePrefix && filled($prefix),
@@ -169,7 +169,7 @@
             wire:target="{{ $loadingIndicatorTarget }}"
         @endif
         @class([
-            'fi-input-wrp-input min-w-0 flex-1',
+            'min-w-0 flex-1',
             'ps-3' => $hasLoadingIndicator && (! $hasPrefix) && $inlinePrefix,
         ])
     >
@@ -179,7 +179,7 @@
     @if ($hasSuffix)
         <div
             @class([
-                'fi-input-wrp-suffix flex items-center gap-x-3 pe-3',
+                'flex items-center gap-x-3 pe-3',
                 'ps-1' => $inlineSuffix && filled($suffix),
                 'ps-2' => $inlineSuffix && blank($suffix),
                 'border-s border-gray-200 ps-3 dark:border-white/10' => ! $inlineSuffix,

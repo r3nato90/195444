@@ -10,10 +10,6 @@ return [
 
     'columns' => [
 
-        'actions' => [
-            'label' => 'Tindakan|Tindakan',
-        ],
-
         'text' => [
 
             'actions' => [

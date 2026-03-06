@@ -17,14 +17,14 @@ class Deposit extends Model
 
     protected $fillable = [
         'payment_id',
-        'external_id',
         'user_id',
         'amount',
         'type',
         'proof',
         'currency',
         'symbol',
-        'status'
+        'status',
+        'external_id'
     ];
 
     protected $hidden = [

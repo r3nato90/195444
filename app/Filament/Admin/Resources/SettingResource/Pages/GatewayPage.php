@@ -19,6 +19,7 @@ use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Arr;
 use App\Models\AproveSaveSetting;
 
 class GatewayPage extends Page implements HasForms
@@ -29,9 +30,6 @@ class GatewayPage extends Page implements HasForms
 
     protected static string $view = 'filament.resources.setting-resource.pages.gateway-page';
 
-    /**
-     * @return string|Htmlable
-     */
     public function getTitle(): string|Htmlable
     {
         return 'Gateways';
@@ -40,117 +38,88 @@ class GatewayPage extends Page implements HasForms
     public Setting $record;
     public ?array $data = [];
 
-    /**
-     * @dev @anonymous
-     * @param Model $record
-     * @return bool
-     */
     public static function canView(Model $record): bool
     {
         return auth()->user()->hasRole('admin');
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
     public function mount(): void
     {
         $setting = Setting::first();
-        $this->record = $setting;
-        $this->form->fill($setting->toArray());
+        if ($setting) {
+            $this->record = $setting;
+            $this->form->fill($setting->toArray());
+        } else {
+            $this->form->fill();
+        }
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @return void
-     */
     public function save()
     {
         try {
             if (env('APP_DEMO')) {
-                Notification::make()
-                    ->title('Atenção')
-                    ->body('Você não pode realizar está alteração na versão demo')
-                    ->danger()
-                    ->send();
+                Notification::make()->title('Atenção')->body('Você não pode realizar esta alteração na versão demo')->danger()->send();
                 return;
             }
 
-            // Verificação da senha
             $approvalSettings = AproveSaveSetting::first();
             $inputPassword = $this->data['approval_password_save'] ?? '';
 
-            if (!Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
-                Notification::make()
-                    ->title('Erro de Autenticação')
-                    ->body('Senha incorreta. Por favor, tente novamente.')
-                    ->danger()
-                    ->send();
+            if (!$approvalSettings || !Hash::check($inputPassword, $approvalSettings->approval_password_save)) {
+                Notification::make()->title('Erro de Autenticação')->body('Senha incorreta. Por favor, tente novamente.')->danger()->send();
                 return;
             }
 
-            $setting = Setting::find($this->record->id);
+            $setting = Setting::find($this->record->id ?? 1);
+            
+            // Remove a senha do array antes de tentar salvar no banco de dados
+            $dadosParaSalvar = Arr::except($this->data, ['approval_password_save']);
 
-            if ($setting->update($this->data)) {
-                Cache::put('setting', $setting);
-
-                Notification::make()
-                    ->title('Dados alterados')
-                    ->body('Dados alterados com sucesso!')
-                    ->success()
-                    ->send();
-
-               // redirect(route('filament.admin.resources.settings.payment', ['record' => $this->record->id]));
-
+            if ($setting) {
+                if ($setting->update($dadosParaSalvar)) {
+                    Cache::put('setting', $setting);
+                    Notification::make()->title('Sucesso')->body('Dados do gateway alterados com sucesso!')->success()->send();
+                }
             }
         } catch (Halt $exception) {
+            Notification::make()->title('Erro')->body('Ocorreu um problema ao salvar.')->danger()->send();
             return;
         }
     }
 
-    /**
-     * @dev anonymous - Meu instagram
-     * @param Form $form
-     * @return Form
-     */
     public function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make('Gateways')
-                    ->description('Ativa ou desative seus gateway de Pagamento')
+                    ->description('Ative ou desative seus gateways de Pagamento')
                     ->schema([
                         Select::make('default_gateway')
-                            ->label('Gateway Padrão para Saque')
+                            ->label('Gateway Padrão para Saque e Depósito')
                             ->options([
-                                 
-                                'suitpay' => 'Suitpay',
-                                
-                                 'bspay' => 'Bspay',
-                            ])->columnSpanFull()
-                        ,
-                        
+                                'suitpay' => 'Suitpay (Ecompag)',
+                                'pixup'   => 'PixUP (v2)', // Adicionado a Pixup como opção visível
+                            ])->columnSpanFull(),
+                            
                         Toggle::make('suitpay_is_enable')
-                            ->label('SuitPay Ativo'),
-                        
-                            Toggle::make('bspay_is_enable')
-                            ->label('BsPay Ativo')
-                         ,
-                        // Toggle::make('stripe_is_enable')
-                        //     ->label('Stripe Ativo'),
-                    ])->columns(2),
+                            ->label('Suitpay Ativo'),
+
+                        // ADICIONADO: Toggle da PixUP
+                        Toggle::make('pixup_is_enable')
+                            ->label('PixUP Ativo'),
+                            
+                    ])->columns(2), // O columnSpanFull no Select e columns 2 aqui deixa os dois Toggles alinhados perfeitamente lado a lado
+                    
                 Section::make('Digite a senha de confirmação')
-                    ->description('Obrigatório digitar sua senha de confirmação!')
+                    ->description('Obrigatório digitar sua senha de confirmação para efetuar mudanças de segurança!')
                     ->schema([
-                        // Campo de senha
                         TextInput::make('approval_password_save')
                             ->label('Senha de Aprovação')
                             ->password()
                             ->required()
                             ->helperText('Digite a senha para salvar as alterações.')
                             ->maxLength(191),
-                    ])->columns(3)
+                    ])->columns(1)
             ])
             ->statePath('data');
     }

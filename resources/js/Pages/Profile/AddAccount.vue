@@ -1,6 +1,6 @@
 <template>
   
-    <div class="fixed flex bottom-0 w-full cister max-w-[490px] p-2 background-bottom-navigation">
+    <div class="fixed flex bottom-0 w-full cister max-w-[450px] p-2 background-bottom-navigation">
       <button class="open-modal1-addaccount flex items-center justify-between w-full" @click="openModal1">
         <img src="/public/assets/images/icon_normal_pix.png" alt="Icon" class="mr-2 w-10 h-10">
         <span class="text-color">Adicionar conta</span>
@@ -35,7 +35,7 @@
     </div>
  
   <!-- Modal de adicionar conta -->
-  <AddAcountModal ref="addAcountModal" @formSubmitted="handleFormSubmitted"/>
+  <AddAcountModal ref="addAcountModal"/>
   <!-- Modal de criar senha de saque -->
   <CriarSenhaSaque ref="criarSenhaSaque"/>
   <!-- Modal de verificar senha de saque -->
@@ -119,17 +119,6 @@ export default {
     openModal1() {
       this.$refs.addAcountModal.openModal1();
     },
-    handleFormSubmitted(data) {
-    console.log('Dados recebidos do filho:', data);
-    // Lógica para recarregar informações no pai
-    this.refreshParentData();
-  },
-  refreshParentData() {
-
-    this.fetchAccountWithdrawsDetails();
-    console.log('Dados do componente pai foram atualizados!');
-    // Adicione a lógica para recarregar ou atualizar informações
-  },
     fetchAccountWithdrawsDetails() {
       this.loading = true;
       HttpApi.get('profile/infos/account-withdraws')

@@ -69,12 +69,7 @@ class Report
 
     protected ?bool $handled = null;
 
-    protected ?string $overriddenGrouping = null;
-
-    /**
-     * @param array<class-string<ArgumentReducer>|ArgumentReducer>|ArgumentReducers|null $argumentReducers
-     * @param array<class-string, string> $overriddenGroupings
-     */
+    /** @param array<class-string<ArgumentReducer>|ArgumentReducer>|ArgumentReducers|null $argumentReducers */
     public static function createForThrowable(
         Throwable $throwable,
         ContextProvider $context,
@@ -82,30 +77,21 @@ class Report
         ?string $version = null,
         null|array|ArgumentReducers $argumentReducers = null,
         bool $withStackTraceArguments = true,
-        array $overriddenGroupings = [],
     ): self {
         $stacktrace = Backtrace::createForThrowable($throwable)
             ->withArguments($withStackTraceArguments)
             ->reduceArguments($argumentReducers)
             ->applicationPath($applicationPath ?? '');
 
-        $exceptionClass = self::getClassForThrowable($throwable);
-
-        $report = (new self())
+        return (new self())
             ->setApplicationPath($applicationPath)
             ->throwable($throwable)
             ->useContext($context)
-            ->exceptionClass($exceptionClass)
+            ->exceptionClass(self::getClassForThrowable($throwable))
             ->message($throwable->getMessage())
             ->stackTrace($stacktrace)
             ->exceptionContext($throwable)
             ->setApplicationVersion($version);
-
-        if (array_key_exists($exceptionClass, $overriddenGroupings)) {
-            $report->overriddenGrouping($overriddenGroupings[$exceptionClass]);
-        }
-
-        return $report;
     }
 
     protected static function getClassForThrowable(Throwable $throwable): string
@@ -325,13 +311,6 @@ class Report
         return $this;
     }
 
-    public function overriddenGrouping(?string $overriddenGrouping): self
-    {
-        $this->overriddenGrouping = $overriddenGrouping;
-
-        return $this;
-    }
-
     protected function exceptionContext(Throwable $throwable): self
     {
         if ($throwable instanceof ProvidesFlareContext) {
@@ -409,7 +388,6 @@ class Report
             'application_version' => $this->applicationVersion,
             'tracking_uuid' => $this->trackingUuid,
             'handled' => $this->handled,
-            'overridden_grouping' => $this->overriddenGrouping,
         ];
     }
 

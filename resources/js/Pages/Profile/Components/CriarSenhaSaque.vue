@@ -5,11 +5,11 @@
       <div class="modal-content p-4 bg-white rounded shadow-lg">
         <!-- Início do header -->
         <div class="p-4 h-12 mb-2 flex justify-center items-center relative">
-          <h2 class="text-[14px] font-bold absolute left-1/2 transform -translate-x-1/2">Definir PIN para SAQUE</h2>
+          <h2 class="text-[14px] font-bold absolute left-1/2 transform -translate-x-1/2">Crie sua senha de SAQUE</h2>
         </div>
         <!-- Fim do header -->
 
-        <button @click="navigateToCreatePin" class="flex justify-center items-center vgdfd">Criar um PIN</button>
+        <button @click="navigateToCreatePin" class="flex justify-center items-center vgdfd">Criar uma senha</button>
       </div>
     </div>
   </div>
@@ -61,7 +61,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 40;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -69,7 +69,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 40;
+  z-index: 50;
 }
 .modal-content {
   background: var(--background-bottom-navigation);

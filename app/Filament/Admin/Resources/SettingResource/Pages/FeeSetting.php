@@ -120,33 +120,60 @@ class FeeSetting extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Ajuste de Taxas')
+                Section::make('Ajuste de Taxas, CPA e Bonus')
                     ->description('Formulário ajustar as taxas da plataforma')
                     ->schema([
                         Grid::make()->schema([
+                            TextInput::make('cpa_baseline')
+                                ->label('Deposito Min. CPA')
+                                ->helperText('Valor mínimo que o indicado deve depositar para ganhar o CPA.')
+                                ->numeric()
+                                ->suffix('R$ ')
+                                ->maxLength(191),
+                            TextInput::make('cpa_value')
+                                ->label('Afiliado CPA')
+                                ->helperText('Valor da comissão CPA que ganhará por indicado.')
+                                ->numeric()
+                                ->suffix('R$ ')
+                                ->maxLength(191),
+                        ])->columns(2),
+
+                        Grid::make()->schema([
+                            TextInput::make('cpa_percentage_baseline')
+                                ->label('Deposito Min. CPA (%)')
+                                ->numeric()
+                                ->suffix('R$')
+                                ->helperText('Quanto é necessário depositar para ativar o CPA em %')
+                                ->maxLength(191),
+                            TextInput::make('cpa_percentage_n1')
+                                ->label('% Afiliado Nível 1')
+                                ->numeric()
+                                ->suffix('%')
+                                ->helperText('% afiliado N1 recebera dos depositos')
+                                ->maxLength(191),
+                            TextInput::make('cpa_percentage_n2')
+                                ->label('% Afiliado Nível 2')
+                                ->numeric()
+                                ->suffix('%')
+                                ->helperText('% afiliado N2 recebera dos depositos')
+                                ->maxLength(191),
+                        ])->columns(3),
+
+                        Grid::make()->schema([        
                             TextInput::make('revshare_percentage')
                                 ->label('RevShare (%)')
                                 ->numeric()
                                 ->suffix('%')
                                 ->helperText('Este é o revshare padrão para cada usuário que se candidata a ser afiliado.')
                                 ->maxLength(191),
-                            TextInput::make('cpa_baseline')
-                                ->label('CPA Baseline')
-                                ->numeric()
-                                ->suffix('R$ ')
-                                ->maxLength(191),
-                            TextInput::make('cpa_value')
-                                ->label('CPA Valor')
-                                ->numeric()
-                                ->suffix('R$ ')
-                                ->maxLength(191),
                             TextInput::make('ngr_percent')
                                 ->helperText('Esta taxa é deduzida dos ganhos do afiliado para plataforma.')
                                 ->label('NGR (%)')
                                 ->numeric()
                                 ->suffix('%')
-                                ->maxLength(191),
+                                ->maxLength(191),                            
                         ])->columns(2),
+
                         Toggle::make('revshare_reverse')
                             ->inline(true)
                             ->label('Ativar RevShare Negativo')

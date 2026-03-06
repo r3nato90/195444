@@ -1,5 +1,5 @@
 <template>
-    <div class="block items-container w-full h-full max-h-[100%] max-w-[490px]">
+    <div class="block items-container w-full h-full max-h-[100%] max-w-[450px]">
         <div v-if="(paymentType == null || paymentType === '') && wallet && setting">
             <div class="">
                 <ul>
@@ -58,7 +58,7 @@
         <div v-if="setting && paymentType === 'pix' && (setting.suitpay_is_enable || setting.digitopay_is_enable || setting.ezzebank_is_enable || setting.bspay_is_enable)">
             <div v-if="showPixQRCode && wallet" class="flex flex-col items-center">
 
-                 <div class="flex flex-col w-full max-w-[490px] items-center">
+                 <div class="flex flex-col w-full max-w-[450px] items-center">
                     <div class="headerss flex w-full justify-center items-center p-1">
                         <img :src="`/assets/images/pix.png`" class="h-20">
                     </div>
@@ -87,7 +87,7 @@
             </div>
 
             <div v-if="!showPixQRCode">
-                <div v-if="setting != null && wallet != null && isLoading === false" class="flex flex-col h-full max-h-[100%] w-full max-w-[490px]">
+                <div v-if="setting != null && wallet != null && isLoading === false" class="flex flex-col h-full max-h-[100%] w-full max-w-[450px]">
                    
                         <div class="relative flex items-center justify-center  custom-font">
                             <button @click="refreshHome" class="w-6 h-6 absolute left-0">
@@ -125,44 +125,44 @@
                         </div>
 
                         <div class="item-selected flex justify-between grid grid-cols-4 custom-font">
-                            <div style="background-color: var(--sidebar-color-dark);" class="item btn-border-transparent-yellow-1" @click.prevent="setAmount(parseFloat(setting.min_deposit))" :class="{'active' : selectedAmount === parseFloat(setting.min_deposit)}">
+                            <div class="item btn-border-transparent-yellow-1" @click.prevent="setAmount(parseFloat(setting.min_deposit))" :class="{'active' : selectedAmount === parseFloat(setting.min_deposit)}">
                             <button type="button">{{ parseFloat(setting.min_deposit).toFixed(2) }}</button>
                             <div v-if="selectedAmount === parseFloat(setting.min_deposit)" class="ratio  .btn-border-transparent-yellow-1">+{{ setting.initial_bonus }}%</div>
                         </div>
 
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(30.00)" :class="{'active' : selectedAmount === 30.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(30.00)" :class="{'active' : selectedAmount === 30.00}">
                                 <button type="button">30</button>
                                 <div v-if="selectedAmount === 30.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                                 
                             </div>
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(50.00)" :class="{'active' : selectedAmount === 50.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(50.00)" :class="{'active' : selectedAmount === 50.00}">
                                 <button type="button">50</button>
                                 <div v-if="selectedAmount === 50.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                                 
                             </div>
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(100.00)" :class="{'active' : selectedAmount === 100.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(100.00)" :class="{'active' : selectedAmount === 100.00}">
                                 <button type="button">100</button>
                                 <div v-if="selectedAmount === 100.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                             
                             </div>
                         </div>
                         <div class="mt-2 item-selected flex justify-between grid grid-cols-4 pb-2 custom-font">
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(1000.00)" :class="{'active' : selectedAmount === 1000.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(1000.00)" :class="{'active' : selectedAmount === 1000.00}">
                                 <button type="button">1000</button>
                                 <div v-if="selectedAmount === 1000.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                             
                             </div>
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(2000.00)" :class="{'active' : selectedAmount === 2000.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(2000.00)" :class="{'active' : selectedAmount === 2000.00}">
                                 <button type="button">2000</button>
                                 <div v-if="selectedAmount === 2000.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                             
                             </div>
-                            <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(5000.00)" :class="{'active' : selectedAmount === 5000.00}">
+                            <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(5000.00)" :class="{'active' : selectedAmount === 5000.00}">
                                 <button type="button">5000</button>
                                 <div v-if="selectedAmount === 5000.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                                 
                             </div>
-                             <div style="background-color: var(--sidebar-color-dark);" class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(10000.00)" :class="{'active' : selectedAmount === 10000.00}">
+                             <div class="item  btn-border-transparent-yellow-1" @click.prevent="setAmount(10000.00)" :class="{'active' : selectedAmount === 10000.00}">
                                 <button type="button">10000</button>
                                 <div v-if="selectedAmount === 10000.00" class="ratio">+{{ setting.initial_bonus }}%</div>
                                 
@@ -170,7 +170,7 @@
                         </div>
 
                            <div class="mt-2 flex justify-between items-center custom-font">
-                            <div style="background-color: var(--sidebar-color-dark);" class="flex w-full justify-between item py-1">
+                            <div class="flex w-full justify-between item py-1">
                                 <div class="flex w-full items-center item text-color">
                                     <input type="text"
                                            v-model="deposit.amount"
@@ -441,7 +441,34 @@ export default {
         reloadPage() {
         window.location.reload();
     },
-         
+         async checkTransactionStatusByToken(token) {
+        const _this = this;
+        const _toast = useToast();
+        const router = this.$router; // Acessa o roteador
+
+        try {
+            const response = await HttpApi.get('transaction/status/by-token', { params: { token } });
+
+            if (response.data.status === 1) { // Supondo que 1 é o status de pagamento confirmado
+                // Exibe o toast de sucesso
+                _toast.success(`Pagamento ${response.data.status_message}`);
+
+                // Limpa o intervalo para parar a verificação
+                clearInterval(_this.checkStatusInterval);
+
+                // Redireciona para a página inicial
+                await router.push({ name: 'home' });
+            } 
+            // Não faz nada se o pagamento não for confirmado
+        } catch (error) {
+            // Exemplo de tratamento de erro
+            if (error.response && error.response.data && error.response.data.error) {
+                _toast.error(error.response.data.error);
+            } else {
+                _toast.error('Erro ao verificar o status da transação.');
+            }
+        }
+    },
         copyQRCode() {
             navigator.clipboard.writeText(this.qrcodecopypast).then(() => {
                 alert('Código QR copiado para a área de transferência');

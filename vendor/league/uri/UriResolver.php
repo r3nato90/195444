@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Uri;
 
-use Deprecated;
 use League\Uri\Contracts\UriInterface;
 use Psr\Http\Message\UriInterface as Psr7UriInterface;
 
@@ -33,7 +32,6 @@ final class UriResolver
      * This method MUST be transparent when dealing with error and exceptions.
      * It MUST not alter or silence them apart from validating its own parameters.
      */
-    #[Deprecated(message:'use League\Uri\BaseUri::resolve() instead', since:'league/uri:7.0.0')]
     public static function resolve(Psr7UriInterface|UriInterface $uri, Psr7UriInterface|UriInterface $baseUri): Psr7UriInterface|UriInterface
     {
         return BaseUri::from($baseUri)->resolve($uri)->getUri();
@@ -48,7 +46,6 @@ final class UriResolver
      * This method MUST be transparent when dealing with error and exceptions.
      * It MUST not alter or silence them apart from validating its own parameters.
      */
-    #[Deprecated(message:'use League\Uri\BaseUri::relativize() instead', since:'league/uri:7.0.0')]
     public static function relativize(Psr7UriInterface|UriInterface $uri, Psr7UriInterface|UriInterface $baseUri): Psr7UriInterface|UriInterface
     {
         return BaseUri::from($baseUri)->relativize($uri)->getUri();

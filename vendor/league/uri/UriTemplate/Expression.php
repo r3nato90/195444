@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Uri\UriTemplate;
 
-use Deprecated;
 use League\Uri\Exceptions\SyntaxError;
 use Stringable;
 
@@ -72,7 +71,6 @@ final class Expression
      * @deprecated Since version 7.0.0
      * @codeCoverageIgnore
      */
-    #[Deprecated(message:'use League\Uri\UriTemplate\Exppression::new() instead', since:'league/uri:7.0.0')]
     public static function createFromString(Stringable|string $expression): self
     {
         return self::new($expression);

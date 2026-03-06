@@ -3,7 +3,7 @@
 
     <SideBarComponent v-once />
 
-    <div class="sm:ml-0 mt-16 max-w-[490px]">
+    <div class="sm:ml-0 mt-16 max-w-[450px]">
         <div class="relative">
             <slot></slot>
         <BottomNavComponent v-once/>

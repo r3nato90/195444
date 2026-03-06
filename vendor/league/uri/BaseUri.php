@@ -17,9 +17,8 @@ use JsonSerializable;
 use League\Uri\Contracts\UriAccess;
 use League\Uri\Contracts\UriInterface;
 use League\Uri\Exceptions\MissingFeature;
-use League\Uri\Idna\Converter as IdnaConverter;
+use League\Uri\Idna\Converter;
 use League\Uri\IPv4\Converter as IPv4Converter;
-use League\Uri\IPv6\Converter as IPv6Converter;
 use Psr\Http\Message\UriFactoryInterface;
 use Psr\Http\Message\UriInterface as Psr7UriInterface;
 use Stringable;
@@ -52,9 +51,6 @@ class BaseUri implements Stringable, JsonSerializable, UriAccess
     protected readonly Psr7UriInterface|UriInterface|null $origin;
     protected readonly ?string $nullValue;
 
-    /**
-     * @param UriFactoryInterface|null $uriFactory Deprecated, will be removed in the next major release
-     */
     final protected function __construct(
         protected readonly Psr7UriInterface|UriInterface $uri,
         protected readonly ?UriFactoryInterface $uriFactory
@@ -186,18 +182,6 @@ class BaseUri implements Stringable, JsonSerializable, UriAccess
     }
 
     /**
-     * Tells whether the URI is opaque or not.
-     *
-     * A URI is opaque if and only if it is absolute
-     * and does not has an authority path.
-     */
-    public function isOpaque(): bool
-    {
-        return $this->nullValue === $this->uri->getAuthority()
-            && $this->isAbsolute();
-    }
-
-    /**
      * Tells whether two URI do not share the same origin.
      */
     public function isCrossOrigin(Stringable|string $uri): bool
@@ -266,15 +250,7 @@ class BaseUri implements Stringable, JsonSerializable, UriAccess
      */
     public function hasIdn(): bool
     {
-        return IdnaConverter::isIdn($this->uri->getHost());
-    }
-
-    /**
-     * Tells whether the URI contains an IPv4 regardless if it is mapped or native.
-     */
-    public function hasIPv4(): bool
-    {
-        return IPv4Converter::fromEnvironment()->isIpv4($this->uri->getHost());
+        return Converter::isIdn($this->uri->getHost());
     }
 
     /**
@@ -322,7 +298,7 @@ class BaseUri implements Stringable, JsonSerializable, UriAccess
                 ->withQuery($query)
                 ->withHost($this->uri->getHost())
                 ->withPort($this->uri->getPort())
-                ->withUserInfo($user, $pass)
+                ->withUserInfo((string) $user, $pass)
                 ->withScheme($this->uri->getScheme()),
             $this->uriFactory
         );
@@ -562,10 +538,6 @@ class BaseUri implements Stringable, JsonSerializable, UriAccess
             $converted = IPv4Converter::fromEnvironment()->toDecimal($host);
         } catch (MissingFeature) {
             $converted = null;
-        }
-
-        if (false === filter_var($converted, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $converted = IPv6Converter::compress($host);
         }
 
         return match (true) {

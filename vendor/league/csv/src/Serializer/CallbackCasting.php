@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace League\Csv\Serializer;
 
 use Closure;
-use Deprecated;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
@@ -377,7 +376,6 @@ final class CallbackCasting implements TypeCasting
      * @see CallbackCasting::unregisterType()
      * @codeCoverageIgnore
      */
-    #[Deprecated(message:'use League\Csv\Serializer\CallbackCasting::unregisterType() instead', since:'league/csv:9.13.0')]
     public static function unregister(string $type): bool
     {
         return self::unregisterType($type);

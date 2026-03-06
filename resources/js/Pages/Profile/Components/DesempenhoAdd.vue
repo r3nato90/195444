@@ -96,7 +96,7 @@
         </div>
        
    
-<div v-if="activeTab === 'meudesempenho'" class="w-full max-w-[490px]">
+<div v-if="activeTab === 'meudesempenho'" class="w-full max-w-[450px]">
         <div class="background-bottom-navigation rounded-lg">
           <div class="flex w-full justify-center py-2 items-center bordse">
             <p class=" text-[14px] custom-font-title"> Informações dos meus ganhos e percas</p>

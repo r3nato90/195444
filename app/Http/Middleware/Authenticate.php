@@ -12,6 +12,14 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        return $request->expectsJson() ? null : route('game');
+        // Se a requisição for API ou se não esperar explicitamente HTML, retorna NULL.
+        // Isso faz o Laravel retornar um JSON {"message": "Unauthenticated"} 
+        // com status 401, em vez de tentar redirecionar e dar erro de "Route not defined".
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return null;
+        }
+
+        // Apenas para rotas WEB (fora da API) que não pedem JSON
+        return url('/'); 
     }
 }

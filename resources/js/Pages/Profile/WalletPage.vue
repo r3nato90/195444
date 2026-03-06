@@ -3,7 +3,7 @@
   <WalletLayout>
 
     <!-- Conteúdo da Página -->
-    <div class="items-container w-full  max-w-[490px] mx-auto">
+    <div class="items-container w-full  max-w-[450px] mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 ml-3 mr-3">
         <div class="relative col-span-3">
           <div v-if="!isLoadingWallet" class="flex flex-col w-full p-4 rounded">

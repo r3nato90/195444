@@ -68,6 +68,7 @@ return [
 
             ],
 
+
             'delete' => [
                 'label' => 'Esborrar',
             ],

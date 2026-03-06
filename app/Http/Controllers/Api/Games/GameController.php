@@ -10,21 +10,33 @@ use App\Models\GamesKey;
 use App\Models\Gateway;
 use App\Models\Provider;
 use App\Models\Wallet;
+use App\Traits\Providers\EvergameTrait;
+use app\Traits\Providers\DrakonTrait;
 use App\Traits\Providers\WorldSlotTrait;
-use App\Traits\Providers\PlayFiverTrait;
-use App\Traits\Providers\ApiPragmatic40Trait;
-use App\Traits\Providers\WizzeProTrait;
+use App\Traits\Providers\PlayConnectTrait;
+use App\Traits\Providers\FiversTrait;
+//use App\Traits\Providers\PGSoftTrait;
+use App\Traits\Providers\PlayGamingTrait;
+use App\Traits\Providers\PGClonesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\Core as Helper;
+use App\Traits\Providers\PlayFiverTrait;
+use App\Traits\Providers\PgOnePlayiGamingTrait;
 
 class GameController extends Controller
 {
-    use PlayFiverTrait,
+    use
+        PgOnePlayiGamingTrait,
         WorldSlotTrait,
-        ApiPragmatic40Trait,
-        WizzeProTrait;
-        
+        DrakonTrait,
+        EvergameTrait,
+        FiversTrait,
+//        PGSoftTrait,
+        PlayGamingTrait,
+        PGClonesTrait,
+  PlayFiverTrait,
+        PlayConnectTrait;
 
 
     /**
@@ -34,9 +46,9 @@ class GameController extends Controller
     public function index()
     {
         $providers = Provider::with(['games', 'games.provider'])
-            ->where('status', 1)
             ->whereHas('games')
             ->orderBy('name', 'desc')
+            ->where('status', 1)
             ->get();
 
         return response()->json(['providers' => $providers]);
@@ -190,12 +202,175 @@ class GameController extends Controller
                     ]);
 
                     switch ($game->distribution) {
+                        case 'pgoneplayigaming':
+                          $pgoneplayigaming = self::GameLaunchPgOnePlayiGaming($game->provider->code, $game->game_id, 'pt', auth('api')->user()->id);
+                          if(isset($pgoneplayigaming['launchUrl'])){
+                               return response()->json([
+                                   'game'=> $game,
+                                   'gameUrl'=> $pgoneplayigaming['launchUrl']
+                               ]);
+                           } else {
+                               return response()->json($pgoneplayigaming);
+                           }
+                                        case 'play_fiver':
+                    $playfiver = self::playFiverLaunch($game->game_id, $game->only_demo);
+                    return response()->json([
+                        'game' => $game,
+                        'gameUrl' => $playfiver['launch_url'],
+                        'token' => $token
+                    ]);
                         case 'source':
                             return response()->json([
                                 'game' => $game,
                                 'gameUrl' => url('/originals/' . $game->game_code . '/index.html?token=' . $token),
                                 'token' => $token
                             ]);
+                        case 'playconnect':
+                            $gameLauncher = self::GameLaunchPlayConnect($game);
+
+                            if ($gameLauncher) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $gameLauncher,
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json();
+                            }
+                         case 'pgclone':
+                            $cloneLaunch = self::GameLaunchClone($game->provider->code, $game->game_id, 'pt', auth('api')->id());
+        
+                            if (isset($cloneLaunch['launchUrl'])) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $cloneLaunch['launchUrl'],
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json($cloneLaunch);
+                            }
+                        case 'pgsoft':
+                            $pgsoftLaunch = PGSoftTrait::GameLaunchPGSoft($game->provider->code, $game->game_code, 'pt_BR', auth('api')->id());
+
+                            if (isset($pgsoftLaunch['url'])) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $pgsoftLaunch['url'],
+                                    'token' => $token
+                                ]);
+                            }
+
+                            return response()->json(['error' => $pgsoftLaunch, 'status' => false], 400);
+
+                        case 'drakon':
+                            $gameLauncher = self::GameLaunchDrakon($game);
+
+                            if ($gameLauncher) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $gameLauncher,
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json();
+                            }
+                        case 'venix':
+                            $gameLauncher = self::GameLaunchVeniX($game);
+
+                            if ($gameLauncher) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $gameLauncher,
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json();
+                            }
+                        case 'playigaming':
+                            $gameLauncher = self::GameLaunchPIG($game);
+
+                            if ($gameLauncher) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $gameLauncher,
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json();
+                            }
+                        case 'playgaming':
+                            $gameLauncher = self::LaunchGamePlayGaming($game->game_id);
+
+                            if ($gameLauncher) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $gameLauncher,
+                                    'token' => $token
+                                ]);
+                            } else {
+                                return response()->json();
+                            }
+                        case 'salsa':
+                            return response()->json([
+                                'game' => $game,
+                                'gameUrl' => self::playGameSalsa('CHARGED', 'BRL', 'pt', $game->game_id),
+                                'token' => $token
+                            ]);
+                        case 'kagaming':
+                            return response()->json([
+                                'game' => $game,
+                                'gameUrl' => self::GameLaunchKaGaming($game->game_server_url, $game->game_code),
+                                'token' => $token
+                            ]);
+                        case 'evergame':
+                            $evergameLaunch = self::GameLaunchEvergame($game->provider->code, $game->game_id, 'pt', auth('api')->id());
+
+                            if (isset($evergameLaunch['launchUrl'])) {
+                                // Verifica se deve ser aberto em nova aba
+                                if (isset($evergameLaunch['openInNewTab']) && $evergameLaunch['openInNewTab']) {
+                                    // Redireciona para a nova URL em uma nova aba
+                                    return redirect()->away($evergameLaunch['launchUrl']);
+                                } else {
+                                    // Retorna a resposta normalmente
+                                    return response()->json([
+                                        'game' => $game,
+                                        'gameUrl' => $evergameLaunch['launchUrl'],
+                                        'token' => $token
+                                    ]);
+                                }
+                            } else {
+                                return response()->json($evergameLaunch);
+                            }
+                        case 'vibra_gaming':
+                            return response()->json([
+                                'game' => $game,
+                                'gameUrl' => self::GenerateGameLaunch($game),
+                                'token' => $token
+                            ]);
+                        case 'fivers':
+                            $fiversLaunch = self::GameLaunchFivers($game->provider->code, $game->game_id, 'pt', auth('api')->id());
+
+                            if (isset($fiversLaunch['launch_url'])) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $fiversLaunch['launch_url'],
+                                    'token' => $token
+                                ]);
+                            }
+
+                            return response()->json(['error' => $fiversLaunch, 'status' => false], 400);
+                        case 'games2_api':
+                            $games2ApiLaunch = self::GameLaunchGames2($game->provider->code, $game->game_id, 'pt', auth('api')->id());
+
+                            if (isset($games2ApiLaunch['launch_url'])) {
+                                return response()->json([
+                                    'game' => $game,
+                                    'gameUrl' => $games2ApiLaunch['launch_url'],
+                                    'token' => $token
+                                ]);
+                            }
+
+                            return response()->json(['error' => $games2ApiLaunch, 'status' => false], 400);
                         case 'worldslot':
                             $worldslotLaunch = self::GameLaunchWorldSlot($game->provider->code, $game->game_id, 'pt', auth('api')->id());
 
@@ -208,38 +383,6 @@ class GameController extends Controller
                             }
 
                             return response()->json(['error' => $worldslotLaunch, 'status' => false], 400);
-                        case 'wizzepro':
-                            $wizzeproLaunch = self::GameLaunchWizzePro($game->provider->code, $game->game_id, 'pt', auth('api')->id());
-                            
-                            if(isset($wizzeproLaunch['launchUrl'])) {
-                                return response()->json([
-                                    'game' => $game,
-                                    'gameUrl' => $wizzeproLaunch['launchUrl'],
-                                ]);
-                            } else {
-                                return response()->json($wizzeproLaunch);
-                            }
-                    
-                        return response()->json(['error' => $wizzeproLaunch, 'status' => false ], 400);
-                        case 'apipragmatic40':
-                        $apiPragmatic40Launch = self::ApiPragmaticGameLaunch($game->provider->code, $game->game_id, 'pt', auth('api')->user()->email);
-                        if(isset($apiPragmatic40Launch['launch_url'])) {
-                            return response()->json([
-                                'game' => $game,
-                                'gameUrl' => $apiPragmatic40Launch['launch_url'],
-                                'token' => $token
-                            ]);
-                        }
-                    
-                        return response()->json(['error' => $apiPragmatic40Launch, 'status' => false ], 400);
-                        case 'play_fiver':
-                            $playfiver = self::playFiverLaunch($game->game_id, $game->only_demo);
-                            return response()->json([
-                                'game' => $game,
-                                'gameUrl' => $playfiver['launch_url'],
-                                'token' => $token
-                            ]);
-                        
 
                     }
                 }
@@ -289,37 +432,193 @@ class GameController extends Controller
         $games = Game::where('provider_id', $providerId)->where('status', 1)->paginate($perPage);
         return response()->json($games);
     }
-    // WIZZE PRO API
-    public function GoldApiMethodWizzePro(Request $request)
+
+    public function webhookPlayIGamingMethod(Request $request)
     {
-        return self::WebhooksWizzePro($request);
+        return self::WebhookPIG($request);
     }
-    public function UserBalanceMethodWizzePro(Request $request)
+
+    public function webhookPlayConnectMethod(Request $request)
     {
-        return self::GetUserBalanceWizzePro($request);
+        return self::WebhooksPlayConnect($request);
     }
-    public function GameCallbackMethodWizzePro(Request $request)
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function webhookDrakonMethod(Request $request)
     {
-        return self::GameCallbackWizzePro($request);
+        return self::WebhookDrakon($request);
     }
-    public function MoneyCallbackMethodWizzePro(Request $request)
+    public function getBalanceCallback(Request $request)
     {
-        return self::MoneyCallbackWizzePro($request);
+        // \Log::info('getBalanceCallback');
+        // \Log::debug($request);
+        return PGSoftTrait::getBalancePGSoft($request);
     }
-    public function webhookPlayFiver(Request $request)
+
+    /**
+     * @dev 
+     */
+    public function betWinCallback(Request $request)
     {
-        return self::webhookPlayFiverAPI($request);
+        // \Log::info('betWinCallback');
+        // \Log::debug($request);
+        return PGSoftTrait::ProcessPlayPGSoft($request);
     }
+
+    /**
+     * @dev anonymous
+     */
+    public function withdrawCallback(Request $request)
+    {
+        // \Log::info('withdrawCallback');
+        // \Log::debug($request);
+        // Lógica para lidar com o callback de Withdraw
+        return PGSoftTrait::ProcessWithdrawCallbackPGSoft($request);
+    }
+
+    /**
+     * @dev anonymous 
+     */
+    public function depositCallback(Request $request)
+    {
+        // \Log::info('depositCallback');
+        // \Log::debug($request);
+        // Lógica para lidar com o callback de Deposit
+        return PGSoftTrait::ProcessDepositCallbackPGSoft($request);
+        ;
+    }
+    public function rollbackTransactionCallback(Request $request)
+    {
+        // \Log::info('rollbackTransactionCallback');
+        // \Log::debug($request);
+        // Lógica para lidar com o callback de RollbackTransaction
+        return response()->json(['message' => 'Callback de RollbackTransaction recebido com sucesso']);
+    }
+    /**
+     * @dev anonymous
+     * Update the specified resource in storage.
+     */
     public function webhookGoldApiMethod(Request $request)
     {
         return self::WebhooksFivers($request);
     }
-    public function webhookApiPragmatic40(Request $request)
+
+    /**
+     * @dev anonymous
+     * Update the specified resource in storage.
+     */
+    public function webhookUserBalanceMethod(Request $request)
     {
-     return self::ApiPragmaticWebhook($request);
+        return self::GetUserBalanceWorldSlot($request);
+    }
+
+    /**
+     * @dev anonymous
+     * Update the specified resource in storage.
+     */
+    public function webhookGameCallbackMethod(Request $request)
+    {
+        return self::GameCallbackWorldSlot($request);
+    }
+
+    /**
+     * @dev anonymous
+     * Update the specified resource in storage.
+     */
+    public function webhookMoneyCallbackMethod(Request $request)
+    {
+        return self::MoneyCallbackWorldSlot($request);
+    }
+
+    /**
+     * Webhook Vibra Method
+     *
+     * @param Request $request
+     * @param $parameters
+     * @return array|\Illuminate\Http\JsonResponse|null
+     */
+    public function webhookVibraMethod(Request $request, $parameters)
+    {
+        return self::WebhookVibra($request, $parameters);
+    }
+
+    /**
+     * @param Request $request
+     * @return null
+     */
+    public function webhookKaGamingMethod(Request $request)
+    {
+        return self::WebhookKaGaming($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return null
+     */
+    public function webhookSalsaMethod(Request $request)
+    {
+        return self::webhookSalsa($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function webhookVeniXMethod(Request $request)
+    {
+        return self::WebhookVeniX($request);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|null
+     */
+    public function webhookEvergameMethod(Request $request)
+    {
+        return self::WebhooksEvergame($request);
+    }
+   public function webhookGoldApiMethodClone(Request $request)
+    {
+        return self::WebhooksClones($request);
+    }
+
+    public function webhookUserBalanceMethodClone(Request $request)
+    {
+        Log::debug("Consultando saldo Clone");
+        Log::debug($request->all());
+        return self::GetUserBalanceClone($request);
+    }
+
+    public function webhookGameCallbackMethodClone(Request $request)
+    {
+        Log::debug("Callback Clone");
+        return self::GameCallbackClone($request);
+    }
+
+    public function webhookMoneyCallbackMethodClone(Request $request)
+    {
+        Log::debug("MoneyCallback Clone");
+        return self::MoneyCallbackClone($request);
     }
 
 
-   
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|null
+     */
+    public function webhookPlayGamingMethod(Request $request)
+    {
+        return self::WebhooksPlayGaming($request);
+    }
+      public function webhookPlayFiver(Request $request)
+    {
+        return self::webhookPlayFiverAPI($request);
+    }
+     public function webhookPgOnePlayiGaming(Request $request)
+    {
+        return self::WebhooksPgOnePlayiGaming($request);
+    }
 
 }

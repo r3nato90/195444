@@ -2,7 +2,7 @@
   <div class="flex justify-center items-center w-full h-full">
     <RouterView v-slot="{ Component, route }">
       <Transition name="page-opacity" mode="out-in">
-        <div :key="route.name" class="center-content background-color-cassino w-full max-w-[490px] hidden-scrollbar">
+        <div :key="route.name" class="center-content background-color-cassino w-full max-w-[450px] hidden-scrollbar">
           <component :is="Component"></component>
         </div>
       </Transition>

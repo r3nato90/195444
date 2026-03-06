@@ -297,9 +297,7 @@
                                         'text-center' => $alignment === Alignment::Center,
                                     ])
                                 >
-                                    <x-filament::modal.heading
-                                        @class(['me-5' => $closeButton])
-                                    >
+                                    <x-filament::modal.heading>
                                         {{ $heading }}
                                     </x-filament::modal.heading>
 

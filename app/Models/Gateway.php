@@ -37,20 +37,23 @@ class Gateway extends Model
         'stripe_secret_key',
         'stripe_webhook_key',
 
-
         // digitopay
         'digitopay_uri',
         'digitopay_cliente_id',
         'digitopay_cliente_secret',
 
-        //
+        // ezzebank
         'ezzebank_uri',
         'ezzebank_cliente_id',
         'ezzebank_cliente_secret',
         'ezze_user',
         'ezze_senha',
-      
+        
+        // PixUP
+        'pixup_client_id',
+        'pixup_client_secret',
 
+        // bspay
         'bspay_uri',
         'bspay_cliente_id',
         'bspay_cliente_secret',
@@ -60,7 +63,7 @@ class Gateway extends Model
     protected $hidden = array('updated_at');
 
     /**
-     * Get the user's first name.
+     * Mascara o ID do cliente DigitoPay em modo Demo.
      */
     protected function digitopayClienteId(): Attribute
     {
@@ -70,7 +73,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara o Secret do cliente DigitoPay em modo Demo.
      */
     protected function digitopayClienteSecret(): Attribute
     {
@@ -80,7 +83,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara a Public Key genérica em modo Demo.
      */
     protected function publicKey(): Attribute
     {
@@ -90,7 +93,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara a Private Key genérica em modo Demo.
      */
     protected function privateKey(): Attribute
     {
@@ -100,7 +103,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara o ID do cliente SuitPay em modo Demo.
      */
     protected function suitpayClienteId(): Attribute
     {
@@ -110,7 +113,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara o Secret do cliente SuitPay em modo Demo.
      */
     protected function suitpayClienteSecret(): Attribute
     {
@@ -120,12 +123,7 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
-     */
-
-
-    /**
-     * Get the user's first name.
+     * Mascara a Public Key da Stripe em modo Demo.
      */
     protected function stripePublicKey(): Attribute
     {
@@ -135,9 +133,29 @@ class Gateway extends Model
     }
 
     /**
-     * Get the user's first name.
+     * Mascara a Secret Key da Stripe em modo Demo.
      */
     protected function stripeSecretKey(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Mascara o ID do cliente PixUP em modo Demo.
+     */
+    protected function pixupClientId(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,
+        );
+    }
+
+    /**
+     * Mascara o Secret do cliente PixUP em modo Demo.
+     */
+    protected function pixupClientSecret(): Attribute
     {
         return Attribute::make(
             get: fn(?string $value) => env('APP_DEMO') ? '*********************' : $value,

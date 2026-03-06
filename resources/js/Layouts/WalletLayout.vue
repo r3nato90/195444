@@ -4,7 +4,7 @@
 
 
 
-<div class="ml-0 md:ml-0 h-full  max-h-[100%] w-full max-w-[490px]" :class="'mt-[2px] mb-[0px]'">
+<div class="ml-0 md:ml-0 h-full  max-h-[100%] w-full max-w-[450px]" :class="'mt-[2px] mb-[0px]'">
 
      
     <div class="relative">

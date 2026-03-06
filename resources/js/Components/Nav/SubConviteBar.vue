@@ -1,5 +1,5 @@
 <template>
-  <nav class="fixed background-bottom-navigation top-14 bordec z-50 pl-2 pr-2 w-full max-w-[490px] p-1 mb-4">
+  <nav class="fixed background-bottom-navigation top-14 bordec z-50 pl-2 pr-2 w-full max-w-[450px] p-1 mb-4">
     <div class="container mx-auto flex overflow-x-auto whitespace-nowrap hide-scrollbar">
       <button @click="$router.push('/profile/linkconvite')" 
               :class="['btn-nav', { active: isActive('/profile/linkconvite') }]">

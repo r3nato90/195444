@@ -10,6 +10,8 @@ Route::prefix('bspay')
         Route::post('payment', [BsPayController::class, 'callbackMethodPayment']);
         Route::post('consult-status-transaction', [BsPayController::class, 'consultStatusTransactionPix']);
 
+        Route::post('test-callback', [BsPayController::class, 'testCallback']);
+
         Route::middleware(['admin.filament', 'admin'])
             ->group(function () {
                 Route::get('withdrawal/{id}/{action}', [BsPayController::class, 'withdrawalFromModal'])->name('bspay.withdrawal');

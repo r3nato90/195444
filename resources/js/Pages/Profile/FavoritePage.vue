@@ -6,35 +6,35 @@
             </div>
         </LoadingComponent>
 
-        <div class="scroll-container w-full max-w-[490px] mx-auto scroll-hidden pr-2 pl-2">
+        <div v-if="!isLoading" class="md:w-4/6 2xl:w-4/6 mx-auto my-16 p-4">
+            <HeaderComponent>
+                <template #header>
+                    {{ $t('List of') }} <span class=" bg-blue-100 text-blue-800 text-2xl font-semibold me-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ms-2">{{ $t('Favorites') }}</span>
+                </template>
 
-            <div class="w-full flex justify-between mb-1 items-center pl-2 pr-2 pt-2">
-                <div class="flex items-center">
-                    <img src="/public/assets/images/populareshv.png" alt="Ícone" class="w-auto h-8 mr-1" />
-                    <h2 class="title-custom title-color" style="font-family: 'Helvetica', sans-serif;">{{
-                        $t('Favoritos') }}</h2>
+                <p class="text-2xl flex items-center justify-center">{{ $t('Total') }} <strong>({{ games?.length ?? 0 }})</strong></p>
+            </HeaderComponent>
+
+            <div v-if="games?.length > 0" class="mt-5">
+                <div class="relative w-full">
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-5">
+                        <CassinoGameCard
+                            v-for="(game, index) in games"
+                            :index="index"
+                            :title="game.game_name"
+                            :cover="game.cover"
+                            :gamecode="game.game_code"
+                            :type="game.distribution"
+                            :game="game"
+                        />
+                    </div>
                 </div>
             </div>
-
-            <div v-if="games.length > 0" :class="['grid', `grid-cols-4`, 'gap-2', 'mb-2']">
-
-                <CassinoGameCard v-for="(game, gameIndex) in games" :key="gameIndex" :index="gameIndex"
-                    :title="game.game.game_name" :cover="game.game.cover" :gamecode="game.game.game_code"
-                    :type="game.game.distribution" :game="game.game" />
-
-            </div>
-
             <div v-else class="empty-data flex flex-col justify-center items-center text-center my-36">
-            <img :src="`/assets/images/img_none_sj.webp`" alt="" class="w-auto h-auto max-h-[140px]">
-            <h3 class="text-color custom-font">{{ $t('Sem jogos disponíveis') }}</h3>
+                <img :src="`/assets/images/no-results.png`" alt="" class="w-auto h-auto max-h-[300px]">
+                <h3>{{ $t('No data to show') }}</h3>
+            </div>
         </div>
-
-        </div>
-
-
-       
-
-
     </BaseLayout>
 </template>
 
@@ -49,11 +49,11 @@ import CassinoGameCard from "@/Pages/Cassino/Components/CassinoGameCard.vue";
 
 export default {
     props: [],
-    components: { CassinoGameCard, HeaderComponent, LoadingComponent, BaseLayout },
+    components: {CassinoGameCard, HeaderComponent, LoadingComponent, BaseLayout },
     data() {
         return {
             isLoading: true,
-            games: [],
+            games: null,
         }
     },
     setup(props) {
@@ -68,12 +68,11 @@ export default {
 
     },
     methods: {
-
         getFavoriteGame: async function (page = 1) {
             const _this = this;
             await HttpApi.get(`/profile/favorites`)
                 .then(response => {
-                    //console.log(response.data.games);
+                    console.log(response.data.games);
                     _this.games = response.data.games;
                     _this.isLoading = false;
                 })
@@ -83,7 +82,7 @@ export default {
         },
     },
     async created() {
-        await this.getFavoriteGame();
+      await this.getFavoriteGame();
     },
     watch: {
 
@@ -91,4 +90,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

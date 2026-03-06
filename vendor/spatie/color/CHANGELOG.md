@@ -2,30 +2,6 @@
 
 All notable changes to `color` will be documented in this file
 
-## 1.6.2 - 2024-12-09
-
-### What's Changed
-
-* Issue #88 Cast return to float instead of string to match Contrast ratio return type by @NiklasBr in https://github.com/spatie/color/pull/91
-
-### New Contributors
-
-* @NiklasBr made their first contribution in https://github.com/spatie/color/pull/91
-
-**Full Changelog**: https://github.com/spatie/color/compare/1.6.1...1.6.2
-
-## 1.6.1 - 2024-11-18
-
-### What's Changed
-
-* Fix wrong Validation Error message for hsla strings by @Afrowson in https://github.com/spatie/color/pull/90
-
-### New Contributors
-
-* @Afrowson made their first contribution in https://github.com/spatie/color/pull/90
-
-**Full Changelog**: https://github.com/spatie/color/compare/1.6.0...1.6.1
-
 ## 1.6.0 - 2024-09-20
 
 ### What's Changed

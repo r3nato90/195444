@@ -78,8 +78,6 @@ export const useAuthStore = defineStore("auth", () => {
         token.value = '';
         user.value = '';
         isAuth.value = false;
-        // Redireciona para a página de login
-        window.location.href = '/login';
     }
 
     /**

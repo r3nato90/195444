@@ -22,7 +22,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="no-data w-full max-w-[490px] flex flex-col items-center justify-center">
+      <div class="no-data w-full max-w-[450px] flex flex-col items-center justify-center">
         <img :src="`/assets/images/img_none_sj.webp`" alt="Nenhum registro" class="w-auto h-auto max-h-[140px]" />
         <h3 class="text-color">{{ $t('Sem registro') }}</h3>
       </div>
@@ -82,7 +82,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%; /* Ocupa a largura completa do contêiner */
-  max-width: 490px; /* Largura máxima do cartão */
+  max-width: 450px; /* Largura máxima do cartão */
   overflow: hidden;
   cursor: pointer; /* Adiciona um cursor de ponteiro para indicar que o card é clicável */
   display: flex; /* Alinha imagem e texto lado a lado */

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Csv;
 
-use Deprecated;
 use InvalidArgumentException;
 use Stringable;
 
@@ -152,7 +151,6 @@ class EscapeFormula
      *
      * @see escapeRecord
      */
-    #[Deprecated(message:'use League\Csv\EscapeFormula::escapeRecord() instead', since:'league/csv:9.11.0')]
     public function __invoke(array $record): array
     {
         return $this->escapeRecord($record);

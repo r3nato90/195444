@@ -29,7 +29,6 @@ trait QueryBuilderGrammar
             'unionLimit' => $builder->unionLimit,
             'unionOffset' => $builder->unionOffset,
             'unionOrders' => $builder->unionOrders,
-            'lock' => $builder->lock,
 
             'joins' => $this->packJoins($builder->joins), // must be the last
         ], fn ($item) => isset($item));

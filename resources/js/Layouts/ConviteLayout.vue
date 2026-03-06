@@ -4,7 +4,7 @@
   <!--<SubConviteBar :simple="false" />-->
    
 
-    <div class="ml-0 md:ml-0 w-full max-w-[490px] h-screen" :class="'mt-[38px] mb-[0px]'">
+    <div class="ml-0 md:ml-0 w-full max-w-[450px] h-screen" :class="'mt-[38px] mb-[0px]'">
         
        <div class="relative">
             <slot></slot>

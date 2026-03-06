@@ -19,10 +19,10 @@ class Package
     }
 
     /**
-     * @param string|null $key
+     * @param string $key
      * @return mixed
      */
-    public function get(?string $key = null)
+    public function get(string $key = null)
     {
         if (is_null($key)) {
             return $this->data;

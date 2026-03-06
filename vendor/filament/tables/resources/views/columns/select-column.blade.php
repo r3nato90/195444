@@ -34,7 +34,7 @@
                             return
                         }
 
-                        let newState = $refs.newState.value.replaceAll('\\'+String.fromCharCode(34), String.fromCharCode(34))
+                        let newState = $refs.newState.value
 
                         if (state === newState) {
                             return
@@ -50,7 +50,7 @@
         $attributes
             ->merge($getExtraAttributes(), escape: false)
             ->class([
-                'fi-ta-select w-full min-w-48',
+                'fi-ta-select',
                 'px-3 py-4' => ! $isInline(),
             ])
     }}

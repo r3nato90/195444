@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace League\Csv;
 
-use Deprecated;
 use Generator;
 use InvalidArgumentException;
 use RuntimeException;
@@ -400,7 +399,6 @@ abstract class AbstractCsv implements ByteSequence
      *
      * Returns the stream filter mode.
      */
-    #[Deprecated(message:'use League\Csv\AbstractCsv::supportsStreamFilterOnRead() or League\Csv\AbstractCsv::supportsStreamFilterOnWrite() instead', since:'league/csv:9.7.0')]
     public function getStreamFilterMode(): int
     {
         return static::STREAM_FILTER_MODE;
@@ -416,7 +414,6 @@ abstract class AbstractCsv implements ByteSequence
      *
      * Tells whether the stream filter capabilities can be used.
      */
-    #[Deprecated(message:'use League\Csv\AbstractCsv::supportsStreamFilterOnRead() or League\Csv\AbstractCsv::supportsStreamFilterOnWrite() instead', since:'league/csv:9.7.0')]
     public function supportsStreamFilter(): bool
     {
         return $this->document instanceof Stream;
@@ -431,7 +428,6 @@ abstract class AbstractCsv implements ByteSequence
      * @see AbstractCsv::toString
      * @codeCoverageIgnore
      */
-    #[Deprecated(message:'use League\Csv\AbstractCsv::toString() instead', since:'league/csv:9.7.0')]
     public function getContent(): string
     {
         return $this->toString();
@@ -446,7 +442,6 @@ abstract class AbstractCsv implements ByteSequence
      *
      * Retrieves the CSV content
      */
-    #[Deprecated(message:'use League\Csv\AbstractCsv::toString() instead', since:'league/csv:9.1.0')]
     public function __toString(): string
     {
         return $this->toString();
@@ -467,7 +462,6 @@ abstract class AbstractCsv implements ByteSequence
      * @deprecated since version 9.17.0
      * @see https://tools.ietf.org/html/rfc6266#section-4.3
      */
-    #[Deprecated(message:'the method no longer affect the outcome of the class, use League\Csv\HttpHeaders::forFileDownload instead', since:'league/csv:9.17.0')]
     protected function sendHeaders(string $filename): void
     {
         if (strlen($filename) !== strcspn($filename, '\\/')) {
@@ -507,7 +501,6 @@ abstract class AbstractCsv implements ByteSequence
      *
      * @throws Exception
      */
-    #[Deprecated(message:'use League\Csv\AbstractCsv::download() instead', since:'league/csv:9.18.0')]
     public function output(?string $filename = null): int
     {
         try {

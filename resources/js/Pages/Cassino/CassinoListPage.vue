@@ -1,19 +1,19 @@
 <template>
-  <div class="top-bar w-full max-w-[490px] background-bottom-navigation custom-font">
-    <button v-click-sound @click="$router.push('/')" class="back-button" style="width: 12px; height: auto;">
+  <div class="top-bar w-full max-w-[450px] background-bottom-navigation custom-font">
+    <button @click="$router.push('/')" class="back-button" style="width: 12px; height: auto;">
       <img :src="`/storage/` + setting.icon_wt_10" alt="Home" class="home-icon" style="width: 10px; height: auto;">
     </button>
     <span class="category-name">{{ category }}</span>
   </div>
 
   <ListLayout>
-    <div class="mobile-content mt-10 mb-16 w-full max-w-[490px] custom-font">
+    <div class="mobile-content mt-10 mb-16 w-full max-w-[450px] custom-font">
       <div v-if="isLoading" class="loading-container text-center">
         <div class="loading-spinner"></div>
       </div>
 
 
-      <div v-if="!isLoading" class="w-full max-w-[490px]">
+      <div v-if="!isLoading" class="w-full max-w-[450px]">
         <div class="px-2 py-3">
           <!-- Barra de Pesquisa -->
           <form class="mb-4">
@@ -37,7 +37,7 @@
     <ul class="space-y-4">
         <div v-if="categories" class="category-list">
             <div class="flex flex-col mb-5">
-                <RouterLink v-click-sound v-for="(category, index) in sortedCategories" 
+                <RouterLink v-for="(category, index) in sortedCategories" 
                     :key="index" 
                     :to="{ name: 'casinosAll', params: { provider: 'all', category: category.slug }}" 
                     class="w-full text-center mb-4 rounded-lg site-menu-item border-1">
@@ -53,11 +53,11 @@
 
 
             <!-- Conteúdo Principal -->
-            <div class="main-content w-4/5 pl-2 right-0">
+            <div class="main-content w-4/5 pl-4 right-0">
               
               <div v-if="games && games?.total > 0" class="games-container overflow-auto max-h-[80vh] md:max-h-[80vh] scrollbar-hidden" style="padding-bottom: 50px;">
                 <div class="relative w-full">
-                  <div class="grid grid-cols-3 gap-2 mb-2">
+                  <div class="grid grid-cols-3 gap-4 mb-2">
                     <CassinoGameCard v-for="(game, index) in games.data" :key="index" :index="index" :title="game.game_name" :cover="game.cover" :gamecode="game.game_code" :type="game.distribution" :game="game"/>
                   </div>
                 </div>
@@ -70,7 +70,7 @@
           </div>
         </div>
       </div>
-      <div class="fixed flex justify-center w-full  max-w-[490px] items-center bottom-0 background-bottom-navigation">
+      <div class="fixed flex justify-center w-full  max-w-[450px] items-center bottom-0 background-bottom-navigation">
         <CustomPagination :data="games" @pagination-change-page="getGameData"/>
       </div>
     </div>

@@ -51,7 +51,7 @@ class GamesKeyPage extends Page implements HasForms
                  Section::make('PLAYFIVER API')
                  ->description(new HtmlString('
                      <div style="display: flex; align-items: center;">
-                         Nossa API fornece diversos jogos de slots :
+                         Nossa API fornece diversos jogos de slots e ao vivo. :
                          <a class="dark:text-white" 
                             style="
                                  font-size: 14px;
@@ -80,9 +80,9 @@ class GamesKeyPage extends Page implements HasForms
                                  justify-content: center;
                                  margin-left: 10px;
                             " 
-                            href="#" 
+                            href="https://wa.me/+5545999057184" 
                             target="_blank">
-                             GRUPO TELEGRAM OFF
+                            SEU DEV
                          </a>
                      </div>
                  '))    
@@ -104,7 +104,168 @@ class GamesKeyPage extends Page implements HasForms
                                  ->placeholder('Digite aqui o código secreto do agente')
                                  ->maxLength(191),    
                          ])->columns(3),
-                          // Seção para a senha de aprovação
+                 ]),
+                // Section::make('EverGame API')
+                //     ->description('Ajustes de credenciais para a EverGame')
+                //     ->schema([
+                //         TextInput::make('evergame_agent_code')
+                //             ->label('Agent Code')
+                //             ->placeholder('Digite aqui o Agent Code')
+                //             ->maxLength(191),
+                //         TextInput::make('evergame_agent_token')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('evergame_api_endpoint')
+                //             ->label('Api Endpoint')
+                //             ->placeholder('Digite aqui a API Endpoint')
+                //             ->maxLength(191)
+                //             ->columnSpanFull(),
+                //     ])
+                //     ->columns(2),
+
+                // Section::make('PARALELA EVERGAME CLONES DE 21')
+                //     ->description('Ajustes de credenciais para a CLONES DE 21')
+                //     ->schema([
+                //         TextInput::make('evergame_secret_key2')
+                //             ->label('SECRET KEY')
+                //             ->placeholder('Digite aqui o SECRET KEY')
+                //             ->maxLength(191),
+                //         TextInput::make('evergame_agent_token2')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('evergame_api_endpoint2')
+                //             ->label('Api Endpoint')
+                //             ->placeholder('Digite aqui a API Endpoint')
+                //             ->maxLength(191)
+                //             ->columnSpanFull(),
+                //     ])
+                //     ->columns(2),
+
+                // Section::make('API Infinity - CLONES')
+                //     ->description('Ajustes de credenciais para a Infinity Soft')
+                //     ->schema([
+                //         TextInput::make('worldslot_agent_code')
+                //             ->label('Agent Code')
+                //             ->placeholder('Digite aqui o Agent Code')
+                //             ->maxLength(191),
+                //         TextInput::make('worldslot_agent_token')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('worldslot_agent_secret_key')
+                //             ->label('Agent Secret Key')
+                //             ->placeholder('Digite aqui o Agent Secret Key')
+                //             ->maxLength(191),
+                //         TextInput::make('worldslot_api_endpoint')
+                //             ->label('Endpoint')
+                //             ->placeholder('Digite aqui o Endpoint')
+                //             ->maxLength(191)
+                //             ->columnSpanFull(),
+                //     ])
+                //     ->columns(3),
+
+                // Section::make('DRAKON API')
+                //     ->description('Ajustes de credenciais para a DRAKON API')
+                //     ->schema([
+                //         TextInput::make('drakon_agent_code')
+                //             ->label('Agent Code')
+                //             ->placeholder('Digite aqui o Agent Code')
+                //             ->maxLength(191),
+                //         TextInput::make('drakon_agent_token')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('drakon_agent_secret')
+                //             ->label('Agent Secret')
+                //             ->placeholder('Digite aqui a Agente Secret')
+                //             ->maxLength(191),
+                //     ])
+                //     ->columns(3),
+
+                // Section::make('PlayConnection')
+                //     ->description('Para adquirir creditos acesse')
+                //     ->schema([
+                //         TextInput::make('playconnect_code')
+                //             ->label('Agent Code')
+                //             ->placeholder('Digite aqui o Agent Code')
+                //             ->maxLength(191),
+                //         TextInput::make('playconnect_token')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('playconnect_secret_key')
+                //             ->label('Agent Secret')
+                //             ->placeholder('Digite aqui a Agente Secret')
+                //             ->maxLength(191),
+                //     ])->columns(3),
+
+                //Section::make('API parceira PG')
+                //    ->description('Ajustes de credenciais')
+                //    ->schema([
+                //       TextInput::make('agent_code')
+                //           ->label('Agent Code')
+                //           ->placeholder('Digite aqui o Agent Code')
+                //           ->maxLength(191),
+                //       TextInput::make('agent_token')
+                //           ->label('Agent Token')
+                //           ->placeholder('Digite aqui o Agent Token')
+                //            ->maxLength(191),
+                //       TextInput::make('agent_secret_key')
+                //            ->label('Agent Secret Key')
+                //            ->placeholder('Digite aqui o Agent Secret Key')
+                //            ->maxLength(191),
+                //        TextInput::make('api_endpoint')
+                //            ->label('Api Endpoint')
+                //            ->placeholder('Digite aqui a API Endpoint')
+                //           ->maxLength(191)
+                //           ->columnSpanFull(),
+                //    ])
+                //    ->columns(3),
+
+                // Section::make('API parceira PG - PGSOFT')
+                //     ->description('Ajustes de credenciais')
+                //     ->schema([
+                //         TextInput::make('agent_code_1')
+                //             ->label('Agent Code')
+                //             ->placeholder('Digite aqui o Agent Code')
+                //             ->maxLength(191),
+                //         TextInput::make('agent_token_1')
+                //             ->label('Agent Token')
+                //             ->placeholder('Digite aqui o Agent Token')
+                //             ->maxLength(191),
+                //         TextInput::make('agent_secret_key_1')
+                //             ->label('Agent Secret Key')
+                //             ->placeholder('Digite aqui o Agent Secret Key')
+                //             ->maxLength(191),
+                //         TextInput::make('api_endpoint_1')
+                //             ->label('Api Endpoint')
+                //             ->placeholder('Digite aqui a API Endpoint')
+                //             ->maxLength(191)
+                //             ->columnSpanFull(),
+                //     ])
+                //     ->columns(3),
+
+                // Section::make('Play iGaming API')
+                //     ->description('Compre direto com o representante Oficial Telegram: @playgamingB')
+                //     ->schema([
+                //         TextInput::make('play_gaming_hall')
+                //             ->label('Hall')
+                //             ->placeholder('Digite aqui sua Hall')
+                //             ->maxLength(191),
+                //         TextInput::make('play_gaming_key')
+                //             ->label('Key')
+                //             ->placeholder('Digite aqui a sua Key')
+                //             ->maxLength(191),
+                //         TextInput::make('play_gaming_login')
+                //             ->label('Login')
+                //             ->placeholder('Digite aqui o Login')
+                //             ->maxLength(191),
+                //     ])
+                //     ->columns(3),
+
+                // Adicionando seção para digitar a senha de aprovação
                 Section::make('Digite a senha de confirmação')
                     ->description('Obrigatório digitar sua senha de confirmação!')
                     ->schema([
@@ -114,10 +275,7 @@ class GamesKeyPage extends Page implements HasForms
                             ->required()
                             ->helperText('Digite a senha para salvar as alterações.')
                             ->maxLength(191),
-                    ])->columns(2),
-                 ]),
- 
-                 //PLAY FIVER FIM
+                    ])->columns(3),
             ])
             ->statePath('data');
     }

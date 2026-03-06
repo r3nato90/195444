@@ -13,7 +13,6 @@ use Spatie\FlareClient\Concerns\HasContext;
 use Spatie\FlareClient\Context\BaseContextProviderDetector;
 use Spatie\FlareClient\Context\ContextProviderDetector;
 use Spatie\FlareClient\Enums\MessageLevels;
-use Spatie\FlareClient\Enums\OverriddenGrouping;
 use Spatie\FlareClient\FlareMiddleware\AddEnvironmentInformation;
 use Spatie\FlareClient\FlareMiddleware\AddGlows;
 use Spatie\FlareClient\FlareMiddleware\CensorRequestBodyFields;
@@ -69,12 +68,9 @@ class Flare
 
     protected bool $withStackFrameArguments = true;
 
-    /** @var array<class-string, string> */
-    protected array $overriddenGroupings = [];
-
     public static function make(
-        ?string $apiKey = null,
-        ?ContextProviderDetector $contextDetector = null
+        string $apiKey = null,
+        ContextProviderDetector $contextDetector = null
     ): self {
         $client = new Client($apiKey);
 
@@ -163,18 +159,6 @@ class Flare
         return $this;
     }
 
-    /**
-     * @param class-string $exceptionClass
-     */
-    public function overrideGrouping(
-        string $exceptionClass,
-        string $type = OverriddenGrouping::ExceptionMessageAndClass,
-    ): self {
-        $this->overriddenGroupings[$exceptionClass] = $type;
-
-        return $this;
-    }
-
     public function version(): ?string
     {
         if (! $this->determineVersionCallable) {
@@ -191,7 +175,7 @@ class Flare
      */
     public function __construct(
         Client $client,
-        ?ContextProviderDetector $contextDetector = null,
+        ContextProviderDetector $contextDetector = null,
         array $middleware = [],
     ) {
         $this->client = $client;
@@ -333,7 +317,7 @@ class Flare
         return $this;
     }
 
-    public function report(Throwable $throwable, ?callable $callback = null, ?Report $report = null, ?bool $handled = null): ?Report
+    public function report(Throwable $throwable, callable $callback = null, Report $report = null, ?bool $handled = null): ?Report
     {
         if (! $this->shouldSendReport($throwable)) {
             return null;
@@ -378,7 +362,7 @@ class Flare
         return true;
     }
 
-    public function reportMessage(string $message, string $logLevel, ?callable $callback = null): void
+    public function reportMessage(string $message, string $logLevel, callable $callback = null): void
     {
         $report = $this->createReportFromMessage($message, $logLevel);
 
@@ -453,8 +437,7 @@ class Flare
             $this->applicationPath,
             $this->version(),
             $this->argumentReducers,
-            $this->withStackFrameArguments,
-            $this->overriddenGroupings,
+            $this->withStackFrameArguments
         );
 
         return $this->applyMiddlewareToReport($report);

@@ -5,13 +5,13 @@
       <div class="modal-content p-4 bg-white rounded shadow-lg">
         <!-- Início do header -->
         <div class="p-4 h-12 flex justify-center items-center">
-          <h2 class="text-[16px] text-color">Digite seu PIN</h2>
+          <h2 class="text-[16px] text-color">Digite sua senha de saque</h2>
         </div>
         <!-- Fim do header -->
 
         <section class="password-section mt-4">
   <div class="password-input__label">
-    <span class="text-color">Necessário para gerenciar as contas</span>
+    <span class="text-color">Verificar Senha de Saque</span>
     <span class="password-icon" @click="togglePasswordVisibility" style="cursor: pointer;">
       <i v-if="isPasswordVisible" class="fa fa-eye-slash" aria-hidden="true"></i>
       <i v-else class="fa fa-eye" aria-hidden="true"></i>
@@ -151,12 +151,12 @@ button:disabled {
   top: 0;
   width: 100%;
   height: 100%;
-  max-width: 490px;
+  max-width: 450px;
   z-index: 40;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .modal-container {
-  z-index: 40;
+  z-index: 50;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -269,7 +269,7 @@ trait CanImportRecords
                     filled($jobBatchName = $importer->getJobBatchName()),
                     fn (PendingBatch $batch) => $batch->name($jobBatchName),
                 )
-                ->finally(function () use ($columnMap, $import, $jobConnection, $options) {
+                ->finally(function () use ($import, $columnMap, $options) {
                     $import->touch('completed_at');
 
                     event(new ImportCompleted($import, $columnMap, $options));
@@ -307,29 +307,17 @@ trait CanImportRecords
                                     ->markAsRead(),
                             ]),
                         )
-                        ->when(
-                            ($jobConnection === 'sync') ||
-                                (blank($jobConnection) && (config('queue.default') === 'sync')),
-                            fn (Notification $notification) => $notification
-                                ->persistent()
-                                ->send(),
-                            fn (Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
-                        );
+                        ->sendToDatabase($import->user, isEventDispatched: true);
                 })
                 ->dispatch();
 
-            if (
-                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
-                (blank($jobConnection) && (config('queue.default') !== 'sync'))
-            ) {
-                Notification::make()
-                    ->title($action->getSuccessNotificationTitle())
-                    ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
-                        'count' => Number::format($import->total_rows),
-                    ]))
-                    ->success()
-                    ->send();
-            }
+            Notification::make()
+                ->title($action->getSuccessNotificationTitle())
+                ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
+                    'count' => Number::format($import->total_rows),
+                ]))
+                ->success()
+                ->send();
         });
 
         $this->registerModalActions([
@@ -409,6 +397,7 @@ trait CanImportRecords
             $s3Adapter = Storage::disk($fileDisk)->getAdapter();
 
             invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
+            
             $fileS3Path = (string) str('s3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath)->replace('\\', '/');
 
             $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([

@@ -11,7 +11,7 @@ return [
             ],
 
             'add' => [
-                'label' => ':label\'e ekle',
+                'label' => ':label ekle',
             ],
 
             'add_between' => [
@@ -185,15 +185,6 @@ return [
 
             ],
 
-            'svg' => [
-
-                'messages' => [
-                    'confirmation' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olabileceği için tavsiye edilmez.\n Devam etmek istediğinize emin misiniz?',
-                    'disabled' => 'SVG dosyalarını düzenlemek ölçeklendirme yaptığınızda kalite kaybına neden olduğu için engellendi.',
-                ],
-
-            ],
-
         ],
 
     ],
@@ -250,25 +241,12 @@ return [
 
     ],
 
-    'radio' => [
-
-        'boolean' => [
-            'true' => 'Evet',
-            'false' => 'Hayır',
-        ],
-
-    ],
-
     'repeater' => [
 
         'actions' => [
 
             'add' => [
                 'label' => ':label\'e ekle',
-            ],
-
-            'add_between' => [
-                'label' => 'Arasına yerleştir',
             ],
 
             'delete' => [
@@ -367,7 +345,7 @@ return [
                         ],
 
                         'create_another' => [
-                            'label' => 'Oluştur & Yeni oluştur',
+                            'label' => 'Oluştur & yeni oluştur',
                         ],
 
                     ],
@@ -403,7 +381,7 @@ return [
 
         'loading_message' => 'Yükleniyor...',
 
-        'max_items_message' => 'Sadece :count adet seçilebilir.',
+        'max_items_message' => 'Sadece :count seçilebilir.',
 
         'no_search_results_message' => 'Arama kriterlerinize uyan seçenek yok.',
 
@@ -417,31 +395,6 @@ return [
 
     'tags_input' => [
         'placeholder' => 'Yeni etiket',
-    ],
-
-    'text_input' => [
-
-        'actions' => [
-
-            'hide_password' => [
-                'label' => 'Şifreyi gizle',
-            ],
-
-            'show_password' => [
-                'label' => 'Şifreyi göster',
-            ],
-
-        ],
-
-    ],
-
-    'toggle_buttons' => [
-
-        'boolean' => [
-            'true' => 'Evet',
-            'false' => 'Hayır',
-        ],
-
     ],
 
     'wizard' => [

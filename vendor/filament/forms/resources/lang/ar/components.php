@@ -404,8 +404,6 @@ return [
 
             'create_option' => [
 
-                'label' => 'إضافة',
-
                 'modal' => [
 
                     'heading' => 'إضافة',
@@ -427,8 +425,6 @@ return [
             ],
 
             'edit_option' => [
-
-                'label' => 'تعديل',
 
                 'modal' => [
 

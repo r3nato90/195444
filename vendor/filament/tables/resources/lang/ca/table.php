@@ -14,6 +14,7 @@ return [
             'label' => 'Acció|Accions',
         ],
 
+
         'text' => [
 
             'actions' => [

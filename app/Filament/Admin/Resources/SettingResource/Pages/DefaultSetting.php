@@ -122,6 +122,7 @@ class DefaultSetting extends Page implements HasForms
             $imageMenuNav = $this->data['image_menu_nav'];
             // $imageUserNav = $this->data['image_user_nav'];
             //images botoes jackpot e suporte flutuante
+            $imageJackpot = $this->data['image_jackpot'];
             $iconbt1 = $this->data['icon_bt_1'];
             $iconbt2 = $this->data['icon_bt_2'];
             $iconbt3 = $this->data['icon_bt_3'];
@@ -359,6 +360,15 @@ class DefaultSetting extends Page implements HasForms
                     $this->data['img_bg_1'] = $this->uploadFile($imgbg1);
                     if (is_array($this->data['img_bg_1'])) {
                         unset($this->data['img_bg_1']);
+                    }
+                }
+            }
+             // Função para upload do botao 1
+             if (is_array($imageJackpot) || is_object($imageJackpot)) {
+                if (!empty($imageJackpot)) {
+                    $this->data['image_jackpot'] = $this->uploadFile($imageJackpot);
+                    if (is_array($this->data['image_jackpot'])) {
+                        unset($this->data['image_jackpot']);
                     }
                 }
             }
@@ -712,61 +722,61 @@ class DefaultSetting extends Page implements HasForms
                         ])->columns(2),
                     ]),
 
-                // Section::make('Botões de navegação')
-                //     ->description('Imagens para botões de navegação')
-                //     ->schema([
-                //         FileUpload::make('image_home_bottom')
-                //             ->label('Home')
-                //             ->placeholder('Carregue a imagem para o botão Home')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_cassino_bottom')
-                //             ->label('Login')
-                //             ->placeholder('Carregue a imagem para o botão Login')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_deposito_bottom')
-                //             ->label('Depósito')
-                //             ->placeholder('Carregue a imagem para o botão Depósito')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_convidar_bottom')
-                //             ->label('Promoções')
-                //             ->placeholder('Carregue a imagem para o botão Promoções')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_wallet_bottom')
-                //             ->label('Perfil')
-                //             ->placeholder('Carregue a imagem para o botão Perfil')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
+                Section::make('Botões de navegação')
+                    ->description('Imagens para botões de navegação')
+                    ->schema([
+                        FileUpload::make('image_home_bottom')
+                            ->label('Home')
+                            ->placeholder('Carregue a imagem para o botão Home')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_cassino_bottom')
+                            ->label('Login')
+                            ->placeholder('Carregue a imagem para o botão Login')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_deposito_bottom')
+                            ->label('Depósito')
+                            ->placeholder('Carregue a imagem para o botão Depósito')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_convidar_bottom')
+                            ->label('Promoções')
+                            ->placeholder('Carregue a imagem para o botão Promoções')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_wallet_bottom')
+                            ->label('Perfil')
+                            ->placeholder('Carregue a imagem para o botão Perfil')
+                            ->image()
+                            ->hint('Max: 100x100'),
 
-                //         FileUpload::make('image_home_bottom_hover')
-                //             ->label('Home')
-                //             ->placeholder('Carregue a imagem para o botão Home')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_cassino_bottom_hover')
-                //             ->label('Login')
-                //             ->placeholder('Carregue a imagem para o botão Login')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_deposito_bottom_hover')
-                //             ->label('Depósito')
-                //             ->placeholder('Carregue a imagem para o botão Depósito')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_convidar_bottom_hover')
-                //             ->label('Promoções')
-                //             ->placeholder('Carregue a imagem para o botão Promoções')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //         FileUpload::make('image_wallet_bottom_hover')
-                //             ->label('Perfil')
-                //             ->placeholder('Carregue a imagem para o botão Perfil')
-                //             ->image()
-                //             ->hint('Max: 100x100'),
-                //     ])->columns(5),
+                        FileUpload::make('image_home_bottom_hover')
+                            ->label('Home')
+                            ->placeholder('Carregue a imagem para o botão Home')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_cassino_bottom_hover')
+                            ->label('Login')
+                            ->placeholder('Carregue a imagem para o botão Login')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_deposito_bottom_hover')
+                            ->label('Depósito')
+                            ->placeholder('Carregue a imagem para o botão Depósito')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_convidar_bottom_hover')
+                            ->label('Promoções')
+                            ->placeholder('Carregue a imagem para o botão Promoções')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                        FileUpload::make('image_wallet_bottom_hover')
+                            ->label('Perfil')
+                            ->placeholder('Carregue a imagem para o botão Perfil')
+                            ->image()
+                            ->hint('Max: 100x100'),
+                    ])->columns(5),
 
                 Section::make('Botões da NAV TOP')
                     ->description('Imagens para NAV TOP')
@@ -845,37 +855,41 @@ class DefaultSetting extends Page implements HasForms
                     ])->columns(5),
 
                 Section::make('JACKPOT')
-                    ->description('Icones para a sidebar, jackpot, suporte')
+                    ->description('Altere a imagem do jackpot')
                     ->schema([
-                        FileUpload::make('icon_bt_1')
-                            ->label('botão 1 do jackpot')
-                            ->placeholder('Carregue a logo do icone 1')
+                        FileUpload::make('image_jackpot')
+                            ->label('Imagem Jackpot')
+                            ->placeholder('Carregue o jackpot')
                             ->image(),
-                        FileUpload::make('icon_bt_2')
-                            ->label('botão 2 do jackpot')
-                            ->placeholder('Carregue a logo do icone 2')
-                            ->image(),
-                        FileUpload::make('icon_bt_3')
-                            ->label('botão 3 do jackpot')
-                            ->placeholder('Carregue a logo do icone 3')
-                            ->image(),
-                        FileUpload::make('icon_bt_4')
-                            ->label('botão 4 do jackpot')
-                            ->placeholder('Carregue a logo do icone 4')
-                            ->image(),
-                        TextInput::make('name_bt_1')
-                            ->label('Nome do botão 1')
-                            ->maxLength(191),
-                        TextInput::make('name_bt_2')
-                            ->label('Nome do botão 2')
-                            ->maxLength(191),
-                        TextInput::make('name_bt_3')
-                            ->label('Nome do botão 3')
-                            ->maxLength(191),
-                        TextInput::make('name_bt_4')
-                            ->label('Nome do botão 4')
-                            ->maxLength(191),
-                    ])->columns(4),
+                        // FileUpload::make('icon_bt_1')
+                        //     ->label('botão 1 do jackpot')
+                        //     ->placeholder('Carregue a logo do icone 1')
+                        //     ->image(),
+                        // FileUpload::make('icon_bt_2')
+                        //     ->label('botão 2 do jackpot')
+                        //     ->placeholder('Carregue a logo do icone 2')
+                        //     ->image(),
+                        // FileUpload::make('icon_bt_3')
+                        //     ->label('botão 3 do jackpot')
+                        //     ->placeholder('Carregue a logo do icone 3')
+                        //     ->image(),
+                        // FileUpload::make('icon_bt_4')
+                        //     ->label('botão 4 do jackpot')
+                        //     ->placeholder('Carregue a logo do icone 4')
+                        //     ->image(),
+                        // TextInput::make('name_bt_1')
+                        //     ->label('Nome do botão 1')
+                        //     ->maxLength(191),
+                        // TextInput::make('name_bt_2')
+                        //     ->label('Nome do botão 2')
+                        //     ->maxLength(191),
+                        // TextInput::make('name_bt_3')
+                        //     ->label('Nome do botão 3')
+                        //     ->maxLength(191),
+                        // TextInput::make('name_bt_4')
+                        //     ->label('Nome do botão 4')
+                        //     ->maxLength(191),
+                    ])->columns(2),
 
                 Section::make('Botão flutuante & imagem de fundo')
                     ->description('Icones para a sidebar, jackpot, suporte')

@@ -117,7 +117,7 @@
                     aria-label="{{ $getPlaceholder() }}"
                     type="button"
                     tabindex="-1"
-                    @disabled($isDisabled || $isReadOnly())
+                    @disabled($isDisabled)
                     {{
                         $getExtraTriggerAttributeBag()->class([
                             'w-full',

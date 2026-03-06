@@ -1,17 +1,17 @@
 <template>
     <div :key="index" class="game-list flex flex-col mt-2 relative p-2">
         <div class="w-full flex justify-between mb-2">
-            <h2 class=" title-color ml-2 title-custom">{{ $t(provider.name) }}</h2>
+            <h2 class="text-[16px] title-color ml-2" style="font-family: 'Helvetica', sans-serif;">{{ $t(provider.name) }}</h2>
             <div class="flex">
-                <RouterLink 
+                <RouterLink
                     :to="{ name: 'casinosAll', params: { provider: provider.id, category: 'all' } }"
-                    class="item-game  px-3 py-1 text-color title-custom">
+                    class="item-game text-[14px] px-3 py-1 text-color">
                     {{ $t('Tudo') }}
                 </RouterLink>
             </div>
         </div>
 
-         <div :class="['grid', `grid-cols-${setting.collum_games}`, 'gap-2', 'mb-2']">
+         <div :class="['grid', `grid-cols-${setting.collum_games}`, 'gap-3', 'mb-2']">
             <CassinoGameCard
                 v-for="(game, gameIndex) in displayedGames"
                 :key="gameIndex"
@@ -90,11 +90,5 @@ body {
   font-family: 'Helvetica', sans-serif; /* Define a fonte Helvetica para todo o documento */
   font-style: normal;
     font-weight: 400;
-}
-
-.title-custom {
-    font-family: Helvetica, sans-serif;
-    font-size: calc(min(100vw, 490px)* 0.032);
-    font-weight: bold;
 }
 </style>

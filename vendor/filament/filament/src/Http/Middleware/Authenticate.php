@@ -19,7 +19,7 @@ class Authenticate extends Middleware
         if (! $guard->check()) {
             $this->unauthenticated($request, $guards);
 
-            return; /** @phpstan-ignore-line */
+            return;
         }
 
         $this->auth->shouldUse(Filament::getAuthGuard());

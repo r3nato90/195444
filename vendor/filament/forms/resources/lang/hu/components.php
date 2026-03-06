@@ -12,42 +12,14 @@ return [
 
             'add' => [
                 'label' => 'Új :label',
-                'modal' => [
-                    'heading' => 'Új :label',
-                    'actions' => [
-                        'add' => [
-                            'label' => 'Új',
-                        ],
-                    ],
-                ],
             ],
 
             'add_between' => [
                 'label' => 'Beillesztés blokkok közé',
-                'modal' => [
-                    'heading' => 'Új :label',
-                    'actions' => [
-                        'add' => [
-                            'label' => 'Új',
-                        ],
-                    ],
-                ],
             ],
 
             'delete' => [
                 'label' => 'Törlés',
-            ],
-
-            'edit' => [
-                'label' => 'Szerkesztés',
-                'modal' => [
-                    'heading' => 'Blokk szerkesztése',
-                    'actions' => [
-                        'save' => [
-                            'label' => 'Változtatások mentése',
-                        ],
-                    ],
-                ],
             ],
 
             'reorder' => [
@@ -433,7 +405,7 @@ return [
 
         'max_items_message' => 'Csak :count elem választható ki.',
 
-        'no_search_results_message' => 'Nincs találat.',
+        'no_search_results_message' => 'Nincs találat',
 
         'placeholder' => 'Válassz ki egy elemet',
 

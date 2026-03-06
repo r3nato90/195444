@@ -7,7 +7,7 @@
             </div>
         </LoadingComponent>
 
-        <div v-if="!isLoading" class="my-auto max-w-[490px] mt-36">
+        <div v-if="!isLoading" class="my-auto max-w-[450px] mt-36">
             <div class="px-4 py-5">
                 <div class="min-h-[calc(100vh-565px)] text-center flex flex-col items-center justify-center">
                     <div class="w-full rounded-lg shadow-lg border-none md:mt-0 sm:max-w-md xl:p-0 background-color-cassino">

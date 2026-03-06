@@ -2,7 +2,7 @@
   <div>
     <GameLayout>
       <!-- Tela de carregamento -->
-      <div class="w-full h-full flex justify-center items-center bg-black max-w-[490px]" :isLoading="isLoading">
+      <div class="w-full h-full flex justify-center items-center bg-black max-w-[450px]" :isLoading="isLoading">
         <div class="text-center">
           <img src="/public/assets/images/loading.png" class="w-[50px] h-auto" alt="Carregando informações dos jogos" />
         </div>

@@ -4,7 +4,7 @@
 
     <button
       v-if="wallet?.total_balance !== undefined && !isLoadingWallet"
-      @click="$router.push('/profile/profile')"
+      @click="$router.push('/profile/wallet')"
       type="button"
       class="flex justify-center items-center mgd"
     >

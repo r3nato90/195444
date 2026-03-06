@@ -126,6 +126,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        
+        'pixup' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/pixup.log'),
+        'level' => env('LOG_LEVEL', 'debug'),
+    ],
+        
     ],
 
 ];

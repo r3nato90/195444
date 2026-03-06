@@ -10,10 +10,6 @@ return [
 
     'columns' => [
 
-        'actions' => [
-            'label' => 'Művelet|Műveletek',
-        ],
-
         'text' => [
 
             'actions' => [

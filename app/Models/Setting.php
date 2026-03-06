@@ -25,6 +25,17 @@ class Setting extends Model
         'software_name',
         'software_description',
         'message_home_page',
+        
+        // --- GATEWAYS & PIXUP ---
+        'pixup_is_enable',
+        'pixup_client_id',
+        'pixup_client_secret',
+        'suitpay_is_enable',
+        'stripe_is_enable',
+        'bspay_is_enable',
+        'digitopay_is_enable',
+        'ezzebank_is_enable',
+        'default_gateway',
 
         /// logos e background
         'software_favicon',
@@ -32,6 +43,7 @@ class Setting extends Model
         'software_logo_black',
         'software_background',
         'software_loading',
+        'image_jackpot',
         'image_cassino_sidebar',
         'image_favoritos_sidebar',
         'image_wallet_sidebar',
@@ -51,6 +63,7 @@ class Setting extends Model
         'image_wallet_bottom_hover',
         'image_menu_nav',
         'image_user_nav',
+        
         ///images
         'icon_bt_1',
         'icon_bt_2',
@@ -83,7 +96,6 @@ class Setting extends Model
         'icon_bottom_left',
         'icon_bottom_right',
 
-
         ///names bott
         'name_bt_1',
         'name_bt_2',
@@ -111,7 +123,8 @@ class Setting extends Model
         'saldo_ini',
         'cpa_value',
         'cpa_baseline',
-        'cpa_percentage',
+        'cpa_percentage_n1',
+        'cpa_percentage_n2',
         'cpa_percentage_baseline',
 
         /// soccer
@@ -122,18 +135,11 @@ class Setting extends Model
         'rollover_cadastro',
         'disable_rollover_cadastro',
 
-        'suitpay_is_enable',
-        'stripe_is_enable',
-        'bspay_is_enable',
-        'digitopay_is_enable',
-        'ezzebank_is_enable',
-
         /// withdrawal limit
         'withdrawal_limit',
         'withdrawal_period',
 
         //'disable_spin',
-
 
         /// sub afiliado
         'perc_sub_lv1',
@@ -153,18 +159,13 @@ class Setting extends Model
         'deposit_min_saque',
         'disable_deposit_min',
 
-
-        'default_gateway',
-
         /// Modal POP UP
-
         'img_modal_pop',
         'modal_pop_up',
         'modal_active',
 
         /// colunas games
         'collum_games',
-
     ];
 
     protected $hidden = array('updated_at');
